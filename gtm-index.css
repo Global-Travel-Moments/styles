@@ -2929,40 +2929,29 @@ body {
     align-items: center !important;
 }
 
-/* Nuclear reset on button, its parent, and pseudo-elements */
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel,
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel::before,
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel::after {
-    all: unset !important;
-}
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel::before,
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel::after {
-    content: none !important;
-    display: none !important;
-}
-/* Kill the blue outer circle — target every possible parent/wrapper */
-.rvlx-app-container .profile-new-search-nav > *,
-.rvlx-app-container .profile-new-search-nav a,
-.rvlx-app-container .profile-new-search-nav > a,
-.rvlx-app-container .profile-new-search-nav .profile-action-hotel-wrapper,
-.rvlx-app-container .profile-action-hotel-wrapper {
-    background: transparent !important;
-    background-color: transparent !important;
+/* 2. Browse & Book button — kill every Revelex property creating the blue circle */
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel {
+    /* Kill the background image (Hotels-Book-Now-Banner-Option.jpg) */
+    background: #ef8b57 !important;
+    background-image: none !important;
+    background-size: auto !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    /* Kill the oversized dimensions */
+    height: auto !important;
+    width: auto !important;
+    flex-basis: auto !important;
+    /* Kill the circle shape */
+    overflow: visible !important;
+    box-shadow: none !important;
     border: none !important;
     outline: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel {
+    /* Our pill style */
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    background-color: #ef8b57 !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
     border-radius: 2.5em !important;
     padding: 0.75em 2em !important;
     cursor: pointer !important;
@@ -2971,16 +2960,23 @@ body {
     font-size: 1rem !important;
     font-weight: 600 !important;
     text-decoration: none !important;
-    backdrop-filter: none !important;
-    filter: none !important;
-    -webkit-appearance: none !important;
-    appearance: none !important;
+    transition: background-color 0.2s ease !important;
 }
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel span {
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel::before,
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel::after,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel::before,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel::after {
+    content: none !important;
+    display: none !important;
+}
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel span,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel span {
     color: white !important;
 }
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel:hover {
-    background-color: #111c3c !important;
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel:hover,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel:hover {
+    background: #111c3c !important;
+    background-image: none !important;
     color: white !important;
 }
 
