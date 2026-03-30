@@ -2990,7 +2990,14 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. "What's around?" - Manrope and uppercase places */
+/* 13. Hotel info subtitles and body text - Manrope */
+.rvlx-app-container .tabs-contents-subtitle,
+.rvlx-app-container .tabs-contents-text {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. "What's around?" - Manrope and uppercase places */
 .rvlx-app-container .tabs-contents-aside-title,
 .rvlx-app-container .tabs-contents-aside-body {
     font-family: Manrope, sans-serif !important;
