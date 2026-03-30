@@ -2990,7 +2990,13 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Back to Search Results link - Manrope */
+/* 13. Street View / Map / Gallery tab labels - Manrope */
+.rvlx-app-container .tabs-contents-title > span {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Back to Search Results link - Manrope */
 .rvlx-app-container .section-links-back {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
