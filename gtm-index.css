@@ -2990,7 +2990,13 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Room rate tabs - add spacing below pill */
+/* 13. "Book Now, Pay Later" text - Manrope */
+.rvlx-app-container .item-summary-is-required {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Room rate tabs - add spacing below pill */
 .rvlx-app-container .tabs-container-wrapper {
     margin-bottom: 12px !important;
 }
