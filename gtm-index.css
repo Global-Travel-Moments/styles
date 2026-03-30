@@ -2990,7 +2990,13 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Hotel info subtitles and body text - Manrope */
+/* 13. Star rating label - Manrope */
+.rvlx-app-container .star-rating-label {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Hotel info subtitles and body text - Manrope */
 .rvlx-app-container .tabs-contents-subtitle,
 .rvlx-app-container .tabs-contents-text {
     font-family: Manrope, sans-serif !important;
