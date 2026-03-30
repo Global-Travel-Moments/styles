@@ -2920,52 +2920,16 @@ body {
    Date: 30 March 2026
    ============================================== */
 
-/* 2. Move search section above hero image, center and style button orange */
+/* 2. Style Browse & Book button as orange pill */
 
-/* Pull section back into normal flow first */
-.rvlx-app-container .profile-new-search {
-    position: relative !important;
-    top: unset !important;
-    left: unset !important;
-    right: unset !important;
-    bottom: unset !important;
-    width: 100% !important;
-    height: auto !important;
-    transform: none !important;
-    order: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    padding: 1.5em 1em !important;
-    background: none !important;
-    z-index: auto !important;
-}
-
-/* Now flex-order the parent */
-.rvlx-app-container .body-top {
-    display: flex !important;
-    flex-direction: column !important;
-}
-.rvlx-app-container .hero.hero-profile {
-    order: 2 !important;
-}
-
-/* Reset nav container */
+/* Center the nav container */
 .rvlx-app-container .profile-new-search-nav {
-    position: relative !important;
-    top: unset !important;
-    left: unset !important;
-    right: unset !important;
-    bottom: unset !important;
-    width: auto !important;
-    height: auto !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    background: none !important;
 }
 
-/* Reset and style the button - nuclear reset */
+/* Nuclear reset on button and its pseudo-elements */
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel,
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel::before,
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel::after {
@@ -2983,13 +2947,13 @@ body {
     font-size: 1rem !important;
     font-weight: 600 !important;
     text-decoration: none !important;
-    transition: background-color 0.2s ease !important;
 }
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel span {
     color: white !important;
 }
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel:hover {
     background-color: #111c3c !important;
+    color: white !important;
 }
 
 /* 1. Search prompt text - increase size by 6pt */
