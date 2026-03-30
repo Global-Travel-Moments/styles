@@ -2990,7 +2990,34 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Rate disclaimer text - Manrope */
+/* 13. Loading splash - cycling text below logo */
+@keyframes gtm-loading-text {
+    0%,   9% { content: "Curating Your Stay"; }
+    10%, 19% { content: "Preparing Arrival"; }
+    20%, 29% { content: "Securing Your Suite"; }
+    30%, 39% { content: "Refining Selections"; }
+    40%, 49% { content: "Confirming Your Booking"; }
+    50%, 59% { content: "Arranging the Details"; }
+    60%, 69% { content: "Tailoring Your Room"; }
+    70%, 79% { content: "Perfecting the Stay"; }
+    80%, 89% { content: "Anticipating Your Arrival"; }
+    90%, 99% { content: "Finalising the Reservation"; }
+    100%      { content: "Curating Your Stay"; }
+}
+.rvlx-app-container .loader-container::after {
+    content: "Curating Your Stay" !important;
+    display: block !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: white !important;
+    text-align: center !important;
+    margin-top: 1.5em !important;
+    letter-spacing: 0.05em !important;
+    animation: gtm-loading-text 10s steps(1) infinite !important;
+}
+
+/* 14. Rate disclaimer text - Manrope */
 .rvlx-app-container .table-pricing-disclaimer {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
