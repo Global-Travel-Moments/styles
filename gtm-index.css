@@ -2926,9 +2926,18 @@ body {
 }
 
 /* 2. Hotel button - match site button style */
-.rvlx-app-container .profile-new-search-nav a {
+.rvlx-app-container .profile-new-search-nav {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: static !important;
+}
+
+.rvlx-app-container .profile-new-search-nav a,
+.rvlx-app-container .profile-action-wrapper.profile-action-hotel {
+    position: static !important;
     display: inline-block !important;
-    background-color: var(--color--orange) !important;
+    background-color: #ef8b57 !important;
     color: white !important;
     border-radius: 2.5em !important;
     padding: 0.75em 2em !important;
@@ -2939,8 +2948,9 @@ body {
     transition: background-color 0.2s ease !important;
 }
 
-.rvlx-app-container .profile-new-search-nav a:hover {
-    background-color: var(--color--dark-blue) !important;
+.rvlx-app-container .profile-new-search-nav a:hover,
+.rvlx-app-container .profile-action-wrapper.profile-action-hotel:hover {
+    background-color: #111c3c !important;
     color: white !important;
 }
 
