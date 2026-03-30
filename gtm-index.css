@@ -2920,6 +2920,15 @@ body {
    Date: 30 March 2026
    ============================================== */
 
+/* 2. Hotel button - center and make orange */
+.rvlx-app-container .profile-new-search-nav {
+    justify-content: center !important;
+}
+
+.rvlx-app-container .profile-action-wrapper.profile-action-hotel::before {
+    background-color: #ef8b57 !important;
+}
+
 /* 1. Search prompt text - increase size by 6pt */
 .rvlx-app-container .profile-new-search-menu {
     font-size: calc(1em + 6pt) !important;
