@@ -3001,6 +3001,14 @@ body {
     align-items: center !important;
 }
 
+/* 10. Background image for home page hero area */
+.rvlx-app-container .body-top {
+    background-image: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/690c9a1724f2546578c5c2da_Global-Travel-Moments-Fiji2.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    padding: 2em !important;
+}
+
 /* 8. Hotel Search page - add marketing text below heading */
 .rvlx-app-container .gt-search-title h1::after {
     content: "Welcome to your private booking portal. Everything you see here, from the hotels to the rates, has been curated with you in mind.";
