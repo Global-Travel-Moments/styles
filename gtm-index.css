@@ -2990,7 +2990,17 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Street View / Map / Gallery tab labels - Manrope */
+/* 13. "What's around?" - Manrope and uppercase places */
+.rvlx-app-container .tabs-contents-aside-title,
+.rvlx-app-container .tabs-contents-aside-body {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+.rvlx-app-container .tabs-contents-aside-body {
+    text-transform: uppercase !important;
+}
+
+/* 14. Street View / Map / Gallery tab labels - Manrope */
 .rvlx-app-container .tabs-contents-title > span {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
