@@ -2920,7 +2920,21 @@ body {
    Date: 30 March 2026
    ============================================== */
 
-/* 2. Hotel button - separate from image, center, make orange */
+/* 2. Move search section above hero image, center and style button orange */
+.rvlx-app-container .body-top {
+    display: flex !important;
+    flex-direction: column !important;
+}
+.rvlx-app-container .hero.hero-profile {
+    order: 2 !important;
+}
+.rvlx-app-container .profile-new-search {
+    order: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 1.5em 1em !important;
+}
 .rvlx-app-container .profile-new-search-nav {
     display: flex !important;
     justify-content: center !important;
@@ -2928,36 +2942,27 @@ body {
     position: static !important;
     background: none !important;
 }
-
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel {
-    position: relative !important;
+    position: static !important;
     width: auto !important;
     height: auto !important;
-    top: unset !important;
-    left: unset !important;
-    right: unset !important;
-    bottom: unset !important;
     transform: none !important;
-    background-color: #ef8b57 !important;
-    color: white !important;
-    border-radius: 2.5em !important;
-    padding: 0.75em 2em !important;
-    display: inline-flex !important;
-    align-items: center !important;
     filter: none !important;
     opacity: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    background-color: #ef8b57 !important;
+    border-radius: 2.5em !important;
+    padding: 0.75em 2em !important;
 }
-
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel::before {
     display: none !important;
 }
-
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel span {
     color: white !important;
     filter: none !important;
     opacity: 1 !important;
 }
-
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel:hover {
     background-color: #111c3c !important;
 }
