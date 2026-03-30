@@ -2965,36 +2965,28 @@ body {
     background: none !important;
 }
 
-/* Reset and style the button */
+/* Reset and style the button - nuclear reset */
+.rvlx-app-container .profile-action-wrapper.profile-action-hotel,
+.rvlx-app-container .profile-action-wrapper.profile-action-hotel::before,
+.rvlx-app-container .profile-action-wrapper.profile-action-hotel::after {
+    all: unset !important;
+}
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel {
-    position: relative !important;
-    top: unset !important;
-    left: unset !important;
-    right: unset !important;
-    bottom: unset !important;
-    width: auto !important;
-    height: auto !important;
-    flex-basis: auto !important;
-    flex-shrink: 0 !important;
-    transform: none !important;
-    filter: none !important;
-    backdrop-filter: none !important;
-    opacity: 1 !important;
-    overflow: visible !important;
     display: inline-flex !important;
     align-items: center !important;
     background-color: #ef8b57 !important;
-    background-image: none !important;
     border-radius: 2.5em !important;
     padding: 0.75em 2em !important;
-}
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel::before {
-    display: none !important;
+    cursor: pointer !important;
+    color: white !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    transition: background-color 0.2s ease !important;
 }
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel span {
     color: white !important;
-    filter: none !important;
-    opacity: 1 !important;
 }
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel:hover {
     background-color: #111c3c !important;
