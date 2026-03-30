@@ -2990,7 +2990,13 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Item summary title and subtitle - Manrope */
+/* 13. Back to Search Results link - Manrope */
+.rvlx-app-container .section-links-back {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Item summary title and subtitle - Manrope */
 .rvlx-app-container .item-summary-title,
 .rvlx-app-container .item-summary-title *,
 .rvlx-app-container .item-summary-subtitle {
