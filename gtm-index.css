@@ -2990,7 +2990,13 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Partner Benefits block - Manrope throughout */
+/* 13. Rate disclaimer text - Manrope */
+.rvlx-app-container .table-pricing-disclaimer {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Partner Benefits block - Manrope throughout */
 .rvlx-app-container .hotel-rooms-rate-wrapper,
 .rvlx-app-container .hotel-rooms-rate-wrapper *,
 .rvlx-app-container .hotel-rooms-rate-content,
