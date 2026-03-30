@@ -2990,7 +2990,14 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. "Book Now, Pay Later" text - Manrope */
+/* 13. Pricing labels - Manrope */
+.rvlx-app-container .hotel-room-price-label,
+.rvlx-app-container .is-anchor .button.is-anchor {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. "Book Now, Pay Later" text - Manrope */
 .rvlx-app-container .item-summary-is-required {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
