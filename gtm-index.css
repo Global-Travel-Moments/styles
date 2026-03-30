@@ -2947,6 +2947,8 @@ body {
     font-size: 1rem !important;
     font-weight: 600 !important;
     text-decoration: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
 }
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel span {
     color: white !important;
