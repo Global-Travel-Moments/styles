@@ -2925,50 +2925,6 @@ body {
     font-size: calc(1em + 6pt) !important;
 }
 
-/* 2. Hotel button - match site button style */
-.rvlx-app-container .profile-new-search-nav {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    position: static !important;
-    width: 100% !important;
-}
-
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel {
-    position: static !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background-color: #ef8b57 !important;
-    color: white !important;
-    border-radius: 2.5em !important;
-    padding: 0.75em 2em !important;
-    text-decoration: none !important;
-    font-family: Manrope, sans-serif !important;
-    font-weight: 600 !important;
-    font-size: 1rem !important;
-    transition: background-color 0.2s ease !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-}
-
-/* Reset any ::before overlay the booking engine applies */
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel::before {
-    display: none !important;
-    background: none !important;
-    content: none !important;
-}
-
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel:hover {
-    background-color: #111c3c !important;
-    color: white !important;
-}
-
-.rvlx-app-container .profile-action-wrapper.profile-action-hotel span {
-    color: white !important;
-    position: static !important;
-}
 
 /* 3. Dropdown - remove repeated title */
 .rvlx-app-container .dropdown-rvlx-menu-title {
