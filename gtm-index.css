@@ -2990,7 +2990,17 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Hide supplier name (Synxis/UNKNOWN) above hotel name */
+/* 13. Panel titles and section titles - Manrope */
+.rvlx-app-container .panel-title,
+.rvlx-app-container .panel-title *,
+.rvlx-app-container .panel-section-title,
+.rvlx-app-container .panel-section-title *,
+.rvlx-app-container .panel-section-title-type {
+    font-family: Manrope, sans-serif !important;
+    font-weight: 400 !important;
+}
+
+/* 14. Hide supplier name (Synxis/UNKNOWN) above hotel name */
 .rvlx-app-container .item-summary-subtitle {
     display: none !important;
 }
