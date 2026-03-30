@@ -2934,27 +2934,31 @@ body {
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel,
 .rvlx-app-container a.profile-action-wrapper.profile-action-hotel {
     /* Kill the background image (Hotels-Book-Now-Banner-Option.jpg) */
-    background: #ef8b57 !important;
+    background: transparent !important;
     background-image: none !important;
     background-size: auto !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     filter: none !important;
-    /* Kill the oversized dimensions */
+    /* Kill the oversized dimensions from .profile-action-wrapper */
     height: auto !important;
     width: auto !important;
+    flex: none !important;
     flex-basis: auto !important;
     /* Kill the circle shape */
     overflow: visible !important;
     box-shadow: none !important;
     border: none !important;
     outline: none !important;
+    /* Kill .profile-action-wrapper padding/gap that creates the outer ring */
+    padding: 0.75em 2em !important;
+    gap: 0 !important;
+    position: static !important;
     /* Our pill style */
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     border-radius: 2.5em !important;
-    padding: 0.75em 2em !important;
     cursor: pointer !important;
     color: white !important;
     font-family: Manrope, sans-serif !important;
@@ -2966,17 +2970,35 @@ body {
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel::before,
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel::after,
 .rvlx-app-container a.profile-action-wrapper.profile-action-hotel::before,
-.rvlx-app-container a.profile-action-wrapper.profile-action-hotel::after {
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel::after,
+.rvlx-app-container .profile-action-wrapper::before,
+.rvlx-app-container .profile-action-wrapper::after {
     content: none !important;
     display: none !important;
+    backdrop-filter: none !important;
+    background-color: transparent !important;
+    width: 0 !important;
+    height: 0 !important;
 }
-.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel span,
-.rvlx-app-container a.profile-action-wrapper.profile-action-hotel span {
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel > span,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel > span {
+    background: #ef8b57 !important;
     color: white !important;
+    border-radius: 2.5em !important;
+    padding: 0.75em 2em !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    transition: background-color 0.2s ease !important;
+}
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel:hover > span,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel:hover > span {
+    background: #111c3c !important;
 }
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel:hover,
 .rvlx-app-container a.profile-action-wrapper.profile-action-hotel:hover {
-    background: #111c3c !important;
+    background: transparent !important;
     background-image: none !important;
     color: white !important;
 }
@@ -3177,6 +3199,10 @@ body {
 }
 
 /* 9. Center the hero profile header */
+.rvlx-app-container .hero.hero-profile {
+    justify-content: center !important;
+    align-items: center !important;
+}
 .rvlx-app-container .hero-profile-header-content {
     text-align: center !important;
     display: flex !important;
@@ -3185,12 +3211,22 @@ body {
     justify-content: center !important;
     width: 100% !important;
 }
+.rvlx-app-container .hero-profile-header-text,
+.rvlx-app-container .hero-profile-header-text span {
+    text-align: center !important;
+    width: 100% !important;
+    font-weight: 400 !important;
+}
+/* Hide customer email, member since, and gravatar */
+.rvlx-app-container .hero-profile-header-list {
+    display: none !important;
+}
+.rvlx-app-container .hero-profile-header-image {
+    display: none !important;
+}
 
 /* 10. Background image for home page hero area — DISABLED for now */
-.rvlx-app-container .body-top {
-    background-image: none !important;
-    padding: 2em !important;
-}
+/* (merged into rule 16 below) */
 
 /* 15. Registration/login page - replace blurry background image */
 .rvlx-app-container .members-main-container.members-registration-container {
@@ -3231,6 +3267,27 @@ body {
 }
 .rvlx-app-container .members-content-benefits-section:hover::after {
     opacity: 1 !important;
+}
+
+/* 16. Grey bar at top - match page background colour */
+.rvlx-app-container .body-top {
+    background-image: none !important;
+    background-color: var(--color--cream) !important;
+    padding: 2em !important;
+}
+.rvlx-app-container .main-area-subactions,
+.rvlx-app-container .main-area-subactions-wrapper {
+    background-color: var(--color--cream) !important;
+    background: var(--color--cream) !important;
+}
+
+/* 17. Rounded corners on content containers */
+.rvlx-app-container .tabs-contents {
+    border-radius: 2em !important;
+}
+/* 18. Hide suitcase image on Personal Information page */
+.rvlx-app-container .profile-section-container.profile-information {
+    background-image: none !important;
 }
 
 /* 8. Hotel Search page - add marketing text below heading */
