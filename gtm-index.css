@@ -2990,7 +2990,12 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Remove bold from all headings */
+/* 13. Hide supplier name (Synxis/UNKNOWN) above hotel name */
+.rvlx-app-container .item-summary-subtitle {
+    display: none !important;
+}
+
+/* 14. Remove bold from all headings */
 .rvlx-app-container h1,
 .rvlx-app-container h2,
 .rvlx-app-container h3,
