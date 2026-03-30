@@ -2990,7 +2990,15 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. All hyperlinks - orange */
+/* 13. Item summary title and subtitle - Manrope */
+.rvlx-app-container .item-summary-title,
+.rvlx-app-container .item-summary-title *,
+.rvlx-app-container .item-summary-subtitle {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. All hyperlinks - orange */
 .rvlx-app-container a:not([class*="button"]):not([class*="profile-action"]):not([class*="profile-nav"]) {
     color: #ef8b57 !important;
 }
@@ -3023,8 +3031,8 @@ body {
     font-weight: 400 !important;
 }
 
-/* 14. Hide supplier name (Synxis/UNKNOWN) above hotel name */
-.rvlx-app-container .item-summary-subtitle {
+/* 14. Hide supplier name (Synxis/UNKNOWN) on hotel search results only */
+.rvlx-app-container .item-summary-hotel .item-summary-subtitle {
     display: none !important;
 }
 
