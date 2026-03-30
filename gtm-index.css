@@ -2990,7 +2990,15 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Panel edit link - Manrope */
+/* 13. Payment titles - Manrope */
+.rvlx-app-container .panel-payment-expandable-title,
+.rvlx-app-container .panel-section-block-title {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+}
+
+/* 14. Panel edit link - Manrope */
 .rvlx-app-container .panel-edit {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
