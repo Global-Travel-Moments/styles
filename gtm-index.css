@@ -2990,7 +2990,12 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Pricing labels - Manrope */
+/* 13. All hyperlinks - orange */
+.rvlx-app-container a:not([class*="button"]):not([class*="profile-action"]):not([class*="profile-nav"]) {
+    color: #ef8b57 !important;
+}
+
+/* 14. Pricing labels - Manrope */
 .rvlx-app-container .hotel-room-price-label,
 .rvlx-app-container .is-anchor .button.is-anchor {
     font-family: Manrope, sans-serif !important;
