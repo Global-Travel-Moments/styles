@@ -2990,7 +2990,12 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Panel titles and section titles - Manrope */
+/* 13. Room rate tabs - add spacing below pill */
+.rvlx-app-container .tabs-container-wrapper {
+    margin-bottom: 12px !important;
+}
+
+/* 14. Panel titles and section titles - Manrope */
 .rvlx-app-container .panel-title,
 .rvlx-app-container .panel-title *,
 .rvlx-app-container .panel-section-title,
