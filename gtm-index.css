@@ -2929,7 +2929,7 @@ body {
     align-items: center !important;
 }
 
-/* Nuclear reset on button and its pseudo-elements */
+/* Nuclear reset on button, its parent, and pseudo-elements */
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel,
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel::before,
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel::after {
@@ -2940,10 +2940,29 @@ body {
     content: none !important;
     display: none !important;
 }
+/* Kill the blue outer circle — target every possible parent/wrapper */
+.rvlx-app-container .profile-new-search-nav > *,
+.rvlx-app-container .profile-new-search-nav a,
+.rvlx-app-container .profile-new-search-nav > a,
+.rvlx-app-container .profile-new-search-nav .profile-action-hotel-wrapper,
+.rvlx-app-container .profile-action-hotel-wrapper {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel {
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: center !important;
     background-color: #ef8b57 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
     border-radius: 2.5em !important;
     padding: 0.75em 2em !important;
     cursor: pointer !important;
@@ -2954,6 +2973,8 @@ body {
     text-decoration: none !important;
     backdrop-filter: none !important;
     filter: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
 }
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel span {
     color: white !important;
@@ -3162,14 +3183,16 @@ body {
 /* 9. Center the hero profile header */
 .rvlx-app-container .hero-profile-header-content {
     text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
     align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
 }
 
-/* 10. Background image for home page hero area */
+/* 10. Background image for home page hero area — DISABLED for now */
 .rvlx-app-container .body-top {
-    background-image: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/690c9a1724f2546578c5c2da_Global-Travel-Moments-Fiji2.jpg') !important;
-    background-size: cover !important;
-    background-position: center !important;
+    background-image: none !important;
     padding: 2em !important;
 }
 
