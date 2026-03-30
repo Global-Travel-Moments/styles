@@ -2970,9 +2970,7 @@ body {
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel::before,
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel::after,
 .rvlx-app-container a.profile-action-wrapper.profile-action-hotel::before,
-.rvlx-app-container a.profile-action-wrapper.profile-action-hotel::after,
-.rvlx-app-container .profile-action-wrapper::before,
-.rvlx-app-container .profile-action-wrapper::after {
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel::after {
     content: none !important;
     display: none !important;
     backdrop-filter: none !important;
@@ -3269,10 +3267,10 @@ body {
     opacity: 1 !important;
 }
 
-/* 16. Grey bar at top - match page background colour */
+/* 16. Grey bar at top - transparent (blends with both cream bg and search bg image) */
 .rvlx-app-container .body-top {
     background-image: none !important;
-    background-color: var(--color--cream) !important;
+    background-color: transparent !important;
     padding: 2em !important;
 }
 .rvlx-app-container .main-area-subactions,
@@ -3285,6 +3283,90 @@ body {
 .rvlx-app-container .tabs-contents {
     border-radius: 2em !important;
 }
+/* 19. Replace hotel search page background image */
+.gt-hotel-bg-2 .hotel-search-page {
+    background-image: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/690c97f56045b135a139cdaa_Global-Travel-Moments-Cape-Town-South-Africa2.jpg') !important;
+}
+
+/* 21. Universal button rules — ensure consistent states across all pages */
+/* Inactive: orange outline, orange text, transparent bg */
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel),
+.rvlx-app-container .profile-nav-sections,
+.rvlx-app-container .tabs-contents-title {
+    background-color: transparent !important;
+    border: 2px solid #ef8b57 !important;
+    color: #ef8b57 !important;
+    border-radius: 2.5em !important;
+    font-family: Manrope, sans-serif !important;
+    cursor: pointer !important;
+}
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel) span,
+.rvlx-app-container .profile-nav-sections span,
+.rvlx-app-container .tabs-contents-title span {
+    color: #ef8b57 !important;
+}
+/* Hover: dark blue bg, white text (action buttons only, not tabs) */
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel):hover {
+    background-color: #111c3c !important;
+    border-color: #111c3c !important;
+    color: white !important;
+}
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel):hover span {
+    color: white !important;
+}
+/* Active/Selected: orange bg, white text */
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active,
+.rvlx-app-container .profile-nav-sections.is-active,
+.rvlx-app-container .tabs-contents-title.is-active {
+    background-color: #ef8b57 !important;
+    border-color: #ef8b57 !important;
+    color: white !important;
+}
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active span,
+.rvlx-app-container .profile-nav-sections.is-active span,
+.rvlx-app-container .tabs-contents-title.is-active span {
+    color: white !important;
+}
+
+/* 22. My Reservations button — match Browse & Book style */
+.rvlx-app-container .authentication-module-account .button.is-anchor.icon-user {
+    background: #ef8b57 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 32px !important;
+    padding: 12px 20px !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+    font-size: 0 !important;
+    overflow: hidden !important;
+}
+.rvlx-app-container .authentication-module-account .button.is-anchor.icon-user::after {
+    content: "My Profile" !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    color: white !important;
+}
+.rvlx-app-container .authentication-module-account .button.is-anchor.icon-user:hover {
+    background: #111c3c !important;
+    color: white !important;
+}
+
+/* 20. Curve the white search box */
+.rvlx-app-container .search-form-app {
+    border-radius: 2em !important;
+}
+.rvlx-app-container .main-area-body {
+    border-radius: 2em !important;
+    overflow: hidden !important;
+}
+
 /* 18. Hide suitcase image on Personal Information page */
 .rvlx-app-container .profile-section-container.profile-information {
     background-image: none !important;
