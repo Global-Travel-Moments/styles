@@ -3267,11 +3267,18 @@ body {
     opacity: 1 !important;
 }
 
-/* 16. Grey bar at top - transparent (blends with both cream bg and search bg image) */
+/* 16. Grey bar at top - transparent with rounded corners */
 .rvlx-app-container .body-top {
     background-image: none !important;
     background-color: transparent !important;
     padding: 2em !important;
+    border-radius: 2em !important;
+}
+/* Constrain the white search area width */
+.rvlx-app-container .main-area-container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding-bottom: 2em !important;
 }
 .rvlx-app-container .main-area-subactions,
 .rvlx-app-container .main-area-subactions-wrapper {
@@ -3282,6 +3289,7 @@ body {
 /* 17. Rounded corners on content containers */
 .rvlx-app-container .tabs-contents {
     border-radius: 2em !important;
+    border: none !important;
 }
 /* 19. Replace hotel search page background image */
 .gt-hotel-bg-2 .hotel-search-page {
@@ -3292,7 +3300,7 @@ body {
 /* Inactive: orange outline, orange text, transparent bg */
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel),
 .rvlx-app-container .profile-nav-sections,
-.rvlx-app-container .tabs-contents-title {
+.rvlx-app-container .tabs-container a {
     background-color: transparent !important;
     border: 2px solid #ef8b57 !important;
     color: #ef8b57 !important;
@@ -3301,8 +3309,7 @@ body {
     cursor: pointer !important;
 }
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel) span,
-.rvlx-app-container .profile-nav-sections span,
-.rvlx-app-container .tabs-contents-title span {
+.rvlx-app-container .profile-nav-sections span {
     color: #ef8b57 !important;
 }
 /* Hover: dark blue bg, white text (action buttons only, not tabs) */
@@ -3316,16 +3323,36 @@ body {
 }
 /* Active/Selected: orange bg, white text */
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active,
-.rvlx-app-container .profile-nav-sections.is-active,
-.rvlx-app-container .tabs-contents-title.is-active {
+.rvlx-app-container .profile-nav-sections.is-active {
     background-color: #ef8b57 !important;
     border-color: #ef8b57 !important;
     color: white !important;
 }
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active span,
-.rvlx-app-container .profile-nav-sections.is-active span,
-.rvlx-app-container .tabs-contents-title.is-active span {
+.rvlx-app-container .profile-nav-sections.is-active span {
     color: white !important;
+}
+/* Tab buttons (hotel details) — active: orange bg, white text, no hover */
+.rvlx-app-container .tabs.hotel-details .tabs-container a.is-active,
+.rvlx-app-container .tabs-container a[data-tabs-label].is-active {
+    background-color: #ef8b57 !important;
+    border-color: #ef8b57 !important;
+    color: white !important;
+    font-size: 1rem !important;
+    text-decoration: none !important;
+}
+/* Inactive tabs — no hover state, just switch on click */
+.rvlx-app-container .tabs-container a:hover {
+    background-color: transparent !important;
+    border-color: #ef8b57 !important;
+    color: #ef8b57 !important;
+}
+/* Hotel name header — remove accidental button styling */
+.rvlx-app-container .tabs-contents-header .tabs-contents-title {
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    cursor: default !important;
 }
 
 /* 22. My Reservations button — match Browse & Book style */
