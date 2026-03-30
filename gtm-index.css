@@ -2990,7 +2990,17 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Order item empty state - Manrope, not italic, vertically centred */
+/* 13. Remove bold from all headings */
+.rvlx-app-container h1,
+.rvlx-app-container h2,
+.rvlx-app-container h3,
+.rvlx-app-container h4,
+.rvlx-app-container h5,
+.rvlx-app-container h6 {
+    font-weight: 400 !important;
+}
+
+/* 14. Order item empty state - Manrope, not italic, vertically centred */
 .rvlx-app-container .order-item-wrapper {
     align-items: center !important;
 }
