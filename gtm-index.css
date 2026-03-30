@@ -2990,6 +2990,15 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
+/* 13. Order item empty state - Manrope, not italic, vertically centred */
+.rvlx-app-container .order-item-wrapper {
+    align-items: center !important;
+}
+.rvlx-app-container .order-item-title {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
 /* 12. Add spacing between profile nav buttons and content below */
 .rvlx-app-container .tabs-container.profile-nav {
     margin-bottom: 12px !important;
