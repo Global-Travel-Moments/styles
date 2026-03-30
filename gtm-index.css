@@ -3362,10 +3362,6 @@ body {
 .rvlx-app-container .search-form-app {
     border-radius: 2em !important;
 }
-.rvlx-app-container .main-area-body {
-    border-radius: 2em !important;
-    overflow: hidden !important;
-}
 
 /* 18. Hide suitcase image on Personal Information page */
 .rvlx-app-container .profile-section-container.profile-information {
