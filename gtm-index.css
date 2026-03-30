@@ -2990,6 +2990,11 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
+/* 12. Add spacing between profile nav buttons and content below */
+.rvlx-app-container .tabs-container.profile-nav {
+    margin-bottom: 12px !important;
+}
+
 /* 7. Info bar - Manrope font, not italic, 2pt larger */
 .rvlx-app-container .message-content,
 .rvlx-app-container .message-content * {
