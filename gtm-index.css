@@ -2935,6 +2935,11 @@ body {
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel::after {
     all: unset !important;
 }
+.rvlx-app-container .profile-action-wrapper.profile-action-hotel::before,
+.rvlx-app-container .profile-action-wrapper.profile-action-hotel::after {
+    content: none !important;
+    display: none !important;
+}
 .rvlx-app-container .profile-action-wrapper.profile-action-hotel {
     display: inline-flex !important;
     align-items: center !important;
@@ -2988,6 +2993,12 @@ body {
 /* 7. Info bar - Manrope font */
 .rvlx-app-container .message-content {
     font-family: Manrope, sans-serif !important;
+}
+
+/* 9. Center the hero profile header */
+.rvlx-app-container .hero-profile-header-content {
+    text-align: center !important;
+    align-items: center !important;
 }
 
 /* 8. Hotel Search page - add marketing text below heading */
