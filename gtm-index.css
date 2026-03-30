@@ -2990,7 +2990,16 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 13. Payment titles - Manrope */
+/* 13. Partner Benefits block - Manrope throughout */
+.rvlx-app-container .hotel-rooms-rate-wrapper,
+.rvlx-app-container .hotel-rooms-rate-wrapper *,
+.rvlx-app-container .hotel-rooms-rate-content,
+.rvlx-app-container .hotel-rooms-rate-content * {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Payment titles - Manrope */
 .rvlx-app-container .panel-payment-expandable-title,
 .rvlx-app-container .panel-section-block-title {
     font-family: Manrope, sans-serif !important;
