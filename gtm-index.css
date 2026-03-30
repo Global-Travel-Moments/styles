@@ -3347,6 +3347,21 @@ body {
     border-color: #ef8b57 !important;
     color: #ef8b57 !important;
 }
+/* Price text — orange instead of blue */
+.rvlx-app-container .item-summary-price .from-price-container,
+.rvlx-app-container .item-summary-price .item-summary-price-starting,
+.rvlx-app-container .item-summary-price .item-summary-price-concurrency,
+.rvlx-app-container .item-summary-price .item-summary-price-nights,
+.rvlx-app-container .item-summary-price .item-summary-price-disclaimer {
+    color: #000000 !important;
+}
+
+/* Details + Select buttons — smaller text */
+.rvlx-app-container .item-summary-cta .button {
+    font-size: 0.85rem !important;
+    padding: 0.6em 1.8em !important;
+}
+
 /* Hotel name header — remove accidental button styling */
 .rvlx-app-container .tabs-contents-header .tabs-contents-title {
     background-color: transparent !important;
