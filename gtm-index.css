@@ -2990,9 +2990,12 @@ body {
     font-family: Manrope, sans-serif !important;
 }
 
-/* 7. Info bar - Manrope font */
-.rvlx-app-container .message-content {
+/* 7. Info bar - Manrope font, not italic, 2pt larger */
+.rvlx-app-container .message-content,
+.rvlx-app-container .message-content * {
     font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+    font-size: calc(1em + 2pt) !important;
 }
 
 /* 9. Center the hero profile header */
@@ -3007,6 +3010,40 @@ body {
     background-size: cover !important;
     background-position: center !important;
     padding: 2em !important;
+}
+
+/* 11. Login page - replace sidebar image with Amanyara photo + hover credit */
+.rvlx-app-container .members-content-benefits-image {
+    content: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
+    width: 100% !important;
+    height: 260px !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+    display: block !important;
+}
+.rvlx-app-container .members-content-benefits-section {
+    position: relative !important;
+    overflow: hidden !important;
+}
+.rvlx-app-container .members-content-benefits-section::after {
+    content: "Amanyara — Turks & Caicos" !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: rgba(17, 28, 60, 0.75) !important;
+    color: white !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    text-align: center !important;
+    padding: 8px !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+    pointer-events: none !important;
+}
+.rvlx-app-container .members-content-benefits-section:hover::after {
+    opacity: 1 !important;
 }
 
 /* 8. Hotel Search page - add marketing text below heading */
