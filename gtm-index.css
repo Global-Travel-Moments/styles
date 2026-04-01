@@ -3685,6 +3685,15 @@ body {
     border-color: var(--color--dark-blue) !important;
     color: #FFFAF0 !important;
 }
+/* Rate programme tabs — FFFAF0 fill when inactive, no hover change */
+.rvlx-app-container .hotel-rooms-rate-tabs .tabs-container a:not(.is-active),
+.rvlx-app-container .hotel-rooms-rate-tabs .tabs-container a:not(.is-active):hover {
+    background: #FFFAF0 !important;
+    background-color: #FFFAF0 !important;
+    background-image: none !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    color: var(--color--dark-blue) !important;
+}
 /* Price text — orange instead of blue */
 .rvlx-app-container .item-summary-price .from-price-container,
 .rvlx-app-container .item-summary-price .item-summary-price-starting,
