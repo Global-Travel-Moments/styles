@@ -3226,12 +3226,7 @@ body {
 /* 10. Background image for home page hero area — DISABLED for now */
 /* (merged into rule 16 below) */
 
-/* 15. Registration/login page - replace blurry background image */
-.rvlx-app-container .members-main-container.members-registration-container {
-    background-image: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/690c97f56045b135a139cdaa_Global-Travel-Moments-Cape-Town-South-Africa2.jpg') !important;
-    background-size: cover !important;
-    background-position: center !important;
-}
+/* 15. Registration/login page background image — REMOVED, Revelex now cycles images from their folder */
 
 /* 11. Login page - replace sidebar image with Amanyara photo + hover credit */
 .rvlx-app-container .members-content-benefits-image {
