@@ -3702,6 +3702,27 @@ body {
 .rvlx-app-container .profile-section-action a {
     color: var(--color--orange) !important;
 }
+/* 49. Add Card button — Midnight fill, FFFAF0 text */
+.rvlx-app-container a.button.button-alternate-cta {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container a.button.button-alternate-cta:hover {
+    background-color: #FFFAF0 !important;
+    background: #FFFAF0 !important;
+    color: var(--color--dark-blue) !important;
+}
+/* 50. Refresh button + icon — Midnight colour */
+.rvlx-app-container button.button.is-anchor.icon-refresh {
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container button.button.is-anchor.icon-refresh::before {
+    color: var(--color--dark-blue) !important;
+}
+
 /* Order item wrapper (My Reservations) */
 .rvlx-app-container .order-item-wrapper {
     background-color: #FFFAF0 !important;
