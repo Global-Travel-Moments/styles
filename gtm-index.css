@@ -3513,6 +3513,54 @@ body {
     grid-row: 1 / 5 !important;
 }
 
+/* 44. Hotel details dialog — full restyle */
+/* Dialog background */
+.dialog-hotel-details .dialog {
+    background-color: #FFFAF0 !important;
+}
+.dialog-hotel-details .tabs-contents {
+    background-color: #FFFAF0 !important;
+}
+/* Dialog hotel info card */
+.dialog-hotel-details .item-summary-hotel,
+.dialog-hotel-details .item-summary-content {
+    background-color: #FFFAF0 !important;
+}
+/* Dialog tabs — midnight/FFFAF0 */
+.dialog-hotel-details .tabs-container a.is-active {
+    background-color: var(--color--dark-blue) !important;
+    border-color: var(--color--dark-blue) !important;
+    color: #FFFAF0 !important;
+}
+.dialog-hotel-details .tabs-container a:not(.is-active) {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    color: var(--color--dark-blue) !important;
+}
+/* 5 star hotel, address, room — Manrope + Midnight */
+.dialog-hotel-details .item-summary-subtitle,
+.dialog-hotel-details .star-rating-label,
+.dialog-hotel-details .item-summary-address,
+.dialog-hotel-details .item-summary-room-guests,
+.dialog-hotel-details .item-summary-checkin,
+.dialog-hotel-details .item-summary-checkout {
+    font-family: Manrope, sans-serif !important;
+    color: var(--color--dark-blue) !important;
+}
+/* Headings — Manrope */
+.dialog-hotel-details .tabs-contents-title,
+.dialog-hotel-details .tabs-contents-subtitle,
+.dialog-hotel-details .hotel-detail-content h3,
+.dialog-hotel-details .hotel-detail-content h4,
+.dialog-hotel-details h3,
+.dialog-hotel-details h4 {
+    font-family: Manrope, sans-serif !important;
+}
+/* Amenity icons — transparent bg */
+.dialog-hotel-details .amenities-item {
+    background-color: transparent !important;
+}
+
 /* Hotel results — remaining white blocks to FFFAF0 */
 .rvlx-app-container .amenities-item,
 .rvlx-app-container .pagination-wrapper {
