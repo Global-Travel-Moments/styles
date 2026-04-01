@@ -3544,6 +3544,39 @@ body {
     right: 16px !important;
 }
 
+/* 54. Confirmation page */
+/* All text — Manrope, Midnight */
+.rvlx-app-container .confirmation-wrapper,
+.rvlx-app-container .confirmation-wrapper * {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+    color: var(--color--dark-blue) !important;
+}
+/* Heading — not uppercase, Instrument Serif, orange (must come after wildcard) */
+.rvlx-app-container .confirmation-wrapper .confirmation-wrapper-title,
+.rvlx-app-container .confirmation-wrapper .confirmation-wrapper-title * {
+    text-transform: none !important;
+    font-family: "Instrument Serif", serif !important;
+    background-color: #FFFAF0 !important;
+    color: var(--color--orange) !important;
+    font-weight: 400 !important;
+}
+.rvlx-app-container .confirmation-wrapper .confirmation-wrapper-title {
+    font-size: 32px !important;
+}
+/* White block — FFFAF0, Midnight border, 2em curves */
+.rvlx-app-container .confirmation-items {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+    overflow: hidden !important;
+}
+/* Image wrapper — curved corners */
+.rvlx-app-container .confirmation-wrapper.confirmation-hotel {
+    border-radius: 2em !important;
+    overflow: hidden !important;
+}
+
 /* 53. T&C checkbox — Magic Orange when checked */
 .rvlx-app-container .form-field-checkbox.is-valid label {
     color: var(--color--orange) !important;
