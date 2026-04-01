@@ -3299,8 +3299,8 @@ body {
 }
 .rvlx-app-container .main-area-subactions,
 .rvlx-app-container .main-area-subactions-wrapper {
-    background-color: var(--color--cream) !important;
-    background: var(--color--cream) !important;
+    background-color: transparent !important;
+    background: transparent !important;
 }
 
 /* 17. Rounded corners on content containers */
