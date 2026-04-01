@@ -3074,7 +3074,9 @@ body {
 .rvlx-app-container .panel-section-legend,
 .rvlx-app-container .panel-section-header,
 .rvlx-app-container .review-info-title,
-.rvlx-app-container .static-list-title {
+.rvlx-app-container .static-list-title,
+.rvlx-app-container .order-item-section-title,
+.rvlx-app-container .order-item-list {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
     font-weight: 400 !important;
@@ -3577,6 +3579,13 @@ body {
     overflow: hidden !important;
 }
 
+/* 55. View Details button — Midnight fill, FFFAF0 text */
+.rvlx-app-container .order-item-details-button {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    color: #FFFAF0 !important;
+}
+
 /* 53. T&C checkbox — Magic Orange when checked */
 .rvlx-app-container .form-field-checkbox.is-valid label {
     color: var(--color--orange) !important;
@@ -3646,6 +3655,70 @@ body {
 .dialog-overlay .dialog-body * {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
+}
+
+/* 56. Trip Details dialog (outside .rvlx-app-container) */
+/* Dialog — FFFAF0, Midnight border, curved */
+.order-item-trip-details .dialog {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* Top header section — curved */
+.order-item-trip-details .dialog-head {
+    border-radius: 2em 2em 0 0 !important;
+    overflow: hidden !important;
+}
+/* White areas — FFFAF0 */
+.order-item-trip-details .order-item-wrapper,
+.order-item-trip-details .table-row,
+.order-item-trip-details .table-collapsable-row,
+.order-item-trip-details .table-pricing-item-total,
+.order-item-trip-details .table-pricing-item-taxes,
+.order-item-trip-details .table-pricing-total,
+.order-item-trip-details td,
+.order-item-trip-details th {
+    background-color: #FFFAF0 !important;
+}
+/* Grey table header — FFFAF0 */
+.order-item-trip-details thead {
+    background-color: #FFFAF0 !important;
+}
+/* Cancel button — Magic Orange border + text */
+.order-item-trip-details .order-item-cancel-button {
+    border-color: var(--color--orange) !important;
+    color: var(--color--orange) !important;
+}
+/* Expand arrow — Magic Orange */
+.order-item-trip-details .pricing-itemized-trigger {
+    color: var(--color--orange) !important;
+}
+.order-item-trip-details .pricing-itemized-trigger::before {
+    color: var(--color--orange) !important;
+}
+/* Separators/lines — Midnight */
+.order-item-trip-details table,
+.order-item-trip-details tr,
+.order-item-trip-details td,
+.order-item-trip-details th {
+    border-color: var(--color--dark-blue) !important;
+}
+/* Remove lines in pricing table */
+.order-item-trip-details table,
+.order-item-trip-details table *,
+.order-item-trip-details tr,
+.order-item-trip-details td,
+.order-item-trip-details th {
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+/* Grand Total bar — Midnight bg, curved all corners */
+.order-item-trip-details .payment-total {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    border-radius: 2em !important;
 }
 
 /* 46. Payment page — pricing summary styling */
