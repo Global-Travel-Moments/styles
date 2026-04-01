@@ -3315,7 +3315,7 @@ body {
     background-color: var(--color--cream) !important;
 }
 /* 30. Form fields — Pearl background with Midnight borders */
-.rvlx-app-container input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+.rvlx-app-container input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
 .rvlx-app-container select,
 .rvlx-app-container textarea {
     background-color: #FFFAF0 !important;
@@ -3574,6 +3574,104 @@ body {
 .dialog-overlay .dialog-body * {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
+}
+
+/* 46. Payment page — pricing summary styling */
+/* Outer grey block — FFFAF0 with midnight border */
+.rvlx-app-container .content-wrapper.is-itemized {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+    overflow: hidden !important;
+}
+/* All white elements inside pricing — FFFAF0 */
+.rvlx-app-container .content-wrapper.is-itemized tr,
+.rvlx-app-container .content-wrapper.is-itemized td,
+.rvlx-app-container .content-wrapper.is-itemized th,
+.rvlx-app-container .content-wrapper.is-itemized thead,
+.rvlx-app-container .content-wrapper.is-itemized tbody,
+.rvlx-app-container .table-pricing-summary-room-details,
+.rvlx-app-container .table-pricing-icon,
+.rvlx-app-container .table-pricing-product-wrapper,
+.rvlx-app-container .table-pricing-price {
+    background-color: #FFFAF0 !important;
+}
+/* Pricing Summary heading — Manrope */
+.rvlx-app-container .table-pricing-title {
+    font-family: Manrope, sans-serif !important;
+}
+/* Rooms header row headings — Manrope + FFFAF0 */
+.rvlx-app-container .content-wrapper.is-itemized thead {
+    background-color: #FFFAF0 !important;
+    font-family: Manrope, sans-serif !important;
+}
+.rvlx-app-container .content-wrapper.is-itemized thead th {
+    font-family: Manrope, sans-serif !important;
+    background-color: #FFFAF0 !important;
+}
+/* Room Total text — midnight instead of orange */
+.rvlx-app-container .table-pricing-price-subtotal,
+.rvlx-app-container .table-pricing-price-subtotal * {
+    color: var(--color--dark-blue) !important;
+}
+/* Hotel Total Cost bar — midnight */
+.rvlx-app-container .payment-total,
+.rvlx-app-container .payment-total-deposit {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+}
+/* Panel — FFFAF0, midnight border, curves */
+.rvlx-app-container .panel {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .panel-section {
+    background-color: #FFFAF0 !important;
+}
+/* Panel collapsible header — FFFAF0 + midnight arrow */
+.rvlx-app-container .panel-title.is-expandable-trigger {
+    background-color: #FFFAF0 !important;
+}
+.rvlx-app-container .panel-close.icon-expand {
+    color: var(--color--dark-blue) !important;
+}
+
+/* 47. Payment page — bottom action bar */
+.rvlx-app-container .panel-submit {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* Back button — midnight border + text, FFFAF0 fill, no hover */
+.rvlx-app-container .button-back,
+.rvlx-app-container .button-back:hover {
+    background: #FFFAF0 !important;
+    background-color: #FFFAF0 !important;
+    background-image: none !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container .button-back::before {
+    content: "\2039\00a0" !important;
+    font-size: 1.2em !important;
+}
+/* Continue button — magic orange fill + border, FFFAF0 text, no hover */
+.rvlx-app-container .button-action {
+    background: var(--color--orange) !important;
+    background-color: var(--color--orange) !important;
+    background-image: none !important;
+    border: 2px solid var(--color--orange) !important;
+    color: #FFFAF0 !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .button-action:hover {
+    background: #FFFAF0 !important;
+    background-color: #FFFAF0 !important;
+    background-image: none !important;
+    border: 2px solid var(--color--orange) !important;
+    color: var(--color--orange) !important;
+    border-radius: 2em !important;
 }
 
 /* Hotel results — remaining white blocks to FFFAF0 */
