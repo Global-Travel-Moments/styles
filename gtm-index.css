@@ -1,17 +1,17 @@
 /* GTM Styles v2.0 — 31 March 2026 */
 :root {
-    --color--cream: #f4f1e8;
-    --color--dark-blue-secondary: #0e1c3e;
-    --color--turquoise: #a5d0c9;
-    --color--orange: #ef8b57;
+    --color--cream: #edeadf;
+    --color--dark-blue-secondary: #0b152d;
+    --color--turquoise: #ADD1CF;
+    --color--orange: #ff6512;
     --color--cream-tertiary: #f5f1e7;
-    --color--dark-blue-tertiary: #071536;
+    --color--dark-blue-tertiary: #0b152d;
     --color--yellow: #f7d98c;
-    --color--dark-blue: #111c3c;
+    --color--dark-blue: #0b152d;
     --color--white: white;
-    --color--cream-secondary: #f5f1e8;
+    --color--cream-secondary: #edeadf;
     --color--dark-cream: #f4f1e9;
-    --color--white-secondary: #071536;
+    --color--white-secondary: #0b152d;
     --color--pink: #eecdcd;
     --color--white-tertiary: #fafcff;
 }
@@ -2980,7 +2980,7 @@ body {
 }
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel > span,
 .rvlx-app-container a.profile-action-wrapper.profile-action-hotel > span {
-    background: #ef8b57 !important;
+    background: #ff6512 !important;
     color: white !important;
     border-radius: 2.5em !important;
     padding: 0.75em 2em !important;
@@ -2992,7 +2992,7 @@ body {
 }
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel:hover > span,
 .rvlx-app-container a.profile-action-wrapper.profile-action-hotel:hover > span {
-    background: #111c3c !important;
+    background: #0b152d !important;
 }
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel:hover,
 .rvlx-app-container a.profile-action-wrapper.profile-action-hotel:hover {
@@ -3128,7 +3128,7 @@ body {
 
 /* 14. All hyperlinks - orange */
 .rvlx-app-container a:not([class*="button"]):not([class*="profile-action"]):not([class*="profile-nav"]) {
-    color: #ef8b57 !important;
+    color: #ff6512 !important;
 }
 
 /* 14. Pricing labels - Manrope */
@@ -3283,7 +3283,7 @@ body {
     text-transform: capitalize !important;
     text-align: center !important;
     background-color: var(--color--dark-blue) !important;
-    color: #F5F1E8 !important;
+    color: #edeadf !important;
 }
 /* 28. Sub-heading title case */
 .rvlx-app-container .members-content-title {
@@ -3319,20 +3319,20 @@ body {
 .rvlx-app-container .profile-nav-sections,
 .rvlx-app-container .tabs-container a {
     background-color: transparent !important;
-    border: 2px solid #ef8b57 !important;
-    color: #ef8b57 !important;
+    border: 2px solid #ff6512 !important;
+    color: #ff6512 !important;
     border-radius: 2.5em !important;
     font-family: Manrope, sans-serif !important;
     cursor: pointer !important;
 }
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel) span,
 .rvlx-app-container .profile-nav-sections span {
-    color: #ef8b57 !important;
+    color: #ff6512 !important;
 }
 /* Hover: dark blue bg, white text (action buttons only, not tabs) */
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel):hover {
-    background-color: #111c3c !important;
-    border-color: #111c3c !important;
+    background-color: #0b152d !important;
+    border-color: #0b152d !important;
     color: white !important;
 }
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel):hover span {
@@ -3341,8 +3341,8 @@ body {
 /* Active/Selected: orange bg, white text */
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active,
 .rvlx-app-container .profile-nav-sections.is-active {
-    background-color: #ef8b57 !important;
-    border-color: #ef8b57 !important;
+    background-color: #ff6512 !important;
+    border-color: #ff6512 !important;
     color: white !important;
 }
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active span,
@@ -3352,8 +3352,8 @@ body {
 /* Tab buttons (hotel details) — active: orange bg, white text, no hover */
 .rvlx-app-container .tabs.hotel-details .tabs-container a.is-active,
 .rvlx-app-container .tabs-container a[data-tabs-label].is-active {
-    background-color: #ef8b57 !important;
-    border-color: #ef8b57 !important;
+    background-color: #ff6512 !important;
+    border-color: #ff6512 !important;
     color: white !important;
     font-size: 1rem !important;
     text-decoration: none !important;
@@ -3361,8 +3361,8 @@ body {
 /* Inactive tabs — no hover state, just switch on click */
 .rvlx-app-container .tabs-container a:hover {
     background-color: transparent !important;
-    border-color: #ef8b57 !important;
-    color: #ef8b57 !important;
+    border-color: #ff6512 !important;
+    color: #ff6512 !important;
 }
 /* Price text — orange instead of blue */
 .rvlx-app-container .item-summary-price .from-price-container,
@@ -3389,7 +3389,7 @@ body {
 
 /* 22. My Reservations button — match Browse & Book style */
 .rvlx-app-container .authentication-module-account .button.is-anchor.icon-user {
-    background: #ef8b57 !important;
+    background: #ff6512 !important;
     color: white !important;
     border: none !important;
     border-radius: 32px !important;
@@ -3413,7 +3413,7 @@ body {
     color: white !important;
 }
 .rvlx-app-container .authentication-module-account .button.is-anchor.icon-user:hover {
-    background: #111c3c !important;
+    background: #0b152d !important;
     color: white !important;
 }
 
