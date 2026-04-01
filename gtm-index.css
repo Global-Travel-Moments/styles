@@ -3721,6 +3721,31 @@ body {
     border-radius: 2em !important;
 }
 
+/* 57. Cancel Booking page */
+/* Headline — all Midnight */
+.rvlx-app-container .title-area-content-title,
+.rvlx-app-container .title-area-content-title * {
+    color: var(--color--dark-blue) !important;
+}
+/* Hotel info box — FFFAF0, Midnight border, curved */
+.rvlx-app-container .item-summary-post {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* Return to My Account button — Midnight outline, FFFAF0 fill */
+.rvlx-app-container a.button.button-icon {
+    background-color: #FFFAF0 !important;
+    background: #FFFAF0 !important;
+    color: var(--color--dark-blue) !important;
+    border: 2px solid var(--color--dark-blue) !important;
+}
+.rvlx-app-container a.button.button-icon:hover {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    color: #FFFAF0 !important;
+}
+
 /* 46. Payment page — pricing summary styling */
 /* Outer grey block — FFFAF0 with midnight border */
 .rvlx-app-container .content-wrapper.is-itemized {
