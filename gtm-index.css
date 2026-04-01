@@ -3746,6 +3746,27 @@ body {
     color: #FFFAF0 !important;
 }
 
+/* 58. System message (e.g. booking cancelled) — Midnight fill */
+.rvlx-app-container .message.message-notice {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+    color: #FFFAF0 !important;
+}
+.rvlx-app-container .message.message-notice *,
+.rvlx-app-container .message.message-notice .message-content {
+    color: #FFFAF0 !important;
+}
+.rvlx-app-container .message.message-notice .icon-info-alt {
+    display: none !important;
+}
+.rvlx-app-container .message.message-notice {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
 /* 46. Payment page — pricing summary styling */
 /* Outer grey block — FFFAF0 with midnight border */
 .rvlx-app-container .content-wrapper.is-itemized {
