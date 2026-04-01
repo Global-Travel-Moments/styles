@@ -3315,7 +3315,7 @@ body {
     background-color: var(--color--cream) !important;
 }
 /* 30. Form fields — Pearl background with Midnight borders */
-.rvlx-app-container input,
+.rvlx-app-container input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
 .rvlx-app-container select,
 .rvlx-app-container textarea {
     background-color: #FFFAF0 !important;
@@ -3406,6 +3406,13 @@ body {
 .rvlx-app-container .filter-section {
     overflow: hidden !important;
     margin-bottom: 1em !important;
+}
+.rvlx-app-container .filter-section-body {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+.rvlx-app-container .filter-section-group {
+    overflow: visible !important;
 }
 .rvlx-app-container .filter-section .button.icon-look {
     border-radius: 0 2em 2em 0 !important;
