@@ -3409,6 +3409,10 @@ body {
     border: none !important;
     box-shadow: none !important;
 }
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) {
+    width: 100% !important;
+    margin: 0 !important;
+}
 /* Shrink image when card is sticky/collapsed */
 .rvlx-app-container .item-summary-hotel.is-static.is-sticky .item-summary-feature-image {
     max-height: 100% !important;
@@ -3507,7 +3511,47 @@ body {
     color: var(--color--dark-blue) !important;
 }
 
-/* 43. Review page only — redesigned layout with absolute positioning */
+/* 43. Hotel info card — 3-column grid (only when not collapsed) */
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) .item-summary-content {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 4px 24px !important;
+    width: 100% !important;
+    flex: 1 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) .item-summary-title {
+    grid-column: 1 !important;
+    grid-row: 1 / 3 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) .item-summary-address {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) .item-summary-checkin {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) .item-summary-checkout {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) .item-summary-room-guests {
+    grid-column: 2 !important;
+    grid-row: 4 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) .amenities-wrapper-container {
+    grid-column: 3 !important;
+    grid-row: 1 / 4 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) .item-summary-content-link {
+    grid-column: 3 !important;
+    grid-row: 4 !important;
+    justify-self: end !important;
+    align-self: end !important;
+}
+
+/* Review page only — redesigned layout with absolute positioning */
 .rvlx-app-container .panel .item-summary-hotel.is-static {
     position: relative !important;
 }
