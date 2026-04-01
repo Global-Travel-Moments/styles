@@ -3275,6 +3275,13 @@ body {
     margin: 0 auto !important;
     padding-bottom: 2em !important;
 }
+/* 26. Full-width layout for login and registration pages */
+.members-area-page .main-area-container,
+.members-area-registration .main-area-container {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
 .rvlx-app-container .main-area-subactions,
 .rvlx-app-container .main-area-subactions-wrapper {
     background-color: var(--color--cream) !important;
