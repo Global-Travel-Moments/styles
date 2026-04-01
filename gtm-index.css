@@ -3404,6 +3404,75 @@ body {
     border-radius: 2em !important;
 }
 
+/* 40. Room selection rate tabs — Midnight/FFFAF0 styling */
+.rvlx-app-container .hotel-rooms-rate-tabs .is-active {
+    background-color: var(--color--dark-blue) !important;
+    color: #FFFAF0 !important;
+}
+.rvlx-app-container .hotel-rooms-rate-tabs .is-active .hotel-rooms-rate-tabs-title,
+.rvlx-app-container .hotel-rooms-rate-tabs .is-active .hotel-rooms-rate-tabs-price {
+    color: #FFFAF0 !important;
+}
+.rvlx-app-container .hotel-rooms-rate-tabs .hotel-rooms-rate-tabs-title,
+.rvlx-app-container .hotel-rooms-rate-tabs .hotel-rooms-rate-tabs-price,
+.rvlx-app-container .hotel-rooms-rate-tabs small {
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container .hotel-rooms-rate-tabs .is-active small {
+    color: #FFFAF0 !important;
+}
+/* "Choose your room" heading — Manrope */
+.rvlx-app-container .tabs-contents-title {
+    font-family: Manrope, sans-serif !important;
+}
+
+/* 41. Partner Benefits section — clean up borders, FFFAF0 bg */
+.rvlx-app-container .hotel-rooms-rate-description {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .tabs-content.is-active {
+    background-color: transparent !important;
+}
+.rvlx-app-container .hotel-rooms-rate-trigger {
+    color: var(--color--dark-blue) !important;
+    font-family: Manrope, sans-serif !important;
+}
+
+/* 42. Room selection cards — FFFAF0 bg, midnight border, grey text fix */
+.rvlx-app-container .item-summary-hotel-room {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .item-summary-hotel-room .item-summary-wrapper {
+    border: none !important;
+}
+.rvlx-app-container .hotel-room-price-label,
+.rvlx-app-container .hotel-room-price-taxes,
+.rvlx-app-container .hotel-room-price-taxes *,
+.rvlx-app-container .hotel-room-price-total,
+.rvlx-app-container .hotel-room-price-total * {
+    color: var(--color--dark-blue) !important;
+}
+
+/* Room card details — Manrope fonts, midnight text, curved select button */
+.rvlx-app-container .hotel-room-rate-details {
+    font-family: Manrope, sans-serif !important;
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container .hotel-room-price-total {
+    font-family: Manrope, sans-serif !important;
+}
+.rvlx-app-container .hotel-room-select-button {
+    border-radius: 2em !important;
+}
+.rvlx-app-container .item-summary-hotel-room .item-summary-content,
+.rvlx-app-container .item-summary-hotel-room .item-summary-content * {
+    color: var(--color--dark-blue) !important;
+}
+
 /* Hotel results — remaining white blocks to FFFAF0 */
 .rvlx-app-container .amenities-item,
 .rvlx-app-container .pagination-wrapper {
