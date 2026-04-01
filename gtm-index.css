@@ -3388,7 +3388,12 @@ body {
     border-radius: 2em !important;
 }
 /* Hotel results — remaining white blocks to FFFAF0 */
-.rvlx-app-container .pagination-wrapper,
+.rvlx-app-container .amenities-item,
+.rvlx-app-container .pagination-wrapper {
+    background-color: #FFFAF0 !important;
+    border-radius: 2em !important;
+}
+
 .rvlx-app-container .item-summary-content,
 .rvlx-app-container .item-summary-extras {
     background-color: #FFFAF0 !important;
