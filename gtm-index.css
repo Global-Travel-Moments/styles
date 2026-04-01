@@ -3648,6 +3648,7 @@ body {
 /* Dialog background */
 .dialog-hotel-details .dialog {
     background-color: #FFF9EE !important;
+    overflow: hidden !important;
 }
 .dialog-hotel-details .tabs-contents {
     background-color: #FFF9EE !important;
