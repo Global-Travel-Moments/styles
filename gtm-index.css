@@ -3070,7 +3070,8 @@ body {
 
 /* 14. Payment titles - Manrope */
 .rvlx-app-container .panel-payment-expandable-title,
-.rvlx-app-container .panel-section-block-title {
+.rvlx-app-container .panel-section-block-title,
+.rvlx-app-container .panel-section-legend {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
     font-weight: 400 !important;
@@ -3324,7 +3325,14 @@ body {
 }
 .rvlx-app-container label,
 .rvlx-app-container .checkbox-label,
-.rvlx-app-container .form-field label {
+.rvlx-app-container .form-field label,
+.rvlx-app-container .is-label {
+    background-color: #FFFAF0 !important;
+}
+/* Override Chrome autofill background */
+.rvlx-app-container input:-webkit-autofill,
+.rvlx-app-container select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #FFFAF0 inset !important;
     background-color: #FFFAF0 !important;
 }
 /* 31. Registration button — Magic Orange bg + Pearl text, inverts on hover */
