@@ -3674,6 +3674,39 @@ body {
     border-radius: 2em !important;
 }
 
+/* 48. Profile pages — section containers styled */
+.rvlx-app-container .profile-section-container {
+    background: #FFFAF0 !important;
+    background-color: #FFFAF0 !important;
+    background-image: none !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .profile-section-container *:not(a) {
+    background: transparent !important;
+    background-image: none !important;
+}
+/* Separator lines inside profile sections — midnight */
+.rvlx-app-container .profile-section-container hr,
+.rvlx-app-container .profile-section-container .profile-section-item {
+    border-color: var(--color--dark-blue) !important;
+}
+/* All text in profile sections — midnight (except action links stay orange) */
+.rvlx-app-container .profile-section-container,
+.rvlx-app-container .profile-section-container * {
+    color: var(--color--dark-blue) !important;
+}
+/* Action links (EDIT, ADD, CHANGE PASSWORD, UPDATE, REFRESH) — keep orange */
+.rvlx-app-container .profile-section-container a,
+.rvlx-app-container .profile-section-addon a,
+.rvlx-app-container .profile-section-action a {
+    color: var(--color--orange) !important;
+}
+/* Order item wrapper (My Reservations) */
+.rvlx-app-container .order-item-wrapper {
+    background-color: #FFFAF0 !important;
+}
+
 /* Hotel results — remaining white blocks to FFFAF0 */
 .rvlx-app-container .amenities-item,
 .rvlx-app-container .pagination-wrapper {
@@ -3752,7 +3785,7 @@ body {
 }
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel) span,
 .rvlx-app-container .profile-nav-sections span {
-    color: #ff6512 !important;
+    color: var(--color--dark-blue) !important;
 }
 /* Hover: dark blue bg, white text (action buttons only, not tabs) */
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel):hover {
@@ -3763,16 +3796,16 @@ body {
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel):hover span {
     color: white !important;
 }
-/* Active/Selected: orange bg, white text */
+/* Active/Selected: midnight bg, FFFAF0 text */
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active,
 .rvlx-app-container .profile-nav-sections.is-active {
-    background-color: #ff6512 !important;
-    border-color: #ff6512 !important;
-    color: white !important;
+    background-color: var(--color--dark-blue) !important;
+    border-color: var(--color--dark-blue) !important;
+    color: #FFFAF0 !important;
 }
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active span,
 .rvlx-app-container .profile-nav-sections.is-active span {
-    color: white !important;
+    color: #FFFAF0 !important;
 }
 /* Tab buttons (hotel details) — active: midnight bg, FFFAF0 text */
 .rvlx-app-container .tabs-container a.is-active,
