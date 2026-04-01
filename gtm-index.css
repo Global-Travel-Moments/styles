@@ -3240,13 +3240,16 @@ body {
 .rvlx-app-container .members-content-benefits-section {
     position: relative !important;
     overflow: hidden !important;
+    align-self: flex-start !important;
+    padding-bottom: 2em !important;
+    border-radius: 8px !important;
 }
 .rvlx-app-container .members-content-benefits-section::after {
-    content: "Amanyara — Turks & Caicos" !important;
+    content: "Amanyara \2014  Turks & Caicos" !important;
     position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
+    top: 232px !important;
+    left: 32px !important;
+    right: 32px !important;
     background: rgba(17, 28, 60, 0.75) !important;
     color: white !important;
     font-family: Manrope, sans-serif !important;
