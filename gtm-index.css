@@ -3924,6 +3924,29 @@ body {
     background-image: none !important;
 }
 
+/* 51. Hotel Search page — rebrand sub-heading to "The Hotel Desk by Global Travel Moments" */
+.rvlx-app-container .gt-search-title sub {
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+.rvlx-app-container .gt-search-title sub::after {
+    content: "The Hotel Desk by Global Travel Moments" !important;
+    font-size: 14px !important;
+    letter-spacing: 6.3px !important;
+    line-height: normal !important;
+}
+
+/* 52. Hotel Search page — search wrapper styling */
+.rvlx-app-container .gt-search-wrapper {
+    background-color: #FFFAF0 !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .gt-search-bar-item {
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+
 /* 8. Hotel Search page - add marketing text below heading */
 .rvlx-app-container .gt-search-title h1::after {
     content: "Welcome to your private booking portal. Everything you see here, from the hotels to the rates, has been curated with you in mind.";
