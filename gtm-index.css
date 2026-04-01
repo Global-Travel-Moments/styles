@@ -3473,6 +3473,46 @@ body {
     color: var(--color--dark-blue) !important;
 }
 
+/* 43. Room selection — hotel info card rearranged layout */
+.rvlx-app-container .item-summary-hotel.is-static .item-summary-content {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 4px 24px !important;
+    width: 100% !important;
+    flex: 1 !important;
+}
+/* Left column: hotel name + stars */
+.rvlx-app-container .item-summary-hotel.is-static .item-summary-title {
+    grid-column: 1 !important;
+    grid-row: 1 / 3 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static .item-summary-content-link {
+    grid-column: 1 !important;
+}
+/* Centre column: address, check-in/out, room */
+.rvlx-app-container .item-summary-hotel.is-static .item-summary-address {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static .item-summary-checkin {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static .item-summary-checkout {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static .item-summary-room-guests {
+    grid-column: 2 !important;
+    grid-row: 4 !important;
+}
+/* Right column: amenities */
+.rvlx-app-container .item-summary-hotel.is-static .amenities-wrapper-container {
+    grid-column: 3 !important;
+    grid-row: 1 / 5 !important;
+}
+
 /* Hotel results — remaining white blocks to FFFAF0 */
 .rvlx-app-container .amenities-item,
 .rvlx-app-container .pagination-wrapper {
