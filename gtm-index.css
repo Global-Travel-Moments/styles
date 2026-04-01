@@ -3818,6 +3818,38 @@ body {
     align-items: center !important;
 }
 
+/* 59. Session Expired dialog (outside .rvlx-app-container) */
+.dialog-expired-session .dialog {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+    overflow: hidden !important;
+}
+.dialog-expired-session .dialog,
+.dialog-expired-session .dialog * {
+    font-family: Manrope, sans-serif !important;
+    color: var(--color--dark-blue) !important;
+}
+.dialog-expired-session .dialog-footer {
+    background-color: #FFF9EE !important;
+}
+/* Search Again button — Midnight fill, Pearl text */
+.dialog-expired-session .button-action-alternate {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* New Search button — Magic Orange fill, Pearl text */
+.dialog-expired-session .button-action:not(.button-action-alternate) {
+    background-color: var(--color--orange) !important;
+    background: var(--color--orange) !important;
+    color: #FFF9EE !important;
+    border: 2px solid var(--color--orange) !important;
+    border-radius: 2em !important;
+}
+
 /* 46. Payment page — pricing summary styling */
 /* Outer grey block — FFFAF0 with midnight border */
 .rvlx-app-container .content-wrapper.is-itemized {
