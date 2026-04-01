@@ -3839,9 +3839,16 @@ body {
 .rvlx-app-container .table-pricing-price {
     background-color: #FFF9EE !important;
 }
-/* Pricing Summary heading — Manrope */
+/* Pricing Summary heading — Manrope, bed icon Magic Orange */
 .rvlx-app-container .table-pricing-title {
     font-family: Manrope, sans-serif !important;
+}
+.rvlx-app-container .table-pricing-title::before {
+    color: var(--color--orange) !important;
+}
+/* Room 1 text — Magic Orange */
+.rvlx-app-container .table-pricing-product {
+    color: var(--color--orange) !important;
 }
 /* Rooms header row headings — Manrope + FFFAF0 */
 .rvlx-app-container .content-wrapper.is-itemized thead {
