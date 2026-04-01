@@ -4238,6 +4238,7 @@ body {
     font-family: Manrope, sans-serif !important;
     font-weight: 400 !important;
     letter-spacing: normal !important;
+    text-transform: none !important;
     color: var(--color--dark-blue) !important;
     margin-top: 10px !important;
 }
