@@ -3278,6 +3278,18 @@ body {
     margin: 0 auto !important;
     padding-bottom: 2em !important;
 }
+/* 27. Registration/login headline — title case, centred, blue bg, cream text */
+.rvlx-app-container .members-container-header {
+    text-transform: capitalize !important;
+    text-align: center !important;
+    background-color: var(--color--dark-blue) !important;
+    color: #F5F1E8 !important;
+}
+/* 28. Sub-heading title case */
+.rvlx-app-container .members-content-title {
+    text-transform: capitalize !important;
+}
+
 /* 26. Full-width layout for login and registration pages */
 .members-area-page .main-area-container,
 .members-area-registration .main-area-container {
