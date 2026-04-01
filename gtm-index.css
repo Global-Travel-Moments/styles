@@ -3376,6 +3376,11 @@ body {
     border: 1px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
+/* Remove inner borders on inputs inside search items to prevent double border */
+.rvlx-app-container .modify-search-item input,
+.rvlx-app-container .modify-search-item .calendar-input {
+    border: none !important;
+}
 /* Hide empty placeholder fields in More Options */
 .rvlx-app-container .modify-search-placeholder {
     display: none !important;
