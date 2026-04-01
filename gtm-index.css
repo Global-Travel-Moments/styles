@@ -3561,6 +3561,21 @@ body {
     background-color: transparent !important;
 }
 
+/* 45. Rate Rules dialog — FFFAF0 bg, rounded, Manrope (sits outside .rvlx-app-container) */
+.dialog-overlay .dialog {
+    background-color: #FFFAF0 !important;
+    border-radius: 2em !important;
+}
+.dialog-overlay .dialog-title,
+.dialog-overlay .dialog-head {
+    font-family: Manrope, sans-serif !important;
+}
+.dialog-overlay .dialog-body,
+.dialog-overlay .dialog-body * {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
 /* Hotel results — remaining white blocks to FFFAF0 */
 .rvlx-app-container .amenities-item,
 .rvlx-app-container .pagination-wrapper {
