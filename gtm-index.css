@@ -1,15 +1,15 @@
 /* GTM Styles v2.0 — 31 March 2026 */
 :root {
-    --color--cream: #FFFAF0;
+    --color--cream: #FFF9EE;
     --color--dark-blue-secondary: #0b152d;
     --color--turquoise: #ADD1CF;
-    --color--orange: #ff6512;
+    --color--orange: #FF640F;
     --color--cream-tertiary: #f5f1e7;
     --color--dark-blue-tertiary: #0b152d;
     --color--yellow: #f7d98c;
     --color--dark-blue: #0b152d;
     --color--white: white;
-    --color--cream-secondary: #FFFAF0;
+    --color--cream-secondary: #FFF9EE;
     --color--dark-cream: #f4f1e9;
     --color--white-secondary: #0b152d;
     --color--pink: #eecdcd;
@@ -2980,7 +2980,7 @@ body {
 }
 .rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel > span,
 .rvlx-app-container a.profile-action-wrapper.profile-action-hotel > span {
-    background: #ff6512 !important;
+    background: #FF640F !important;
     color: white !important;
     border-radius: 2.5em !important;
     padding: 0.75em 2em !important;
@@ -3133,7 +3133,7 @@ body {
 
 /* 14. All hyperlinks - orange */
 .rvlx-app-container a:not([class*="button"]):not([class*="profile-action"]):not([class*="profile-nav"]):not([class*="breadcrumbs"]) {
-    color: #ff6512 !important;
+    color: #FF640F !important;
 }
 
 /* 14. Pricing labels - Manrope */
@@ -3288,7 +3288,7 @@ body {
     text-transform: capitalize !important;
     text-align: center !important;
     background-color: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 /* 28. Sub-heading title case */
 .rvlx-app-container .members-content-title {
@@ -3324,7 +3324,7 @@ body {
 .rvlx-app-container input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
 .rvlx-app-container select,
 .rvlx-app-container textarea {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border-color: var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
@@ -3332,25 +3332,25 @@ body {
 .rvlx-app-container .checkbox-label,
 .rvlx-app-container .form-field label,
 .rvlx-app-container .is-label {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 /* Override Chrome autofill background */
 .rvlx-app-container input:-webkit-autofill,
 .rvlx-app-container select:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px #FFFAF0 inset !important;
-    background-color: #FFFAF0 !important;
+    -webkit-box-shadow: 0 0 0 1000px #FFF9EE inset !important;
+    background-color: #FFF9EE !important;
 }
 /* 31. Registration button — Magic Orange bg + Pearl text, inverts on hover */
 .rvlx-app-container .members-actions .button {
     background-color: var(--color--orange) !important;
     background: var(--color--orange) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 .rvlx-app-container .members-actions .button:hover,
 .rvlx-app-container .members-actions .button:focus,
 .rvlx-app-container .members-actions .button:active {
-    background-color: #FFFAF0 !important;
-    background: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
+    background: #FFF9EE !important;
     color: var(--color--orange) !important;
     border-color: var(--color--orange) !important;
 }
@@ -3366,7 +3366,7 @@ body {
 /* 34. Hotel results page — FFFAF0 backgrounds with Midnight borders and 2em curves */
 .rvlx-app-container .item-summary-hotel,
 .rvlx-app-container .modify-search {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 1px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
     max-width: 1200px !important;
@@ -3374,7 +3374,7 @@ body {
 }
 /* Search fields — FFFAF0 bg, Midnight borders, rounded */
 .rvlx-app-container .modify-search-item {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 1px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
@@ -3396,12 +3396,12 @@ body {
 .rvlx-app-container .modify-search-submit {
     background-color: var(--color--orange) !important;
     background: var(--color--orange) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
     border-radius: 2em !important;
 }
 .rvlx-app-container .item-summary-hotel,
 .rvlx-app-container .filter-section {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 1px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
@@ -3445,11 +3445,11 @@ body {
 /* 40. Room selection rate tabs — Midnight/FFFAF0 styling */
 .rvlx-app-container .hotel-rooms-rate-tabs .is-active {
     background-color: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 .rvlx-app-container .hotel-rooms-rate-tabs .is-active .hotel-rooms-rate-tabs-title,
 .rvlx-app-container .hotel-rooms-rate-tabs .is-active .hotel-rooms-rate-tabs-price {
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 .rvlx-app-container .hotel-rooms-rate-tabs .hotel-rooms-rate-tabs-title,
 .rvlx-app-container .hotel-rooms-rate-tabs .hotel-rooms-rate-tabs-price,
@@ -3457,7 +3457,7 @@ body {
     color: var(--color--dark-blue) !important;
 }
 .rvlx-app-container .hotel-rooms-rate-tabs .is-active small {
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 /* "Choose your room" heading — Manrope */
 .rvlx-app-container .tabs-contents-title {
@@ -3466,7 +3466,7 @@ body {
 
 /* 41. Partner Benefits section — clean up borders, FFFAF0 bg */
 .rvlx-app-container .hotel-rooms-rate-description {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
@@ -3480,7 +3480,7 @@ body {
 
 /* 42. Room selection cards — FFFAF0 bg, midnight border, grey text fix */
 .rvlx-app-container .item-summary-hotel-room {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
@@ -3609,7 +3609,7 @@ body {
 .rvlx-app-container .confirmation-wrapper .confirmation-wrapper-title * {
     text-transform: none !important;
     font-family: "Instrument Serif", serif !important;
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     color: var(--color--orange) !important;
     font-weight: 400 !important;
 }
@@ -3618,7 +3618,7 @@ body {
 }
 /* White block — FFFAF0, Midnight border, 2em curves */
 .rvlx-app-container .confirmation-items {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
     overflow: hidden !important;
@@ -3633,7 +3633,7 @@ body {
 .rvlx-app-container .order-item-details-button {
     background-color: var(--color--dark-blue) !important;
     background: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 
 /* 53. T&C checkbox — Magic Orange when checked */
@@ -3647,24 +3647,24 @@ body {
 /* 44. Hotel details dialog — full restyle */
 /* Dialog background */
 .dialog-hotel-details .dialog {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 .dialog-hotel-details .tabs-contents {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 /* Dialog hotel info card */
 .dialog-hotel-details .item-summary-hotel,
 .dialog-hotel-details .item-summary-content {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 /* Dialog tabs — midnight/FFFAF0 */
 .dialog-hotel-details .tabs-container a.is-active {
     background-color: var(--color--dark-blue) !important;
     border-color: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 .dialog-hotel-details .tabs-container a:not(.is-active) {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     color: var(--color--dark-blue) !important;
 }
@@ -3694,7 +3694,7 @@ body {
 
 /* 45. Rate Rules dialog — FFFAF0 bg, rounded, Manrope (sits outside .rvlx-app-container) */
 .dialog-overlay .dialog {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border-radius: 2em !important;
 }
 .dialog-overlay .dialog-title,
@@ -3710,7 +3710,7 @@ body {
 /* 56. Trip Details dialog (outside .rvlx-app-container) */
 /* Dialog — FFFAF0, Midnight border, curved */
 .order-item-trip-details .dialog {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
@@ -3728,11 +3728,11 @@ body {
 .order-item-trip-details .table-pricing-total,
 .order-item-trip-details td,
 .order-item-trip-details th {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 /* Grey table header — FFFAF0 */
 .order-item-trip-details thead {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 /* Cancel button — Magic Orange border + text */
 .order-item-trip-details .order-item-cancel-button {
@@ -3779,21 +3779,21 @@ body {
 }
 /* Hotel info box — FFFAF0, Midnight border, curved */
 .rvlx-app-container .item-summary-post {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
 /* Return to My Account button — Midnight outline, FFFAF0 fill */
 .rvlx-app-container a.button.button-icon {
-    background-color: #FFFAF0 !important;
-    background: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
+    background: #FFF9EE !important;
     color: var(--color--dark-blue) !important;
     border: 2px solid var(--color--dark-blue) !important;
 }
 .rvlx-app-container a.button.button-icon:hover {
     background-color: var(--color--dark-blue) !important;
     background: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 
 /* 58. System message (e.g. booking cancelled) — Midnight fill */
@@ -3802,11 +3802,11 @@ body {
     background: var(--color--dark-blue) !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 .rvlx-app-container .message.message-notice *,
 .rvlx-app-container .message.message-notice .message-content {
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 .rvlx-app-container .message.message-notice .icon-info-alt {
     display: none !important;
@@ -3820,12 +3820,12 @@ body {
 /* 46. Payment page — pricing summary styling */
 /* Outer grey block — FFFAF0 with midnight border */
 .rvlx-app-container .content-wrapper.is-itemized {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: none !important;
     border-radius: 2em !important;
     overflow: hidden !important;
     outline: none !important;
-    box-shadow: 0 0 0 16px #FFFAF0, 0 0 0 18px var(--color--dark-blue) !important;
+    box-shadow: 0 0 0 16px #FFF9EE, 0 0 0 18px var(--color--dark-blue) !important;
 }
 /* All white elements inside pricing — FFFAF0 */
 .rvlx-app-container .content-wrapper.is-itemized tr,
@@ -3837,7 +3837,7 @@ body {
 .rvlx-app-container .table-pricing-icon,
 .rvlx-app-container .table-pricing-product-wrapper,
 .rvlx-app-container .table-pricing-price {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 /* Pricing Summary heading — Manrope */
 .rvlx-app-container .table-pricing-title {
@@ -3845,12 +3845,12 @@ body {
 }
 /* Rooms header row headings — Manrope + FFFAF0 */
 .rvlx-app-container .content-wrapper.is-itemized thead {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     font-family: Manrope, sans-serif !important;
 }
 .rvlx-app-container .content-wrapper.is-itemized thead th {
     font-family: Manrope, sans-serif !important;
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 /* Room Total text — midnight instead of orange */
 .rvlx-app-container .table-pricing-price-subtotal,
@@ -3865,16 +3865,16 @@ body {
 }
 /* Panel — FFFAF0, midnight border, curves */
 .rvlx-app-container .panel {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
 .rvlx-app-container .panel-section {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 /* Panel collapsible header — FFFAF0 + midnight arrow */
 .rvlx-app-container .panel-title.is-expandable-trigger {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 .rvlx-app-container .panel-close.icon-expand {
     color: var(--color--dark-blue) !important;
@@ -3882,15 +3882,15 @@ body {
 
 /* 47. Payment page — bottom action bar */
 .rvlx-app-container .panel-submit {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
 /* Back button — midnight border + text, FFFAF0 fill, no hover */
 .rvlx-app-container .button-back,
 .rvlx-app-container .button-back:hover {
-    background: #FFFAF0 !important;
-    background-color: #FFFAF0 !important;
+    background: #FFF9EE !important;
+    background-color: #FFF9EE !important;
     background-image: none !important;
     border: 2px solid var(--color--dark-blue) !important;
     color: var(--color--dark-blue) !important;
@@ -3905,12 +3905,12 @@ body {
     background-color: var(--color--orange) !important;
     background-image: none !important;
     border: 2px solid var(--color--orange) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
     border-radius: 2em !important;
 }
 .rvlx-app-container .button-action:hover {
-    background: #FFFAF0 !important;
-    background-color: #FFFAF0 !important;
+    background: #FFF9EE !important;
+    background-color: #FFF9EE !important;
     background-image: none !important;
     border: 2px solid var(--color--orange) !important;
     color: var(--color--orange) !important;
@@ -3919,8 +3919,8 @@ body {
 
 /* 48. Profile pages — section containers styled */
 .rvlx-app-container .profile-section-container {
-    background: #FFFAF0 !important;
-    background-color: #FFFAF0 !important;
+    background: #FFF9EE !important;
+    background-color: #FFF9EE !important;
     background-image: none !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
@@ -3949,13 +3949,13 @@ body {
 .rvlx-app-container a.button.button-alternate-cta {
     background-color: var(--color--dark-blue) !important;
     background: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
 .rvlx-app-container a.button.button-alternate-cta:hover {
-    background-color: #FFFAF0 !important;
-    background: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
+    background: #FFF9EE !important;
     color: var(--color--dark-blue) !important;
 }
 /* 50. Refresh button + icon — Midnight colour */
@@ -3968,22 +3968,22 @@ body {
 
 /* Order item wrapper (My Reservations) */
 .rvlx-app-container .order-item-wrapper {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 
 /* Hotel results — remaining white blocks to FFFAF0 */
 .rvlx-app-container .amenities-item,
 .rvlx-app-container .pagination-wrapper {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border-radius: 2em !important;
 }
 
 .rvlx-app-container .item-summary-content,
 .rvlx-app-container .item-summary-extras {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
 }
 .rvlx-app-container .filter-section-head {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: none !important;
     border-radius: 2em 2em 0 0 !important;
 }
@@ -4021,12 +4021,12 @@ body {
 .rvlx-app-container .results-details-action:hover {
     background-color: var(--color--dark-blue) !important;
     background: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 .rvlx-app-container .results-details-online {
     background-color: var(--color--orange) !important;
     background: var(--color--orange) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 
 /* 19. Replace hotel search page background image */
@@ -4065,11 +4065,11 @@ body {
 .rvlx-app-container .profile-nav-sections.is-active {
     background-color: var(--color--dark-blue) !important;
     border-color: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 .rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active span,
 .rvlx-app-container .profile-nav-sections.is-active span {
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 /* Tab buttons (hotel details) — active: midnight bg, FFFAF0 text */
 .rvlx-app-container .tabs-container a.is-active,
@@ -4077,7 +4077,7 @@ body {
 .rvlx-app-container .tabs-container a[data-tabs-label].is-active {
     background-color: var(--color--dark-blue) !important;
     border-color: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
     font-size: 1rem !important;
     text-decoration: none !important;
 }
@@ -4093,13 +4093,13 @@ body {
 .rvlx-app-container .tabs-container a:hover {
     background-color: var(--color--dark-blue) !important;
     border-color: var(--color--dark-blue) !important;
-    color: #FFFAF0 !important;
+    color: #FFF9EE !important;
 }
 /* Rate programme tabs — FFFAF0 fill when inactive, no hover change */
 .rvlx-app-container .hotel-rooms-rate-tabs .tabs-container a:not(.is-active),
 .rvlx-app-container .hotel-rooms-rate-tabs .tabs-container a:not(.is-active):hover {
-    background: #FFFAF0 !important;
-    background-color: #FFFAF0 !important;
+    background: #FFF9EE !important;
+    background-color: #FFF9EE !important;
     background-image: none !important;
     border: 2px solid var(--color--dark-blue) !important;
     color: var(--color--dark-blue) !important;
@@ -4129,7 +4129,7 @@ body {
 
 /* 22. My Reservations button — match Browse & Book style */
 .rvlx-app-container .authentication-module-account .button.is-anchor.icon-user {
-    background: #ff6512 !important;
+    background: #FF640F !important;
     color: white !important;
     border: none !important;
     border-radius: 32px !important;
@@ -4181,7 +4181,7 @@ body {
 
 /* 52. Hotel Search page — search wrapper styling */
 .rvlx-app-container .gt-search-wrapper {
-    background-color: #FFFAF0 !important;
+    background-color: #FFF9EE !important;
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
 }
