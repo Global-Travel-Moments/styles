@@ -1,6 +1,6 @@
 /* GTM Styles v2.0 — 31 March 2026 */
 :root {
-    --color--cream: #edeadf;
+    --color--cream: #FFFAF0;
     --color--dark-blue-secondary: #0b152d;
     --color--turquoise: #ADD1CF;
     --color--orange: #ff6512;
@@ -9,7 +9,7 @@
     --color--yellow: #f7d98c;
     --color--dark-blue: #0b152d;
     --color--white: white;
-    --color--cream-secondary: #edeadf;
+    --color--cream-secondary: #FFFAF0;
     --color--dark-cream: #f4f1e9;
     --color--white-secondary: #0b152d;
     --color--pink: #eecdcd;
@@ -3283,7 +3283,7 @@ body {
     text-transform: capitalize !important;
     text-align: center !important;
     background-color: var(--color--dark-blue) !important;
-    color: #edeadf !important;
+    color: #FFFAF0 !important;
 }
 /* 28. Sub-heading title case */
 .rvlx-app-container .members-content-title {
@@ -3308,6 +3308,47 @@ body {
     border-radius: 2em !important;
     border: none !important;
 }
+/* 29. Content blocks — Pearl background instead of white */
+.rvlx-app-container .members-content,
+.rvlx-app-container .tabs-contents {
+    background-color: var(--color--cream) !important;
+}
+/* 30. Form fields — Pearl background with Midnight borders */
+.rvlx-app-container input,
+.rvlx-app-container select,
+.rvlx-app-container textarea {
+    background-color: #FFFAF0 !important;
+    border-color: var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container label,
+.rvlx-app-container .checkbox-label,
+.rvlx-app-container .form-field label {
+    background-color: #FFFAF0 !important;
+}
+/* 31. Registration button — Magic Orange bg + Pearl text, inverts on hover */
+.rvlx-app-container .members-actions .button {
+    background-color: var(--color--orange) !important;
+    background: var(--color--orange) !important;
+    color: #FFFAF0 !important;
+}
+.rvlx-app-container .members-actions .button:hover,
+.rvlx-app-container .members-actions .button:focus,
+.rvlx-app-container .members-actions .button:active {
+    background-color: #FFFAF0 !important;
+    background: #FFFAF0 !important;
+    color: var(--color--orange) !important;
+    border-color: var(--color--orange) !important;
+}
+/* 32. "Click here" link — underlined */
+.rvlx-app-container .members-register-extras a {
+    text-decoration: underline !important;
+}
+/* 33. Speak to a Travel Designer — Magic Orange */
+.rvlx-app-container .members-contact-item.call-section {
+    color: var(--color--orange) !important;
+}
+
 /* 19. Replace hotel search page background image */
 .gt-hotel-bg-2 .hotel-search-page {
     background-image: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/690c97f56045b135a139cdaa_Global-Travel-Moments-Cape-Town-South-Africa2.jpg') !important;
