@@ -4069,10 +4069,6 @@ body {
     color: #FFF9EE !important;
 }
 
-/* 19. Replace hotel search page background image */
-.gt-hotel-bg-2 .hotel-search-page {
-    background-image: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/690c97f56045b135a139cdaa_Global-Travel-Moments-Cape-Town-South-Africa2.jpg') !important;
-}
 
 /* 21. Universal button rules — ensure consistent states across all pages */
 /* Inactive: orange outline, orange text, transparent bg */
@@ -4228,6 +4224,20 @@ body {
 .rvlx-app-container .gt-search-bar-item {
     border: 2px solid var(--color--dark-blue) !important;
     border-radius: 2em !important;
+}
+/* Remove inner borders on inputs inside search items to prevent double border */
+.rvlx-app-container .gt-search-bar-item input,
+.rvlx-app-container .gt-search-bar-item select {
+    border: none !important;
+}
+/* Search bar dropdowns — Pearl bg */
+.rvlx-app-container .gt-search-bar .output-view,
+.rvlx-app-container .gt-search-bar .output-view *,
+.rvlx-app-container .gt-search-bar .selection-list-search,
+.rvlx-app-container .gt-search-bar .selection-list-search *,
+.rvlx-app-container .gt-search-bar .panel-section-passenger-type,
+.rvlx-app-container .gt-search-bar .panel-section-passenger-type * {
+    background-color: #FFF9EE !important;
 }
 
 /* 8. Hotel Search page - add marketing text below heading */
