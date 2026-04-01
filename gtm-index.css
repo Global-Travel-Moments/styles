@@ -3042,6 +3042,7 @@ body {
     90%, 100%  { content: "Finalising the Reservation"; }
 }
 .rvlx-app-container .loader-container::after {
+    content: "Curating Your Stay";
     display: block !important;
     font-family: Manrope, sans-serif !important;
     font-size: 14px !important;
