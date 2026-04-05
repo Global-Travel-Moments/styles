@@ -4219,7 +4219,7 @@ body {
 /* 52. Hotel Search page — search wrapper styling */
 .rvlx-app-container .gt-search-wrapper {
     background-color: #FFF9EE !important;
-    border: 2px solid var(--color--dark-blue) !important;
+    border: none !important;
     border-radius: 2em !important;
 }
 .rvlx-app-container .gt-search-bar-item {
