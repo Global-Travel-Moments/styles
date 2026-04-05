@@ -4240,6 +4240,31 @@ body {
 .rvlx-app-container .gt-search-bar .panel-section-passenger-type * {
     background-color: #FFF9EE !important;
 }
+/* Calendar selected date states — Midnight bg so white text is visible */
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-start,
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-end,
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-selected {
+    background-color: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-between,
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-range {
+    background-color: #ADD1CF !important;
+    color: var(--color--dark-blue) !important;
+}
+/* Search dropdown Done button — Midnight with Pearl text, curved */
+.gt-search-bar-item.search-item .modify-search-item-button-close {
+    background: #0B152D !important;
+    background-image: none !important;
+    color: #FFF9EE !important;
+    border-color: #FFF9EE !important;
+    border-radius: 2em !important;
+    box-shadow: none !important;
+}
+/* Search dropdown header — Pearl bg */
+.gt-search-bar-item.search-item .modify-search-item-header {
+    background-color: #FFF9EE !important;
+}
 
 /* 8. Hotel Search page - add marketing text below heading */
 .rvlx-app-container .gt-search-title h1::after {
