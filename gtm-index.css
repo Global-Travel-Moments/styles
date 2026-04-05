@@ -3158,8 +3158,21 @@ body {
     font-style: normal !important;
 }
 
-/* 14. "Book Now, Pay Later" text - Manrope */
+/* 14. "Book Now, Pay Later" text - Manrope, Midnight */
 .rvlx-app-container .item-summary-is-required {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+    color: var(--color--dark-blue) !important;
+    border-color: var(--color--dark-blue) !important;
+}
+/* Room rate details — Manrope (ClientID, Rate Plan, Bed Type, Cancellation, Rate Rules) */
+.rvlx-app-container .hotel-room-rate-type,
+.rvlx-app-container .hotel-room-rate-type *,
+.rvlx-app-container .item-summary-room-bed-type,
+.rvlx-app-container .item-summary-room-bed-type *,
+.rvlx-app-container .item-summary-room-cancellation,
+.rvlx-app-container .item-summary-room-cancellation *,
+.rvlx-app-container .item-summary-rate-rules-link {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
 }
@@ -3167,6 +3180,12 @@ body {
 /* 14. Room rate tabs - add spacing below pill */
 .rvlx-app-container .tabs-container-wrapper {
     margin-bottom: 12px !important;
+}
+/* Mobile rate tab slider — Pearl bg on arrows and label */
+.rvlx-app-container .tabs-container-mobile-arrows::before,
+.rvlx-app-container .tabs-container-mobile-arrows::after,
+.rvlx-app-container .tabs-container-mobile-arrows-separation span {
+    background-color: #FFF9EE !important;
 }
 
 /* 14. Panel titles and section titles - Manrope */
@@ -3511,6 +3530,10 @@ body {
 }
 .rvlx-app-container .item-summary-hotel-room .item-summary-wrapper {
     border: none !important;
+}
+/* Rate details list — clear Total price on mobile */
+.rvlx-app-container .item-summary-hotel-room .item-summary-list {
+    margin-top: 1.5em !important;
 }
 .rvlx-app-container .hotel-room-price-label,
 .rvlx-app-container .hotel-room-price-taxes,
