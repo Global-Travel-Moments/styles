@@ -3118,8 +3118,22 @@ body {
     font-style: normal !important;
 }
 
-/* 14. Back to Search Results link - Manrope */
+/* 14. Back to Search Results / section links — Pearl bg, clear breadcrumbs on mobile */
+.rvlx-app-container .section-links {
+    background-color: #FFF9EE !important;
+}
+@media screen and (max-width: 767px) {
+    .rvlx-app-container .section-links {
+        margin-top: 5.5em !important;
+    }
+}
 .rvlx-app-container .section-links-back {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+/* Filter Results + Modify Search buttons — Manrope */
+.rvlx-app-container .section-links-results .section-links-filter,
+.rvlx-app-container .section-links-results .modify-search-trigger {
     font-family: Manrope, sans-serif !important;
     font-style: normal !important;
 }
@@ -3372,6 +3386,16 @@ body {
     border-radius: 2em !important;
     max-width: 1200px !important;
     margin: 0 auto !important;
+}
+/* Modify Search panel — full-width on mobile */
+@media screen and (max-width: 767px) {
+    .rvlx-app-container .modify-search {
+        left: 0 !important;
+        right: 0 !important;
+        border-radius: 0 !important;
+        border: none !important;
+        max-width: none !important;
+    }
 }
 /* Search fields — FFFAF0 bg, Midnight borders, rounded */
 .rvlx-app-container .modify-search-item {
