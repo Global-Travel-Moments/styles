@@ -4,7 +4,7 @@
     --color--dark-blue-secondary: #0b152d;
     --color--turquoise: #ADD1CF;
     --color--orange: #FF640F;
-    --color--cream-tertiary: #f5f1e7;
+    --color--cream-tertiary: #FFF9EE;
     --color--dark-blue-tertiary: #0b152d;
     --color--yellow: #f7d98c;
     --color--dark-blue: #0b152d;
@@ -648,7 +648,7 @@ body {
     margin-right: auto;
     display: grid;
     position: relative;
-
+    z-index: 2;
 }
 
 .navbar_container.is-website-primary {
@@ -1335,7 +1335,6 @@ body {
     background-color: var(--color--cream-tertiary);
     width: 100%;
     height: 70%;
-    display: none;
     position: absolute;
     inset: 0%;
 
