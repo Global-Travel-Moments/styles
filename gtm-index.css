@@ -4314,7 +4314,7 @@ body {
 
 /* 8. Hotel Search page - add marketing text below heading */
 .rvlx-app-container .gt-search-title h1::after {
-    content: "Welcome to your private booking portal. Everything you see here, from the hotels to the rates, has been curated with you in mind.";
+    content: "Your private access to exclusive rates and amenities at the world's best hotels & resorts.";
     display: block !important;
     font-size: 16px !important;
     font-family: Manrope, sans-serif !important;
