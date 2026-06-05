@@ -1,0 +1,4 @@
+# Hotel ID database — 88MB local data file for the deeplink tool.
+# Kept in this folder for convenience but must NEVER be committed
+# (it would bloat the styles repo).
+GTCHotels.csv

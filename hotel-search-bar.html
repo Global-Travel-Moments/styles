@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTM Hotel Search Bar — Trial</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pearl: #FFF9EE;
+  --orange: #FF640F;
+  --midnight: #0B152D;
+  --caribbean: #ADD1CF;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  background: var(--pearl);
+  color: var(--midnight);
+  margin: 0;
+  padding: 2.5rem 1rem 4rem;
+  line-height: 1.5;
+}
+.wrap { max-width: 1100px; margin: 0 auto; }
+.sub {
+  font-family: 'Manrope', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 3rem;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.01em;
+}
+.intro { opacity: 0.75; margin: 0 0 1.75rem; font-size: 0.95rem; }
+
+/* --- search bar --- */
+.search-card {
+  background: var(--pearl);
+  border: 1px solid var(--midnight);
+  border-radius: 2em;
+  padding: 1.5rem;
+}
+.search-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+.pill {
+  background: var(--pearl);
+  border: 1px solid var(--midnight);
+  border-radius: 2em;
+  padding: 0.55rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 200px;
+  min-height: 64px;
+}
+.pill label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin-bottom: 0.15rem;
+}
+.pill select,
+.pill input {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--midnight);
+  width: 100%;
+  padding: 0;
+}
+.pill select:focus,
+.pill input:focus { outline: none; }
+
+/* --- destination autocomplete --- */
+.pill.destination { position: relative; flex: 1 1 280px; }
+.locked-flag { color: var(--orange); font-weight: 700; opacity: 1; }
+.suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--pearl);
+  border: 1px solid var(--midnight);
+  border-radius: 1.25em;
+  z-index: 50;
+  box-shadow: 0 10px 28px rgba(11, 21, 45, 0.18);
+  max-height: 300px;
+  overflow-y: auto;
+}
+.suggestions.hidden { display: none; }
+.suggestion {
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(11, 21, 45, 0.08);
+}
+.suggestion:last-child { border-bottom: none; }
+.suggestion:hover,
+.suggestion.active { background: var(--caribbean); }
+.suggestion .s-main { font-weight: 600; font-size: 0.92rem; }
+.suggestion .s-sub { font-size: 0.78rem; opacity: 0.7; }
+.s-status {
+  padding: 0.7rem 1.1rem;
+  font-size: 0.85rem;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.pill.dates { flex: 1 1 240px; }
+.dates-inner { display: flex; gap: 0.5rem; align-items: center; }
+.dates-inner input { flex: 1; }
+.dates-inner span { opacity: 0.4; }
+.pill.guests { flex: 1 1 260px; }
+.guests-inner { display: flex; gap: 0.85rem; }
+.guests-inner > div { display: flex; flex-direction: column; flex: 1; }
+.guests-inner small {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+}
+.guests-inner input { width: 100%; }
+.search-btn {
+  background: var(--orange);
+  color: var(--pearl);
+  border: 1px solid var(--orange);
+  border-radius: 2em;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0 2.25rem;
+  cursor: pointer;
+  flex: 0 0 auto;
+  min-height: 64px;
+  transition: all 0.18s;
+}
+.search-btn:hover { background: var(--midnight); border-color: var(--midnight); }
+
+/* --- extras row --- */
+.extras {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding: 0 0.5rem;
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.toggle input { width: auto; accent-color: var(--orange); transform: scale(1.2); }
+.child-ages {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.child-ages.hidden { display: none; }
+.child-ages .ca-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  font-weight: 700;
+}
+.child-ages input {
+  width: 58px;
+  border: 1px solid var(--midnight);
+  border-radius: 1em;
+  padding: 0.3rem 0.5rem;
+  background: var(--pearl);
+  font-family: inherit;
+}
+.error {
+  color: var(--orange);
+  font-weight: 600;
+  font-size: 0.88rem;
+  min-height: 1.2em;
+  margin-top: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+/* --- debug / trial url preview --- */
+.debug {
+  margin-top: 1.5rem;
+  background: var(--midnight);
+  color: var(--pearl);
+  border-radius: 1.25em;
+  padding: 1.1rem 1.4rem;
+}
+.debug .dh {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-bottom: 0.5rem;
+}
+.debug .url {
+  font-family: 'Menlo', 'Courier New', monospace;
+  font-size: 0.76rem;
+  word-break: break-all;
+  line-height: 1.6;
+}
+.debug .url.empty { opacity: 0.45; font-style: italic; }
+.note {
+  font-size: 0.82rem;
+  opacity: 0.7;
+  margin-top: 1rem;
+  padding: 0 0.5rem;
+}
+@media (max-width: 720px) {
+  .search-btn { flex: 1 1 100%; padding: 0.9rem; min-height: 0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="sub">The Hotel Desk by Global Travel Moments</p>
+  <h1>Browse &amp; Book Your Next Hotel</h1>
+  <p class="intro">Trial search bar. Start typing a city, region or landmark, pick a suggestion to lock its coordinates, then Search opens live Revelex results in a new tab.</p>
+
+  <div class="search-card">
+    <div class="search-row">
+      <div class="pill destination">
+        <label>Destination<span class="locked-flag" id="lock-flag"></span></label>
+        <input type="text" id="destination-input" autocomplete="off"
+               placeholder="Search by city, region or landmark">
+        <div class="suggestions hidden" id="suggestions"></div>
+      </div>
+      <div class="pill dates">
+        <label>Check-in &middot; Check-out</label>
+        <div class="dates-inner">
+          <input type="date" id="check-in" aria-label="Check-in">
+          <span>&rarr;</span>
+          <input type="date" id="check-out" aria-label="Check-out">
+        </div>
+      </div>
+      <div class="pill guests">
+        <label>Guests &amp; Rooms</label>
+        <div class="guests-inner">
+          <div><small>Adults</small><input type="number" id="adults" value="2" min="1" max="8"></div>
+          <div><small>Children</small><input type="number" id="children" value="0" min="0" max="6"></div>
+          <div><small>Rooms</small><input type="number" id="rooms" value="1" min="1" max="4"></div>
+        </div>
+      </div>
+      <button class="search-btn" id="search-btn">Search</button>
+    </div>
+
+    <div class="extras">
+      <label class="toggle">
+        <input type="checkbox" id="five-star">
+        5-star hotels only
+      </label>
+      <div class="child-ages hidden" id="child-ages">
+        <span class="ca-label">Children's ages</span>
+      </div>
+    </div>
+    <div class="error" id="error"></div>
+  </div>
+
+  <div class="debug">
+    <div class="dh">Generated Revelex URL</div>
+    <div class="url empty" id="url-preview">Lock a destination and pick both dates to build the URL.</div>
+  </div>
+
+  <p class="note">Geocoding by Photon (OpenStreetMap) — no API key. Per-room occupancy is replicated across all rooms. Distance is set to 20 miles (Revelex max). To ship in Webflow, change the redirect from a new tab to the same tab.</p>
+</div>
+
+<script>
+const ENDPOINT = 'https://book.globaltravelmoments.com/app/0/hotel/0/search_hotels.html';
+const HATOKEN = 'GTCGTM01';
+const SEARCH_RADIUS_MILES = 20;
+const PHOTON_URL = 'https://photon.komoot.io/api/';
+
+const $ = id => document.getElementById(id);
+
+// holds the locked-in place: { name, label, lat, lng } or null
+let selectedGeo = null;
+let activeIndex = -1;
+let currentResults = [];
+let debounceTimer = null;
+
+/* ---------- geocoding ---------- */
+function describe(feature) {
+  const p = feature.properties || {};
+  const coords = feature.geometry.coordinates; // [lng, lat]
+  const main = p.name || p.city || p.street || p.country || 'Unknown';
+  const parts = [];
+  if (p.city && p.city !== main) parts.push(p.city);
+  if (p.state && p.state !== main) parts.push(p.state);
+  if (p.country && p.country !== main) parts.push(p.country);
+  return {
+    name: main,
+    label: [main, ...parts].join(', '),
+    sub: parts.join(', '),
+    lat: coords[1],
+    lng: coords[0]
+  };
+}
+
+async function lookup(query) {
+  const url = PHOTON_URL + '?q=' + encodeURIComponent(query) + '&limit=6&lang=en';
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Photon ' + res.status);
+  const data = await res.json();
+  return (data.features || []).map(describe);
+}
+
+function showStatus(text) {
+  const box = $('suggestions');
+  box.replaceChildren();
+  const div = document.createElement('div');
+  div.className = 's-status';
+  div.textContent = text;
+  box.appendChild(div);
+  box.classList.remove('hidden');
+}
+
+function renderSuggestions(results) {
+  currentResults = results;
+  activeIndex = -1;
+  const box = $('suggestions');
+  box.replaceChildren();
+  if (!results.length) { showStatus('No matches — try a different spelling.'); return; }
+  results.forEach((r, i) => {
+    const row = document.createElement('div');
+    row.className = 'suggestion';
+    row.dataset.index = String(i);
+    const main = document.createElement('div');
+    main.className = 's-main';
+    main.textContent = r.name;
+    row.appendChild(main);
+    if (r.sub) {
+      const sub = document.createElement('div');
+      sub.className = 's-sub';
+      sub.textContent = r.sub;
+      row.appendChild(sub);
+    }
+    row.addEventListener('mousedown', e => { e.preventDefault(); pick(i); });
+    box.appendChild(row);
+  });
+  box.classList.remove('hidden');
+}
+
+function hideSuggestions() {
+  $('suggestions').classList.add('hidden');
+  activeIndex = -1;
+}
+
+function pick(index) {
+  const r = currentResults[index];
+  if (!r) return;
+  selectedGeo = { name: r.name, label: r.label, lat: r.lat, lng: r.lng };
+  $('destination-input').value = r.label;
+  $('lock-flag').textContent = ' · coordinates locked';
+  hideSuggestions();
+  rebuild();
+}
+
+function clearGeo() {
+  selectedGeo = null;
+  $('lock-flag').textContent = '';
+  rebuild();
+}
+
+/* ---------- destination input events ---------- */
+$('destination-input').addEventListener('input', () => {
+  if (selectedGeo) clearGeo(); // editing invalidates the lock
+  const q = $('destination-input').value.trim();
+  clearTimeout(debounceTimer);
+  if (q.length < 3) { hideSuggestions(); return; }
+  showStatus('Searching…');
+  debounceTimer = setTimeout(async () => {
+    try {
+      const results = await lookup(q);
+      // ignore stale responses if the query changed meanwhile
+      if ($('destination-input').value.trim() === q) renderSuggestions(results);
+    } catch (e) {
+      showStatus('Location lookup unavailable — check your connection.');
+    }
+  }, 280);
+});
+
+$('destination-input').addEventListener('keydown', e => {
+  const box = $('suggestions');
+  if (box.classList.contains('hidden') || !currentResults.length) return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    const dir = e.key === 'ArrowDown' ? 1 : -1;
+    activeIndex = (activeIndex + dir + currentResults.length) % currentResults.length;
+    [...box.children].forEach((c, i) => c.classList.toggle('active', i === activeIndex));
+  } else if (e.key === 'Enter') {
+    if (activeIndex >= 0) { e.preventDefault(); pick(activeIndex); }
+  } else if (e.key === 'Escape') {
+    hideSuggestions();
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.pill.destination')) hideSuggestions();
+});
+
+/* ---------- url building ---------- */
+function isoToRevelex(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${m}/${d}/${y}`;
+}
+
+function renderChildAges() {
+  const n = parseInt($('children').value, 10) || 0;
+  const wrap = $('child-ages');
+  wrap.querySelectorAll('.ca-field').forEach(e => e.remove());
+  if (n <= 0) { wrap.classList.add('hidden'); rebuild(); return; }
+  wrap.classList.remove('hidden');
+  for (let i = 1; i <= n; i++) {
+    const inp = document.createElement('input');
+    inp.type = 'number';
+    inp.min = '0';
+    inp.max = '17';
+    inp.value = '8';
+    inp.className = 'ca-field';
+    inp.setAttribute('aria-label', `Child ${i} age`);
+    inp.addEventListener('input', rebuild);
+    wrap.appendChild(inp);
+  }
+  rebuild();
+}
+
+function enc(key, value) {
+  return encodeURIComponent(key) + '=' + encodeURIComponent(value);
+}
+
+function buildURL() {
+  const checkIn = isoToRevelex($('check-in').value);
+  const checkOut = isoToRevelex($('check-out').value);
+  if (!selectedGeo || !checkIn || !checkOut) return null;
+
+  const adults = parseInt($('adults').value, 10) || 1;
+  const children = parseInt($('children').value, 10) || 0;
+  const rooms = parseInt($('rooms').value, 10) || 1;
+  const ages = [...document.querySelectorAll('#child-ages .ca-field')].map(e => e.value || '8');
+
+  const p = [];
+  p.push(enc('hatoken', HATOKEN));
+  p.push(enc('clear', 'all'));
+  p.push(enc('search[name]', selectedGeo.name));
+  p.push(enc('search[latitude]', selectedGeo.lat));
+  p.push(enc('search[longitude]', selectedGeo.lng));
+  p.push(enc('search[distance]', SEARCH_RADIUS_MILES));
+  p.push(enc('search[check_in_date]', checkIn));
+  p.push(enc('search[check_out_date]', checkOut));
+  p.push(enc('number-of-rooms', rooms));
+
+  for (let r = 1; r <= rooms; r++) {
+    p.push(enc(`search[rooms][${r}][number_adults]`, adults));
+    p.push(enc(`search[rooms][${r}][number_children]`, children));
+    ages.forEach((age, idx) => {
+      p.push(enc(`search[rooms][${r}][children_ages][${idx + 1}]`, age));
+    });
+  }
+
+  if ($('five-star').checked) {
+    p.push(enc('search[star_ratings][0]', '5'));
+  }
+
+  return ENDPOINT + '?' + p.join('&');
+}
+
+function validate() {
+  if (!selectedGeo) return 'Type a destination and pick a suggestion to lock its location.';
+  if (!$('check-in').value || !$('check-out').value) return 'Pick both check-in and check-out dates.';
+  if ($('check-out').value <= $('check-in').value) return 'Check-out must be after check-in.';
+  return '';
+}
+
+function rebuild() {
+  const url = buildURL();
+  const out = $('url-preview');
+  if (!url) {
+    out.textContent = 'Lock a destination and pick both dates to build the URL.';
+    out.classList.add('empty');
+  } else {
+    out.textContent = url;
+    out.classList.remove('empty');
+  }
+}
+
+['check-in', 'check-out', 'adults', 'rooms', 'five-star'].forEach(id => {
+  $(id).addEventListener('input', rebuild);
+  $(id).addEventListener('change', rebuild);
+});
+$('children').addEventListener('input', renderChildAges);
+
+$('search-btn').addEventListener('click', () => {
+  const err = validate();
+  $('error').textContent = err;
+  if (err) return;
+  const url = buildURL();
+  if (url) window.open(url, '_blank', 'noopener');
+});
+
+// sensible default dates: 30 / 32 days out
+(function seedDates() {
+  const fmt = d => d.toISOString().slice(0, 10);
+  const ci = new Date(); ci.setDate(ci.getDate() + 30);
+  const co = new Date(); co.setDate(co.getDate() + 32);
+  $('check-in').value = fmt(ci);
+  $('check-out').value = fmt(co);
+  $('check-in').min = fmt(new Date());
+})();
+
+rebuild();
+</script>
+</body>
+</html>

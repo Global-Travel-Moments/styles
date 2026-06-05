@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GTM Hotel Deeplink Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pearl: #FFF9EE;
+  --orange: #FF640F;
+  --midnight: #0B152D;
+  --caribbean: #ADD1CF;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  background: var(--pearl);
+  color: var(--midnight);
+  margin: 0;
+  padding: 2.5rem 1rem 4rem;
+  line-height: 1.5;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+h1 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 2.75rem;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
+}
+.subtitle {
+  opacity: 0.7;
+  margin: 0 0 2rem;
+  font-size: 0.95rem;
+}
+.card {
+  background: white;
+  border: 1px solid var(--midnight);
+  border-radius: 2em;
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.25rem;
+}
+.section-title {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 540px) { .grid { grid-template-columns: 1fr; } }
+.field { margin-bottom: 0.85rem; }
+.field.searchable { position: relative; }
+label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--midnight);
+  border-radius: 0.75em;
+  background: var(--pearl);
+  color: var(--midnight);
+  font-family: inherit;
+  font-size: 1rem;
+}
+input:focus { outline: 2px solid var(--orange); outline-offset: 1px; }
+input[type="file"] { padding: 0.5rem; font-size: 0.85rem; cursor: pointer; }
+small.hint {
+  display: block;
+  font-size: 0.78rem;
+  opacity: 0.65;
+  margin-top: 0.3rem;
+}
+small.hint.loaded { color: #1a7a3c; opacity: 1; font-weight: 600; }
+small.hint.busy { color: var(--orange); opacity: 1; font-weight: 600; }
+small.hint.failed { color: #c0392b; opacity: 1; font-weight: 600; }
+
+/* hotel search dropdown */
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: white;
+  border: 1px solid var(--midnight);
+  border-radius: 0.9em;
+  z-index: 20;
+  box-shadow: 0 10px 28px rgba(11, 21, 45, 0.18);
+  max-height: 320px;
+  overflow-y: auto;
+}
+.suggestions.hidden { display: none; }
+.suggestion {
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(11, 21, 45, 0.08);
+}
+.suggestion:last-child { border-bottom: none; }
+.suggestion:hover,
+.suggestion.active { background: var(--caribbean); }
+.suggestion .s-main { font-weight: 600; font-size: 0.9rem; }
+.suggestion .s-sub { font-size: 0.76rem; opacity: 0.7; }
+.suggestion .s-id {
+  font-family: 'Menlo', monospace;
+  font-size: 0.72rem;
+  opacity: 0.85;
+}
+.s-status { padding: 0.6rem 0.9rem; font-size: 0.82rem; opacity: 0.6; font-style: italic; }
+
+.children-ages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+.children-ages.hidden { display: none; }
+.children-ages label { font-size: 0.7rem; text-transform: none; letter-spacing: 0; }
+.output {
+  background: var(--midnight);
+  color: var(--pearl);
+  padding: 1.25rem 1.5rem;
+  border-radius: 1.25em;
+  font-family: 'Menlo', 'Courier New', monospace;
+  font-size: 0.82rem;
+  word-break: break-all;
+  line-height: 1.65;
+  min-height: 5rem;
+}
+.output.empty { opacity: 0.5; font-style: italic; }
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+button {
+  background: var(--orange);
+  color: var(--pearl);
+  border: 1px solid var(--orange);
+  padding: 0.75rem 1.4rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 2em;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.18s;
+}
+button:hover { background: var(--midnight); border-color: var(--midnight); color: var(--pearl); }
+button.secondary, .btn-link.secondary { background: transparent; color: var(--midnight); border-color: var(--midnight); }
+button.secondary:hover, .btn-link.secondary:hover { background: var(--midnight); color: var(--pearl); }
+.btn-link {
+  display: inline-block;
+  background: var(--orange);
+  color: var(--pearl);
+  border: 1px solid var(--orange);
+  padding: 0.75rem 1.4rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 2em;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.18s;
+  text-decoration: none;
+  line-height: 1;
+}
+.btn-link[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+.status {
+  font-size: 0.85rem;
+  color: var(--orange);
+  margin-top: 0.6rem;
+  min-height: 1.2em;
+  font-weight: 600;
+}
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+.toggle-row input[type="checkbox"] { width: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Hotel Deeplink Generator</h1>
+  <p class="subtitle">Builds a Revelex single-hotel URL with the GTM hatoken and Brevo UTM tracking.</p>
+
+  <div class="card">
+    <h2 class="section-title">Hotel</h2>
+    <div class="field">
+      <label for="csv-file">Hotel database</label>
+      <input type="file" id="csv-file" accept=".csv">
+      <small class="hint" id="db-status">No database loaded. Pick <strong>GTCHotels.csv</strong> to search hotels by name — or enter a GDS ID manually below.</small>
+    </div>
+    <div class="field searchable">
+      <label for="hotel-name">Hotel name</label>
+      <input type="text" id="hotel-name" autocomplete="off" placeholder="e.g. Amanyara, Turks &amp; Caicos">
+      <div class="suggestions hidden" id="hotel-suggestions"></div>
+      <small class="hint">Once a database is loaded, type to search and pick a hotel. Otherwise this is just a label for your records.</small>
+    </div>
+    <div class="field">
+      <label for="gds-id">GDS Hotel ID</label>
+      <input type="number" id="gds-id" placeholder="100006394" min="0">
+      <small class="hint">Auto-filled when you pick a hotel above. Can also be typed manually.</small>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Dates &amp; Occupancy</h2>
+    <div class="grid">
+      <div class="field">
+        <label for="check-in">Check-in</label>
+        <input type="date" id="check-in">
+      </div>
+      <div class="field">
+        <label for="check-out">Check-out</label>
+        <input type="date" id="check-out">
+      </div>
+      <div class="field">
+        <label for="rooms">Number of rooms</label>
+        <input type="number" id="rooms" value="1" min="1" max="4">
+      </div>
+      <div class="field">
+        <label for="adults">Adults (room 1)</label>
+        <input type="number" id="adults" value="2" min="1" max="8">
+      </div>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label for="children">Children (room 1)</label>
+        <input type="number" id="children" value="0" min="0" max="6">
+        <div id="children-ages" class="children-ages hidden"></div>
+        <small class="hint">If children &gt; 0, Revelex requires each child's age.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Brevo UTM Tracking</h2>
+    <div class="field">
+      <label for="utm-campaign">UTM campaign slug</label>
+      <input type="text" id="utm-campaign" value="brevo-email-[CAMPAIGN_NAME]">
+      <small class="hint">Defaults to Brevo's <code>[CAMPAIGN_NAME]</code> merge tag — Brevo substitutes the real campaign name at send time. Override if you want a custom slug.</small>
+    </div>
+    <div class="field">
+      <label for="utm-id">UTM ID (Brevo campaign/template ID)</label>
+      <input type="text" id="utm-id" value="[CAMPAIGN_ID]">
+      <small class="hint">Defaults to Brevo's <code>[CAMPAIGN_ID]</code> merge tag — substituted at send time. Override or clear if not needed.</small>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Generated URL</h2>
+    <div class="output empty" id="output">Fill in GDS Hotel ID, check-in, and check-out to generate the URL.</div>
+    <div class="toggle-row">
+      <input type="checkbox" id="readable">
+      <label for="readable" style="text-transform:none;letter-spacing:0;font-weight:500;margin:0;">Show readable version (unencoded brackets). Use the encoded version in emails.</label>
+    </div>
+    <div class="actions">
+      <button id="copy-btn">Copy URL</button>
+      <a id="open-link" class="btn-link secondary" href="#" target="_blank" rel="noopener">Open in new tab</a>
+      <button id="select-btn" class="secondary">Select all (then Cmd+C)</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script>
+const BASE = 'https://book.globaltravelmoments.com/app/0/hotel/0/room_availability.html';
+const HATOKEN = 'GTCGTM01';
+const $ = id => document.getElementById(id);
+
+/* ---------------- hotel database ---------------- */
+// Columns: RevelexHotelID,GDSID,GDSHotelID,Name,AddressStreet1,AddressStreet2,City,StateProvince,CountryCode,Zip,BrandCode
+let HOTELS = [];          // [{ id, name, nameLC, city, cc }]
+let searchTimer = null;
+let activeIndex = -1;
+let currentResults = [];
+
+function parseLine(line) {
+  if (line.indexOf('"') === -1) return line.split(',');
+  const out = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQ) {
+      if (ch === '"') {
+        if (line[i + 1] === '"') { cur += '"'; i++; }
+        else inQ = false;
+      } else { cur += ch; }
+    } else {
+      if (ch === '"') inQ = true;
+      else if (ch === ',') { out.push(cur); cur = ''; }
+      else cur += ch;
+    }
+  }
+  out.push(cur);
+  return out;
+}
+
+function parseCSV(text) {
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1); // strip BOM
+  const lines = text.split(/\r?\n/);
+  const hotels = [];
+  for (let i = 1; i < lines.length; i++) {       // skip header row
+    const line = lines[i];
+    if (!line) continue;
+    const f = parseLine(line);
+    if (f.length < 11) continue;
+    const id = (f[2] || '').trim();
+    const name = (f[3] || '').trim();
+    if (!id || !name || !/^[0-9]+$/.test(id)) continue;
+    hotels.push({
+      id: id,
+      name: name,
+      nameLC: name.toLowerCase(),
+      city: (f[6] || '').trim(),
+      cc: (f[8] || '').trim()
+    });
+  }
+  return hotels;
+}
+
+function setDbStatus(text, cls) {
+  const el = $('db-status');
+  el.textContent = text;
+  el.className = 'hint' + (cls ? ' ' + cls : '');
+}
+
+$('csv-file').addEventListener('change', e => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  setDbStatus('Reading ' + file.name + ' …', 'busy');
+  const reader = new FileReader();
+  reader.onload = () => {
+    setDbStatus('Parsing rows — this can take a few seconds…', 'busy');
+    // defer so the "Parsing…" message paints before the work blocks the thread
+    setTimeout(() => {
+      try {
+        HOTELS = parseCSV(reader.result);
+        if (!HOTELS.length) {
+          setDbStatus('No hotels found in that file — is it the right CSV?', 'failed');
+          return;
+        }
+        setDbStatus('✓ ' + HOTELS.length.toLocaleString() + ' hotels loaded — type a hotel name above to search.', 'loaded');
+      } catch (err) {
+        setDbStatus('Could not parse that file. ' + err.message, 'failed');
+      }
+    }, 30);
+  };
+  reader.onerror = () => setDbStatus('Could not read that file.', 'failed');
+  reader.readAsText(file);
+});
+
+/* ---------------- hotel name search ---------------- */
+function searchHotels(query) {
+  const q = query.toLowerCase();
+  const starts = [];
+  const contains = [];
+  for (let i = 0; i < HOTELS.length; i++) {
+    const h = HOTELS[i];
+    const pos = h.nameLC.indexOf(q);
+    if (pos === 0) { if (starts.length < 15) starts.push(h); }
+    else if (pos > 0) { if (contains.length < 15) contains.push(h); }
+    if (starts.length >= 15) break;
+  }
+  return starts.concat(contains).slice(0, 15);
+}
+
+function hideHotelSuggestions() {
+  $('hotel-suggestions').classList.add('hidden');
+  activeIndex = -1;
+}
+
+function showHotelStatus(text) {
+  const box = $('hotel-suggestions');
+  box.replaceChildren();
+  const div = document.createElement('div');
+  div.className = 's-status';
+  div.textContent = text;
+  box.appendChild(div);
+  box.classList.remove('hidden');
+}
+
+function renderHotelSuggestions(results) {
+  currentResults = results;
+  activeIndex = -1;
+  const box = $('hotel-suggestions');
+  box.replaceChildren();
+  if (!results.length) { showHotelStatus('No hotels match that name.'); return; }
+  results.forEach((h, i) => {
+    const row = document.createElement('div');
+    row.className = 'suggestion';
+    const main = document.createElement('div');
+    main.className = 's-main';
+    main.textContent = h.name;
+    row.appendChild(main);
+    const sub = document.createElement('div');
+    sub.className = 's-sub';
+    const place = [h.city, h.cc].filter(Boolean).join(', ');
+    sub.textContent = place || '—';
+    row.appendChild(sub);
+    const idEl = document.createElement('div');
+    idEl.className = 's-id';
+    idEl.textContent = 'GDS ID ' + h.id;
+    row.appendChild(idEl);
+    row.addEventListener('mousedown', ev => { ev.preventDefault(); pickHotel(i); });
+    box.appendChild(row);
+  });
+  box.classList.remove('hidden');
+}
+
+function pickHotel(index) {
+  const h = currentResults[index];
+  if (!h) return;
+  $('hotel-name').value = h.name;
+  $('gds-id').value = h.id;
+  hideHotelSuggestions();
+  rebuild();
+}
+
+$('hotel-name').addEventListener('input', () => {
+  const q = $('hotel-name').value.trim();
+  clearTimeout(searchTimer);
+  if (!HOTELS.length) { hideHotelSuggestions(); return; }
+  if (q.length < 2) { hideHotelSuggestions(); return; }
+  showHotelStatus('Searching…');
+  searchTimer = setTimeout(() => {
+    if ($('hotel-name').value.trim() === q) renderHotelSuggestions(searchHotels(q));
+  }, 200);
+});
+
+$('hotel-name').addEventListener('keydown', e => {
+  const box = $('hotel-suggestions');
+  if (box.classList.contains('hidden') || !currentResults.length) return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    const dir = e.key === 'ArrowDown' ? 1 : -1;
+    activeIndex = (activeIndex + dir + currentResults.length) % currentResults.length;
+    [...box.children].forEach((c, i) => c.classList.toggle('active', i === activeIndex));
+  } else if (e.key === 'Enter') {
+    if (activeIndex >= 0) { e.preventDefault(); pickHotel(activeIndex); }
+  } else if (e.key === 'Escape') {
+    hideHotelSuggestions();
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.field.searchable')) hideHotelSuggestions();
+});
+
+/* ---------------- url building ---------------- */
+function formatDate(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${m}/${d}/${y}`;
+}
+
+function encParam(key, value, readable) {
+  const k = readable ? key : encodeURIComponent(key);
+  const v = encodeURIComponent(value);
+  return `${k}=${v}`;
+}
+
+function makeAgeField(i) {
+  const div = document.createElement('div');
+  const label = document.createElement('label');
+  label.setAttribute('for', `child-age-${i}`);
+  label.textContent = `Child ${i} age`;
+  const input = document.createElement('input');
+  input.type = 'number';
+  input.id = `child-age-${i}`;
+  input.min = '0';
+  input.max = '17';
+  input.value = '5';
+  input.addEventListener('input', rebuild);
+  div.appendChild(label);
+  div.appendChild(input);
+  return div;
+}
+
+function renderChildrenAges() {
+  const n = parseInt($('children').value, 10) || 0;
+  const wrap = $('children-ages');
+  while (wrap.firstChild) wrap.removeChild(wrap.firstChild);
+  if (n <= 0) { wrap.classList.add('hidden'); rebuild(); return; }
+  wrap.classList.remove('hidden');
+  for (let i = 1; i <= n; i++) wrap.appendChild(makeAgeField(i));
+  rebuild();
+}
+
+function buildURL(readable = false) {
+  const gdsId = $('gds-id').value.trim();
+  const checkIn = formatDate($('check-in').value);
+  const checkOut = formatDate($('check-out').value);
+  const rooms = $('rooms').value || '1';
+  const adults = $('adults').value || '2';
+  const children = parseInt($('children').value, 10) || 0;
+  const utmCampaign = $('utm-campaign').value.trim();
+  const utmId = $('utm-id').value.trim();
+
+  if (!gdsId || !checkIn || !checkOut) return null;
+
+  const p = [];
+  p.push(encParam('hatoken', HATOKEN, readable));
+  p.push(encParam(`search[hotel_list][gds_id][${gdsId}]`, '3', readable));
+  p.push(encParam('search[check_in_date]', checkIn, readable));
+  p.push(encParam('search[check_out_date]', checkOut, readable));
+  p.push(encParam('number-of-rooms', rooms, readable));
+  p.push(encParam('search[rooms][1][number_adults]', adults, readable));
+  p.push(encParam('search[rooms][1][number_children]', children.toString(), readable));
+
+  for (let i = 1; i <= children; i++) {
+    const ageInput = $(`child-age-${i}`);
+    if (ageInput) p.push(encParam(`search[rooms][1][children_ages][${i}]`, ageInput.value || '5', readable));
+  }
+
+  if (utmCampaign) {
+    p.push(encParam('utm_source', 'brevo', readable));
+    p.push(encParam('utm_campaign', utmCampaign, readable));
+    p.push(encParam('utm_medium', 'email', readable));
+    if (utmId) p.push(encParam('utm_id', utmId, readable));
+  }
+
+  return BASE + '?' + p.join('&');
+}
+
+function rebuild() {
+  const readable = $('readable').checked;
+  const url = buildURL(readable);
+  const out = $('output');
+  const link = $('open-link');
+  if (!url) {
+    out.textContent = 'Fill in GDS Hotel ID, check-in, and check-out to generate the URL.';
+    out.classList.add('empty');
+    link.setAttribute('href', '#');
+    link.setAttribute('aria-disabled', 'true');
+    return;
+  }
+  out.textContent = url;
+  out.classList.remove('empty');
+  link.setAttribute('href', buildURL(true));
+  link.removeAttribute('aria-disabled');
+}
+
+function selectOutput() {
+  const out = $('output');
+  if (out.classList.contains('empty')) return false;
+  const range = document.createRange();
+  range.selectNodeContents(out);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  return true;
+}
+
+function tryCopy(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) { return false; }
+}
+
+['hotel-name', 'gds-id', 'check-in', 'check-out', 'rooms', 'adults', 'utm-campaign', 'utm-id', 'readable'].forEach(id => {
+  $(id).addEventListener('input', rebuild);
+  $(id).addEventListener('change', rebuild);
+});
+$('children').addEventListener('input', renderChildrenAges);
+
+$('copy-btn').addEventListener('click', async () => {
+  const url = buildURL($('readable').checked);
+  if (!url) { $('status').textContent = 'Fill GDS ID and both dates first.'; return; }
+  let ok = false;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    try { await navigator.clipboard.writeText(url); ok = true; } catch (e) {}
+  }
+  if (!ok) ok = tryCopy(url);
+  if (ok) {
+    $('status').textContent = 'Copied. Paste straight into your Brevo button or link.';
+  } else {
+    selectOutput();
+    $('status').textContent = 'Auto-copy blocked. URL is selected — press Cmd+C.';
+  }
+  setTimeout(() => { $('status').textContent = ''; }, 4000);
+});
+
+$('select-btn').addEventListener('click', () => {
+  if (selectOutput()) {
+    $('status').textContent = 'Selected. Press Cmd+C to copy.';
+    setTimeout(() => { $('status').textContent = ''; }, 3000);
+  } else {
+    $('status').textContent = 'Fill GDS ID and both dates first.';
+  }
+});
+
+$('output').addEventListener('click', () => { selectOutput(); });
+
+rebuild();
+</script>
+</body>
+</html>

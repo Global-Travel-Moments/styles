@@ -1,0 +1,539 @@
+<!--
+  GTM HOTEL SEARCH BAR — Webflow Embed component — STACKED / PEARL version
+  ------------------------------------------------------------------
+  For the purpose-built embed blocks on the landing pages.
+  Pearl card, white stacked field pills, full-width Search button —
+  every field on its own row, top to bottom.
+
+  Paste this whole block into a Webflow HTML Embed element, then
+  right-click the Embed > Create Component.
+
+  Notes:
+  - Namespaced under .gtm-hsb-stacked — independent of the light
+    (.gtm-hsb), dark (.gtm-hsb-dark) and blog (.gtm-hsb-blog) versions;
+    all can coexist on a page.
+  - No <html>/<head>/<body> and no global selectors — embed-safe fragment.
+  - Manrope is already loaded on the GTM site, so no font <link> needed.
+  - Search redirects in the SAME tab.
+  - Geocoding: Photon (OpenStreetMap), no API key.
+  - If you change another version, mirror layout-neutral changes here.
+-->
+<style>
+.gtm-hsb-stacked, .gtm-hsb-stacked *, .gtm-hsb-stacked *::before, .gtm-hsb-stacked *::after { box-sizing: border-box; }
+.gtm-hsb-stacked {
+  --hsb-white: #FFFFFF;
+  --hsb-pearl: #FFF9EE;
+  --hsb-orange: #FF640F;
+  --hsb-midnight: #0B152D;
+  --hsb-caribbean: #ADD1CF;
+  width: 100%;
+  font-family: 'Manrope', system-ui, sans-serif;
+  color: var(--hsb-midnight);
+  line-height: 1.5;
+}
+
+/* --- card: Pearl, fills the landing-page embed block --- */
+.gtm-hsb-stacked .hsb-card {
+  background: var(--hsb-pearl);
+  border-radius: 1.75em;
+  padding: 1.5rem;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* --- every field stacked, full width --- */
+.gtm-hsb-stacked .hsb-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.gtm-hsb-stacked .hsb-field {
+  background: var(--hsb-white);
+  border: none;
+  border-radius: 1.25em;
+  padding: 0.55rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  min-height: 54px;
+  box-shadow: 0 1px 3px rgba(11, 21, 45, 0.07);
+}
+.gtm-hsb-stacked .hsb-field > label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+  margin-bottom: 0.12rem;
+}
+.gtm-hsb-stacked .hsb-field input {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--hsb-midnight);
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+.gtm-hsb-stacked .hsb-field input:focus { outline: none; }
+
+/* --- destination autocomplete --- */
+.gtm-hsb-stacked .hsb-field--dest { position: relative; }
+.gtm-hsb-stacked .hsb-lock { color: var(--hsb-orange); font-weight: 700; }
+.gtm-hsb-stacked .hsb-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--hsb-white);
+  border: 1px solid var(--hsb-midnight);
+  border-radius: 1.1em;
+  z-index: 999;
+  box-shadow: 0 12px 30px rgba(11, 21, 45, 0.22);
+  max-height: 260px;
+  overflow-y: auto;
+}
+.gtm-hsb-stacked .hsb-suggestions.hsb-hidden { display: none; }
+.gtm-hsb-stacked .hsb-suggestion {
+  padding: 0.55rem 0.95rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(11, 21, 45, 0.08);
+}
+.gtm-hsb-stacked .hsb-suggestion:last-child { border-bottom: none; }
+.gtm-hsb-stacked .hsb-suggestion:hover,
+.gtm-hsb-stacked .hsb-suggestion.hsb-active { background: var(--hsb-caribbean); }
+.gtm-hsb-stacked .hsb-suggestion .hsb-s-main { font-weight: 600; font-size: 0.88rem; }
+.gtm-hsb-stacked .hsb-suggestion .hsb-s-sub { font-size: 0.74rem; opacity: 0.7; }
+.gtm-hsb-stacked .hsb-status {
+  padding: 0.6rem 0.95rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* --- dates + guests --- */
+.gtm-hsb-stacked .hsb-dates-inner { display: flex; gap: 0.4rem; align-items: center; }
+.gtm-hsb-stacked .hsb-dates-inner input { flex: 1; min-width: 0; }
+.gtm-hsb-stacked .hsb-dates-inner span { opacity: 0.4; font-size: 0.85rem; }
+.gtm-hsb-stacked .hsb-guests-inner { display: flex; gap: 0.7rem; }
+.gtm-hsb-stacked .hsb-guests-inner > div { display: flex; flex-direction: column; flex: 1; }
+.gtm-hsb-stacked .hsb-guests-inner small {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+}
+
+/* --- extras: star rating, then a full-width Search button --- */
+.gtm-hsb-stacked .hsb-extras {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+  padding: 0 0.3rem;
+}
+.gtm-hsb-stacked .hsb-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.gtm-hsb-stacked .hsb-toggle input { width: auto; accent-color: var(--hsb-orange); transform: scale(1.1); }
+.gtm-hsb-stacked .hsb-stars-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+}
+.gtm-hsb-stacked .hsb-child-ages {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.gtm-hsb-stacked .hsb-child-ages.hsb-hidden { display: none; }
+.gtm-hsb-stacked .hsb-child-ages .hsb-ca-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  font-weight: 700;
+}
+.gtm-hsb-stacked .hsb-child-ages input {
+  width: 50px;
+  border: none;
+  border-radius: 0.9em;
+  padding: 0.3rem 0.45rem;
+  background: var(--hsb-white);
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--hsb-midnight);
+  box-shadow: 0 1px 3px rgba(11, 21, 45, 0.07);
+}
+
+/* --- full-width Search button --- */
+.gtm-hsb-stacked .hsb-search-btn {
+  background: var(--hsb-orange);
+  color: var(--hsb-pearl);
+  border: 1px solid var(--hsb-orange);
+  border-radius: 2em;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.5rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.9rem;
+  transition: background 0.18s, border-color 0.18s;
+}
+.gtm-hsb-stacked .hsb-search-btn:hover {
+  background: var(--hsb-midnight);
+  border-color: var(--hsb-midnight);
+}
+
+.gtm-hsb-stacked .hsb-error {
+  color: var(--hsb-orange);
+  font-weight: 600;
+  font-size: 0.8rem;
+  min-height: 1.1em;
+  margin-top: 0.5rem;
+  padding: 0 0.3rem;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .gtm-hsb-stacked .hsb-card { padding: 1.15rem; }
+}
+</style>
+
+<div class="gtm-hsb-stacked">
+  <div class="hsb-card">
+    <div class="hsb-row">
+      <div class="hsb-field hsb-field--dest">
+        <label>Destination<span class="hsb-lock" data-hsb="lock"></span></label>
+        <input type="text" data-hsb="dest" autocomplete="off"
+               placeholder="Search by city, region or landmark">
+        <div class="hsb-suggestions hsb-hidden" data-hsb="suggestions"></div>
+      </div>
+      <div class="hsb-field hsb-field--dates">
+        <label>Check-in &middot; Check-out</label>
+        <div class="hsb-dates-inner">
+          <input type="date" data-hsb="checkin" aria-label="Check-in">
+          <span>&rarr;</span>
+          <input type="date" data-hsb="checkout" aria-label="Check-out">
+        </div>
+      </div>
+      <div class="hsb-field hsb-field--guests">
+        <label>Guests &amp; Rooms</label>
+        <div class="hsb-guests-inner">
+          <div><small>Adults</small><input type="number" data-hsb="adults" value="2" min="1" max="8"></div>
+          <div><small>Children</small><input type="number" data-hsb="children" value="0" min="0" max="6"></div>
+          <div><small>Rooms</small><input type="number" data-hsb="rooms" value="1" min="1" max="4"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hsb-extras">
+      <span class="hsb-stars-label">Star rating</span>
+      <label class="hsb-toggle">
+        <input type="checkbox" data-hsb="fivestar">
+        5-star
+      </label>
+      <label class="hsb-toggle">
+        <input type="checkbox" data-hsb="fourstar">
+        4-star
+      </label>
+      <div class="hsb-child-ages hsb-hidden" data-hsb="childages">
+        <span class="hsb-ca-label">Children's ages</span>
+      </div>
+    </div>
+
+    <button type="button" class="hsb-search-btn" data-hsb="search">Search</button>
+    <div class="hsb-error" data-hsb="error"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var ENDPOINT = 'https://book.globaltravelmoments.com/app/0/hotel/0/search_hotels.html';
+  var HATOKEN = 'GTCGTM01';
+  var SEARCH_RADIUS_MILES = 20;
+  var PHOTON_URL = 'https://photon.komoot.io/api/';
+
+  function describe(feature) {
+    var p = feature.properties || {};
+    var coords = feature.geometry.coordinates; // [lng, lat]
+    var main = p.name || p.city || p.street || p.country || 'Unknown';
+    var parts = [];
+    if (p.city && p.city !== main) parts.push(p.city);
+    if (p.state && p.state !== main) parts.push(p.state);
+    if (p.country && p.country !== main) parts.push(p.country);
+    return {
+      name: main,
+      label: [main].concat(parts).join(', '),
+      sub: parts.join(', '),
+      lat: coords[1],
+      lng: coords[0]
+    };
+  }
+
+  function lookup(query) {
+    var url = PHOTON_URL + '?q=' + encodeURIComponent(query) + '&limit=6&lang=en';
+    return fetch(url).then(function (res) {
+      if (!res.ok) throw new Error('Photon ' + res.status);
+      return res.json();
+    }).then(function (data) {
+      return (data.features || []).map(describe);
+    });
+  }
+
+  function enc(key, value) {
+    return encodeURIComponent(key) + '=' + encodeURIComponent(value);
+  }
+
+  function isoToRevelex(iso) {
+    if (!iso) return '';
+    var b = iso.split('-');
+    return b[1] + '/' + b[2] + '/' + b[0];
+  }
+
+  function initSearchBar(root) {
+    var q = function (sel) { return root.querySelector(sel); };
+
+    var destInput = q('[data-hsb="dest"]');
+    var lockFlag = q('[data-hsb="lock"]');
+    var sugBox = q('[data-hsb="suggestions"]');
+    var checkIn = q('[data-hsb="checkin"]');
+    var checkOut = q('[data-hsb="checkout"]');
+    var adultsEl = q('[data-hsb="adults"]');
+    var childrenEl = q('[data-hsb="children"]');
+    var roomsEl = q('[data-hsb="rooms"]');
+    var fiveStarEl = q('[data-hsb="fivestar"]');
+    var fourStarEl = q('[data-hsb="fourstar"]');
+    var childAgesEl = q('[data-hsb="childages"]');
+    var errorEl = q('[data-hsb="error"]');
+    var searchBtn = q('[data-hsb="search"]');
+
+    var selectedGeo = null;
+    var activeIndex = -1;
+    var currentResults = [];
+    var debounceTimer = null;
+
+    function showStatus(text) {
+      sugBox.replaceChildren();
+      var div = document.createElement('div');
+      div.className = 'hsb-status';
+      div.textContent = text;
+      sugBox.appendChild(div);
+      sugBox.classList.remove('hsb-hidden');
+    }
+
+    function renderSuggestions(results) {
+      currentResults = results;
+      activeIndex = -1;
+      sugBox.replaceChildren();
+      if (!results.length) {
+        showStatus('No matches — try a different spelling.');
+        return;
+      }
+      results.forEach(function (r, i) {
+        var rowEl = document.createElement('div');
+        rowEl.className = 'hsb-suggestion';
+        var mainEl = document.createElement('div');
+        mainEl.className = 'hsb-s-main';
+        mainEl.textContent = r.name;
+        rowEl.appendChild(mainEl);
+        if (r.sub) {
+          var subEl = document.createElement('div');
+          subEl.className = 'hsb-s-sub';
+          subEl.textContent = r.sub;
+          rowEl.appendChild(subEl);
+        }
+        rowEl.addEventListener('mousedown', function (e) { e.preventDefault(); pick(i); });
+        sugBox.appendChild(rowEl);
+      });
+      sugBox.classList.remove('hsb-hidden');
+    }
+
+    function hideSuggestions() {
+      sugBox.classList.add('hsb-hidden');
+      activeIndex = -1;
+    }
+
+    function pick(index) {
+      var r = currentResults[index];
+      if (!r) return;
+      selectedGeo = { name: r.name, label: r.label, lat: r.lat, lng: r.lng };
+      destInput.value = r.label;
+      lockFlag.textContent = ' · coordinates locked';
+      hideSuggestions();
+    }
+
+    function clearGeo() {
+      selectedGeo = null;
+      lockFlag.textContent = '';
+    }
+
+    function renderChildAges() {
+      var n = parseInt(childrenEl.value, 10) || 0;
+      root.querySelectorAll('.hsb-ca-field').forEach(function (e) { e.remove(); });
+      if (n <= 0) { childAgesEl.classList.add('hsb-hidden'); return; }
+      childAgesEl.classList.remove('hsb-hidden');
+      for (var i = 1; i <= n; i++) {
+        var inp = document.createElement('input');
+        inp.type = 'number';
+        inp.min = '0';
+        inp.max = '17';
+        inp.value = '8';
+        inp.className = 'hsb-ca-field';
+        inp.setAttribute('aria-label', 'Child ' + i + ' age');
+        childAgesEl.appendChild(inp);
+      }
+    }
+
+    function buildURL() {
+      var ci = isoToRevelex(checkIn.value);
+      var co = isoToRevelex(checkOut.value);
+      if (!selectedGeo || !ci || !co) return null;
+
+      var adults = parseInt(adultsEl.value, 10) || 1;
+      var children = parseInt(childrenEl.value, 10) || 0;
+      var rooms = parseInt(roomsEl.value, 10) || 1;
+      var ages = Array.prototype.map.call(
+        root.querySelectorAll('.hsb-ca-field'),
+        function (e) { return e.value || '8'; }
+      );
+
+      var p = [];
+      p.push(enc('hatoken', HATOKEN));
+      p.push(enc('clear', 'all'));
+      p.push(enc('search[name]', selectedGeo.name));
+      p.push(enc('search[latitude]', selectedGeo.lat));
+      p.push(enc('search[longitude]', selectedGeo.lng));
+      p.push(enc('search[distance]', SEARCH_RADIUS_MILES));
+      p.push(enc('search[check_in_date]', ci));
+      p.push(enc('search[check_out_date]', co));
+      p.push(enc('number-of-rooms', rooms));
+
+      for (var r = 1; r <= rooms; r++) {
+        p.push(enc('search[rooms][' + r + '][number_adults]', adults));
+        p.push(enc('search[rooms][' + r + '][number_children]', children));
+        ages.forEach(function (age, idx) {
+          p.push(enc('search[rooms][' + r + '][children_ages][' + (idx + 1) + ']', age));
+        });
+      }
+
+      var stars = [];
+      if (fiveStarEl.checked) stars.push('5');
+      if (fourStarEl.checked) stars.push('4');
+      stars.forEach(function (s, i) {
+        p.push(enc('search[star_ratings][' + i + ']', s));
+      });
+
+      return ENDPOINT + '?' + p.join('&');
+    }
+
+    function validate() {
+      if (!selectedGeo) return 'Type a destination and pick a suggestion to lock its location.';
+      if (!checkIn.value || !checkOut.value) return 'Pick both check-in and check-out dates.';
+      if (checkOut.value <= checkIn.value) return 'Check-out must be after check-in.';
+      return '';
+    }
+
+    /* --- events --- */
+    destInput.addEventListener('input', function () {
+      if (selectedGeo) clearGeo(); // editing invalidates the lock
+      var query = destInput.value.trim();
+      clearTimeout(debounceTimer);
+      if (query.length < 3) { hideSuggestions(); return; }
+      showStatus('Searching…');
+      debounceTimer = setTimeout(function () {
+        lookup(query).then(function (results) {
+          if (destInput.value.trim() === query) renderSuggestions(results);
+        }).catch(function () {
+          showStatus('Location lookup unavailable — check your connection.');
+        });
+      }, 280);
+    });
+
+    destInput.addEventListener('keydown', function (e) {
+      if (sugBox.classList.contains('hsb-hidden') || !currentResults.length) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        var dir = e.key === 'ArrowDown' ? 1 : -1;
+        activeIndex = (activeIndex + dir + currentResults.length) % currentResults.length;
+        var rows = sugBox.children;
+        for (var i = 0; i < rows.length; i++) {
+          rows[i].classList.toggle('hsb-active', i === activeIndex);
+        }
+      } else if (e.key === 'Enter') {
+        if (activeIndex >= 0) { e.preventDefault(); pick(activeIndex); }
+      } else if (e.key === 'Escape') {
+        hideSuggestions();
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!root.contains(e.target) || !e.target.closest('.hsb-field--dest')) {
+        hideSuggestions();
+      }
+    });
+
+    childrenEl.addEventListener('input', renderChildAges);
+
+    searchBtn.addEventListener('click', function () {
+      var err = validate();
+      errorEl.textContent = err;
+      if (err) return;
+      var url = buildURL();
+      if (url) window.location.href = url;
+    });
+
+    /* --- dates: 30 days out by default, 3-night stay; check-out follows check-in + 3 --- */
+    function fmtLocal(d) {
+      var mm = ('0' + (d.getMonth() + 1)).slice(-2);
+      var dd = ('0' + d.getDate()).slice(-2);
+      return d.getFullYear() + '-' + mm + '-' + dd;
+    }
+    function addDays(iso, n) {
+      var p = iso.split('-');
+      var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+      d.setDate(d.getDate() + n);
+      return fmtLocal(d);
+    }
+    function syncCheckout() {
+      if (!checkIn.value) return;
+      checkOut.value = addDays(checkIn.value, 3);
+      checkOut.min = addDays(checkIn.value, 1);
+    }
+    var today = new Date();
+    var ciDate = new Date();
+    ciDate.setDate(ciDate.getDate() + 30);
+    checkIn.min = fmtLocal(today);
+    checkIn.value = fmtLocal(ciDate);
+    syncCheckout();
+    checkIn.addEventListener('change', syncCheckout);
+  }
+
+  function boot() {
+    document.querySelectorAll('.gtm-hsb-stacked:not([data-hsb-ready])').forEach(function (root) {
+      root.setAttribute('data-hsb-ready', '1');
+      initSearchBar(root);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
