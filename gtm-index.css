@@ -20,6 +20,13 @@ body {
     font-family: Manrope, sans-serif;
 }
 
+/* GTM: neutralise webflow.css's global body reset (color:#333; line-height:20px) so the
+   booking-site header/footer CSS doesn't repaint Revelex's own text grey. Keeps brand Midnight. */
+body {
+    color: #0B152D !important;
+    line-height: normal !important;
+}
+
 .page-padding {
 
     grid-column-gap: 16px;
