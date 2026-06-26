@@ -3287,3 +3287,26 @@ body {
     color: var(--color--dark-blue) !important;
     margin-top: 10px !important;
 }
+
+/* =========================================================================
+   HEADER COMPATIBILITY FIXES — for the self-contained GTM header inside Revelex
+   (added 2026-06-26 after live UAT diagnosis on h5test.revelex.com)
+   These target header chrome, but are integration fixes for the Revelex
+   environment, not website styling. Root causes should ideally be fixed at
+   source by Dang (rename `is-primary`; drop the clearfix on the grid container),
+   after which these can be removed.
+   ========================================================================= */
+
+/* FIX 1 — the navbar's clearfix ::before becomes a phantom CSS-grid item,
+   pushing the right-hand menu onto a 2nd row. Neutralise the pseudo-elements. */
+.navbar_container::before,
+.navbar_container::after { content: none !important; }
+
+/* FIX 2 — class-name collision: Revelex app.css applies a FontAwesome check
+   (content "\f00c", font FontAwesomeRvlx) to `.is-primary::before`, scattering
+   grey/orange ✓ ticks onto the header's `is-primary` elements. Strip them.
+   (Do NOT touch .nav_dropdown-icon::before — that's the real chevron icon.) */
+.navbar_menu::before,
+.navbar_menu::after,
+.navbar_log-container::before,
+.nav_log-wrap::before { content: none !important; }
