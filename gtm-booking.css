@@ -1,0 +1,3289 @@
+/* GTM Styles v2.0 — 31 March 2026 */
+:root {
+    --color--cream: #FFF9EE;
+    --color--dark-blue-secondary: #0b152d;
+    --color--turquoise: #ADD1CF;
+    --color--orange: #FF640F;
+    --color--cream-tertiary: #FFF9EE;
+    --color--dark-blue-tertiary: #0b152d;
+    --color--yellow: #f7d98c;
+    --color--dark-blue: #0b152d;
+    --color--white: white;
+    --color--cream-secondary: #FFF9EE;
+    --color--dark-cream: #f4f1e9;
+    --color--white-secondary: #0b152d;
+    --color--pink: #eecdcd;
+    --color--white-tertiary: #fafcff;
+}
+
+body {
+    font-family: Manrope, sans-serif;
+}
+
+/* GTM: neutralise webflow.css's global body reset (color:#333; line-height:20px) so the
+   booking-site header/footer CSS doesn't repaint Revelex's own text grey. Keeps brand Midnight. */
+body {
+    color: #0B152D !important;
+    line-height: normal !important;
+}
+
+.page-padding {
+
+    grid-column-gap: 16px;
+    grid-row-gap: 16px;
+    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-columns: 1fr;
+    padding: 6.25rem 2.5em 6.25em;
+    display: block;
+
+}
+
+.page-padding.is-home-personalized {
+
+    padding-top: 15.125em;
+    padding-bottom: 11.1em;
+
+}
+
+.page-padding.is-are-weforyou {
+
+    padding-top: 12em;
+    padding-bottom: 6em;
+
+}
+
+.page-padding.is-blog-hero {
+
+    padding-top: 10em;
+    padding-bottom: 0;
+
+}
+
+.page-padding.is-seen {
+
+    padding-bottom: 6.25em;
+
+}
+
+.page-padding.is-keep {
+
+    padding-top: 7.5em;
+
+}
+
+.page-padding.is-contact {
+
+    z-index: 2;
+    padding-top: 0;
+    padding-bottom: 0;
+    position: relative;
+
+}
+
+.page-padding.is-testimonial {
+
+    background-color: var(--color--dark-blue-secondary);
+    padding-top: 9.375em;
+    padding-bottom: 11.25em;
+
+}
+
+.page-padding.is-testimonial.is-more {
+
+    border-top-left-radius: 7.5em;
+    border-top-right-radius: 7.5em;
+    padding-top: 8.175em;
+    padding-left: 8.1em;
+    padding-right: 8.1em;
+
+}
+
+.page-padding.is-about-hero {
+
+    padding-top: 15em;
+    padding-bottom: 12em;
+
+}
+
+.page-padding.is-value {
+
+    padding-top: 11.25em;
+
+}
+
+.page-padding.is-full-screen {
+
+    height: 100%;
+
+}
+
+.page-padding.is-explore {
+
+    background-color: var(--color--dark-blue-secondary);
+    border-top-left-radius: 7.5em;
+    border-top-right-radius: 7.5em;
+    padding-top: 8.75em;
+    padding-bottom: 12.5em;
+
+}
+
+.page-padding.is-credits {
+
+    padding-top: 8.75em;
+    padding-bottom: 9.375em;
+
+}
+
+.page-padding.is-featured {
+
+    padding-top: 6.875em;
+    padding-bottom: 8.125em;
+
+}
+
+.page-padding.is-destination {
+
+    padding-bottom: 0;
+
+}
+
+.page-padding.is-global-travel {
+
+    padding-bottom: 18.75em;
+
+}
+
+.page-padding.is-journal {
+
+    padding-top: 15em;
+
+}
+
+.page-padding.is-hidden {
+
+    margin-left: auto;
+    margin-right: auto;
+    display: none;
+
+}
+
+.page-padding.is-more-both {
+
+    padding-top: 10em;
+    padding-bottom: 10em;
+
+}
+
+.page-padding.is-more-top {
+
+    padding-top: 10em;
+
+}
+
+.page-padding.is-no-right {
+
+    padding-right: 0;
+
+}
+
+.page-padding.is-bottom-large {
+
+    padding-bottom: 11.45em;
+
+}
+
+.page-padding.is-sml {
+
+    padding-top: 3rem;
+
+}
+
+.subheading {
+
+    color: var(--color--orange);
+    margin-top: 0;
+    margin-bottom: 0;
+    font-family: Instrument Serif, sans-serif;
+    font-size: 3.625em;
+    font-weight: 400;
+    line-height: 1.2;
+
+}
+
+.button-primary:where(.w-variant-ca6f8ed9-3d31-f2bc-b30a-860fd620e4b0) {
+
+    padding-left: 4.125em;
+    padding-right: 4.125em;
+
+}
+
+.button-primary:where(.w-variant-213ec4a8-9b88-f04a-cf79-ea0ad4c88d58) {
+
+    padding-left: 9.0625em;
+    padding-right: 9.0625em;
+
+}
+
+.button-primary:hover:where(.w-variant-35e43b5e-afd1-0736-4cf4-cdd35fd827c8) {
+
+    background-color: var(--color--dark-blue-tertiary);
+    color: var(--color--cream);
+
+}
+
+.button-primary:hover:where(.w-variant-ca6f8ed9-3d31-f2bc-b30a-860fd620e4b0) {
+
+    background-color: var(--color--yellow);
+    color: var(--color--dark-blue-secondary);
+
+}
+
+.button-tertiary {
+
+    border: 1px solid var(--color--white);
+    color: var(--color--cream-tertiary);
+    text-align: center;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 2.5em;
+    justify-content: center;
+    align-items: center;
+    padding: 1.25em 1.5em;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all .25s;
+    display: flex;
+
+}
+
+.button-tertiary:hover {
+
+    border-color: var(--color--dark-blue-tertiary);
+    background-color: var(--color--cream-tertiary);
+    color: var(--color--orange);
+
+}
+
+.button-tertiary.is-foryou {
+
+    text-align: center;
+    width: 100%;
+
+}
+
+.section {
+
+    overflow: hidden;
+
+}
+
+.section.is-hero-section {
+
+    z-index: 1;
+    flex-flow: column;
+    height: 100svh;
+    min-height: 100svh;
+    display: flex;
+    position: relative;
+
+}
+
+.section.zindex1.background-color-darkblue {
+
+    color: var(--color--white);
+
+}
+
+.section.background-color-darkblue {
+
+    background-color: var(--color--dark-blue-secondary);
+
+}
+
+.section.background-color-darkblue.overflow {
+
+    overflow: visible;
+
+}
+
+.section.is-full-screen {
+
+    height: 105vh;
+    position: relative;
+
+}
+
+.section.is-full-screen.is-credits {
+
+    height: 80vh;
+    margin-top: 30px;
+
+}
+
+.section.is-explore {
+
+    background-color: var(--color--dark-blue-secondary);
+    border-top-left-radius: 7.5em;
+    border-top-right-radius: 7.5em;
+
+}
+
+.section.is-overflow {
+
+    margin-bottom: -5rem;
+    overflow: visible;
+
+}
+
+.container-medium.text-align-center {
+
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+
+}
+
+.container-medium.is-privacy {
+
+    max-width: 75em;
+
+}
+
+.text-align-center {
+
+    text-align: center;
+
+}
+
+.text-color-white {
+
+    color: var(--color--white);
+
+}
+
+.container-small {
+
+    width: 100%;
+    max-width: 46em;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.container-small.text-align-center {
+
+    z-index: 200;
+    position: relative;
+
+}
+
+.container-small.text-align-center.is-testimonail {
+
+    max-width: 48rem;
+
+}
+
+.container-small.text-align-center.is-testimonial {
+
+    max-width: 60em;
+
+}
+
+.container-small.is-personalised {
+
+    z-index: 2;
+    text-align: center;
+    position: relative;
+
+}
+
+.margin-bottom-large {
+
+    margin-bottom: 3.75em;
+
+}
+
+.flex-v-centered.gap-1-5em {
+
+    grid-column-gap: 1.5em;
+    grid-row-gap: 1.5em;
+
+}
+
+.flex-v-centered.gap-2em {
+
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+
+}
+
+.flex-v-centered.gap-2em.is-credits {
+
+    justify-content: flex-start;
+    align-items: center;
+
+}
+
+.divider-image {
+
+    width: 100%;
+    margin-bottom: -3px;
+
+}
+
+.divider-image.is-foryou {
+
+    position: absolute;
+    inset: auto 0% 93%;
+
+}
+
+.divider-image.is-contact {
+
+    position: absolute;
+    inset: auto 0% 31%;
+
+}
+
+.divider-image.is-blog {
+
+    z-index: 5;
+    position: relative;
+    top: -145px;
+
+}
+
+.container-large {
+
+    width: 90%;
+    max-width: 120em;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.container-large.is-testimonial {
+
+    width: 98%;
+
+}
+
+.flex-h-spacebetween {
+
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+    justify-content: center;
+    display: flex;
+
+}
+
+.flex-h-spacebetween:where(.w-variant-ce3dfa15-a1d4-a87d-7a43-e83faa89ca76) {
+
+    flex-flow: row-reverse;
+    align-items: center;
+
+}
+
+.flex-h-spacebetween.gap-2em {
+
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+
+}
+
+.flex-h-spacebetween.gap-1em {
+
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+
+}
+
+.flex-h-spacebetween.gap-2-5em {
+
+    grid-column-gap: 2.5em;
+    grid-row-gap: 2.5em;
+
+}
+
+.flex-h-spacebetween.is-founder {
+
+    grid-column-gap: 4em;
+    grid-row-gap: 4em;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.flex-h-spacebetween.is-top-aligned {
+
+    align-items: flex-start;
+
+}
+
+.flex-h-spacebetween.is-center-aligned {
+
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.flex-h-spacebetween.is-center-aligned.gap--75em {
+
+    grid-column-gap: .75em;
+    grid-row-gap: .75em;
+
+}.flex-h-spacebetween.is-about-hero {
+
+    justify-content: space-between;
+
+}
+
+.flex-h-spacebetween.gap-8em {
+
+    grid-column-gap: 8em;
+    grid-row-gap: 8em;
+
+}
+
+.container-50.zindex1:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611) {
+
+    order: -1;
+
+}
+
+.container-50.zindex1.is-arewe:where(.w-variant-84c9b05c-d621-1aa9-f234-139d7ffa0b1c),
+.container-50.zindex1.direction-reversed-9 {
+
+    order: -1;
+
+}
+
+.container-50.is-center:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611),
+.container-50.is-center.direction-reversed-5 {
+
+    justify-content: center;
+    align-items: flex-end;
+
+}
+
+.flex-v-stretched {
+
+    flex-flow: column;
+    display: flex;
+
+}
+
+.flex-v-stretched.gap-2em {
+
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+
+}
+
+.flex-v-stretched.gap-1-5em {
+
+    grid-column-gap: 1.5em;
+    grid-row-gap: 1.5em;
+
+}
+
+.flex-v-stretched.gap--05em {
+
+    grid-column-gap: .5em;
+    grid-row-gap: .5em;
+
+}
+
+.flex-v-stretched.gap-4em {
+
+    grid-column-gap: 4em;
+    grid-row-gap: 4em;
+
+}
+
+.container-xsmall {
+
+    width: 80%;
+    max-width: 45.2em;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.container-xsmall.is-partner {
+
+    z-index: 17;
+    text-align: center;
+    max-width: 35em;
+    position: relative;
+
+}
+
+.text-weight-bold {
+
+    font-weight: 700;
+
+}
+
+.text-weight-bold.text-allcaps {
+
+    text-transform: uppercase;
+
+}
+
+.paragraph-regular {
+
+    letter-spacing: 2.24px;
+    font-size: 16px;
+    text-decoration: none;
+
+}
+
+.paragraph-regular.text-weight-bold.text-color-white.is-privacy:where(.w-variant-b7f0f785-b8f9-5aeb-c842-2a689b3382d1) {
+
+    text-transform: uppercase;
+
+}
+
+.paragraph-regular.text-weight-bold.text-style-allcaps.is-partner {
+
+    font-size: 14px;
+
+}
+
+.paragraph-regular.is-link {
+
+    color: var(--color--dark-blue-secondary);
+    letter-spacing: 0;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all .25s;
+
+}
+
+.paragraph-regular.is-link:hover {
+
+    color: var(--color--orange);
+
+}
+
+.paragraph-regular.is-link.is-regular {
+
+    text-transform: none;
+
+}
+
+.paragraph-regular.is-link.is-regular.is-address:hover,
+.paragraph-regular.is-link.is-regular.is-address:hover:where(.w-variant-b7f0f785-b8f9-5aeb-c842-2a689b3382d1) {
+
+    color: var(--color--dark-blue);
+
+}
+
+.paragraph-regular.is-link.is-404 {
+
+    color: var(--color--cream-secondary);
+
+}
+
+.paragraph-regular.is-link.is-overflow {
+
+    word-break: break-all;
+
+}
+
+.paragraph-regular.is-link.is-address:hover {
+
+    color: var(--color--dark-blue);
+
+}
+
+.icon-embed-xxsmall,
+.icon-embed-xsmall {
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+
+}
+
+.link-span {
+
+    color: var(--color--dark-blue-secondary);
+
+}
+
+.link-span.is-nounderline {
+
+    text-decoration: none;
+    transition: all .2s;
+
+}
+
+.link-span.is-nounderline:hover {
+
+    opacity: .7;
+
+}
+
+.link-span.is-white {
+
+    color: var(--color--white);
+
+}
+
+.slider-arrow.is-right.is-secondary:hover:where(.w-variant-bc503e3c-5688-3952-3961-e76b83b02dba) {
+
+    background-color: var(--color--cream);
+    color: var(--color--dark-blue);
+
+}
+
+.slider-arrow.is-secondary.is-left:hover:where(.w-variant-bc503e3c-5688-3952-3961-e76b83b02dba) {
+
+    background-color: var(--color--cream);
+    color: var(--color--dark-blue);
+
+}
+
+.hero-container-image.is-right-aligned {
+
+    margin-left: auto;
+    margin-right: 0;
+    display: block;
+
+}
+
+.about-overlap-hero-image:where(.w-variant-ce3dfa15-a1d4-a87d-7a43-e83faa89ca76) {
+
+    left: auto;
+    right: 69%;
+
+}
+
+.full-screen-content-wrap.is-privacy {
+
+    background-image: linear-gradient(#00000030, #00000030), url("https://cdn.prod.website-files.com/678bb152f89031822d47ac39/678bb152f89031822d47ac8a_Global-Travel-Moments-Hotels-Hilton-1%20(2).webp");
+    background-position: 0 0, 50%;
+    background-repeat: repeat, no-repeat;
+    background-size: auto, cover;
+    padding-top: 0;
+
+}
+
+.richtext h1 {
+
+    color: var(--color--dark-blue);
+    margin-top: 1em;
+    margin-bottom: .3em;
+    font-size: 7.1875em;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.richtext h2 {
+
+    margin-top: .3em;
+    margin-bottom: .3em;
+    font-size: 5.625em;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.richtext h3 {
+
+    margin-top: .3em;
+    margin-bottom: .3em;
+    font-size: 4em;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.richtext h4 {
+
+    color: var(--color--orange);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: .3em;
+    font-family: Manrope, sans-serif;
+    font-size: 1.9em;
+    font-weight: 500;
+    line-height: 1.1;
+
+}
+
+.richtext h5 {
+
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 2.5em;
+    font-weight: 400;
+    line-height: 1.1;
+
+}
+
+.richtext h6 {
+
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 2em;
+    font-weight: 400;
+    line-height: 1.1;
+
+}
+
+.richtext p {
+
+    margin-top: 1em;
+    margin-bottom: .3em;
+    font-family: Manrope, sans-serif;
+    font-size: 1.5em;
+    font-weight: 500;
+    line-height: 1.5;
+
+}
+
+.richtext li {
+
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+
+}
+
+.richtext ul {
+
+    font-family: Manrope, sans-serif;
+    font-size: 1.5em;
+    font-weight: 500;
+    line-height: 1.5;
+
+}
+
+.richtext a {
+
+    color: var(--color--orange);
+    transition: all .2s;
+
+}
+
+.richtext a:hover {
+
+    opacity: .8;
+
+}
+
+.richtext ol {
+
+    font-size: 1.8em;
+
+}
+
+.blog-rich-text h1 {
+
+    color: var(--color--dark-blue);
+    margin-top: 1em;
+    margin-bottom: .3em;
+    font-size: 6em;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.blog-rich-text h2 {
+
+    margin-top: .3em;
+    margin-bottom: .3em;
+    font-size: 5em;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.blog-rich-text h3 {
+
+    margin-top: .3em;
+    margin-bottom: .3em;
+    font-size: 3.5em;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.blog-rich-text h4 {
+
+    color: var(--color--orange);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: .3em;
+    margin-bottom: .6em;
+    font-family: Manrope, sans-serif;
+    font-size: 1.6em;
+    font-weight: 500;
+    line-height: 1.1;
+
+}
+
+.blog-rich-text h5 {
+
+    margin-top: 0;
+    margin-bottom: .5em;
+    font-size: 2.5em;
+    font-weight: 400;
+    line-height: 1.1;
+
+}
+
+.blog-rich-text h6 {
+
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 2em;
+    font-weight: 400;
+    line-height: 1.1;
+
+}
+
+.blog-rich-text p {
+
+    margin-top: 1em;
+    margin-bottom: 1em;
+    font-family: Manrope, sans-serif;
+    font-size: 1.4em;
+    font-weight: 500;
+    line-height: 1.6;
+
+}
+
+.blog-rich-text li {
+
+    margin-bottom: 10px;
+    font-weight: 500;
+    line-height: 1.4;
+
+}
+
+.blog-rich-text ul {
+
+    font-family: Manrope, sans-serif;
+    font-size: 1.5em;
+    font-weight: 500;
+    line-height: 1.2;
+
+}
+
+.blog-rich-text a {
+
+    color: var(--color--orange);
+    transition: all .2s;
+
+}
+
+.blog-rich-text a:hover {
+
+    opacity: .8;
+
+}
+
+.blog-rich-text ol {
+
+    font-size: 1.5em;
+
+}
+
+.blog-rich-text figcaption {
+
+    opacity: 1;
+    color: var(--color--dark-blue);
+    background-color: #fbe6da;
+    border-radius: 20px;
+    margin-top: 2em;
+    margin-bottom: 3em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    font-family: Manrope, sans-serif;
+    font-size: 1.4em;
+    font-weight: 400;
+    overflow: visible;
+
+}
+
+.blog-rich-text figure {
+
+    border-radius: 3rem;
+    margin: 4em 1.2em;
+    overflow: hidden;
+
+}
+
+.blog-rich-text img {
+
+    border-radius: 4rem;
+    margin-top: 6em;
+    margin-bottom: 6em;
+
+}
+
+.explore-dropdown-list.w--open {
+
+    border-radius: 2em;
+    padding: 10px 2em;
+    top: 86px;
+
+}
+
+.policy-rich-text h1 {
+
+    color: var(--color--dark-blue);
+    margin-top: 1em;
+    margin-bottom: .3em;
+    font-size: 7.1875em;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.policy-rich-text h2 {
+
+    margin-top: .3em;
+    margin-bottom: .3em;
+    font-size: 4.5em;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.policy-rich-text h3 {
+
+    color: var(--color--orange);
+    margin-top: .3em;
+    margin-bottom: .3em;
+    font-size: 3.1em;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.policy-rich-text h4 {
+
+    color: var(--color--orange);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: .3em;
+    font-family: Manrope, sans-serif;
+    font-size: 1.9em;
+    font-weight: 500;
+    line-height: 1.1;
+
+}
+
+.policy-rich-text h5 {
+
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 2.5em;
+    font-weight: 400;
+    line-height: 1.1;
+
+}
+
+.policy-rich-text h6 {
+
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 2em;
+    font-weight: 400;
+    line-height: 1.1;
+
+}
+
+.policy-rich-text p {
+
+    margin-top: 1em;
+    margin-bottom: .3em;
+    font-family: Manrope, sans-serif;
+    font-size: 1.5em;
+    font-weight: 500;
+    line-height: 1.5;
+
+}
+
+.policy-rich-text li {
+
+    margin-bottom: 10px;
+    font-weight: 500;
+    line-height: 1.4;
+
+}
+
+.policy-rich-text ul {
+
+    font-family: Manrope, sans-serif;
+    font-size: 1.5em;
+    font-weight: 500;
+    line-height: 1.5;
+
+}
+
+.policy-rich-text a {
+
+    color: var(--color--orange);
+    transition: all .2s;
+
+}
+
+.policy-rich-text a:hover {
+
+    opacity: .8;
+
+}
+
+.policy-rich-text ol {
+
+    font-size: 1.8em;
+
+}
+
+.testimonal-paragraph.text-color-white {
+
+    font-weight: 400;
+
+}
+
+.subtitle.text-color-white {
+
+    color: var(--color--white-tertiary);
+
+}
+
+.grid-4 {
+
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-auto-columns: 1fr;
+    justify-content: center;
+    display: grid;
+
+}
+
+.grid-4:where(.w-variant-ce3dfa15-a1d4-a87d-7a43-e83faa89ca76) {
+
+    flex-flow: row-reverse;
+    align-items: center;
+
+}
+
+.grid-4.gap-2em {
+
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+
+}
+
+.grid-4.gap-1em {
+
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+
+}
+
+.grid-4.gap-2-5em {
+
+    grid-column-gap: 2.5em;
+    grid-row-gap: 2.5em;
+
+}
+
+.grid-4.is-founder {
+
+    grid-column-gap: 4em;
+    grid-row-gap: 4em;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.grid-4.is-top-aligned {
+
+    align-items: flex-start;
+
+}
+
+.grid-4.is-center-aligned {
+
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.grid-4.is-center-aligned.gap--75em {
+
+    grid-column-gap: .75em;
+    grid-row-gap: .75em;
+
+}
+
+.grid-4.is-about-hero {
+
+    justify-content: space-between;
+
+}
+
+.spacer-med.text-align-center {
+
+    font-size: 1.15em;
+
+}
+
+.form-section-rich-text li {
+
+    letter-spacing: 2.24px;
+    text-transform: uppercase;
+    background-image: url("https://cdn.prod.website-files.com/678bb152f89031822d47ac39/6894bdf1dd5840db057fd852_GTM_checkmark-orange.svg");
+    background-position: 0%;
+    background-repeat: no-repeat;
+    background-size: 1.2rem;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    font-size: 1em;
+    font-weight: 500;
+    list-style-type: none;
+
+}
+
+.form-section-rich-text ol {
+
+    padding-left: 0;
+
+}
+
+.form-section-rich-text h4 {
+
+    font-family: Instrument Serif, sans-serif;
+    font-size: 2.5em;
+    font-weight: 400;
+    line-height: 1;
+
+}
+
+.form-section-rich-text ul {
+
+    margin-bottom: 3rem;
+
+}
+
+.form-section-rich-text p {
+
+    margin-bottom: 1rem;
+
+}
+
+.content-img.is-lrg:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611),
+.content-img.is-lrg.direction-reversed-13 {
+
+    left: -42%;
+    right: auto;
+
+}
+
+.content-img-container:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611),
+.content-img-container.direction-reversed-10 {
+
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 26em;
+    padding-right: 0;
+
+}
+
+.container-100.zindex1:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611) {
+
+    order: -1;
+
+}
+
+.container-100.zindex1.is-arewe:where(.w-variant-84c9b05c-d621-1aa9-f234-139d7ffa0b1c) {
+
+    order: -1;
+
+}
+
+.container-100.is-center:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611) {
+
+    justify-content: center;
+    align-items: flex-end;
+
+}
+
+@media screen and (max-width: 991px) {
+
+    .page-padding.is-home-personalized {
+
+        padding-top: 15rem;
+        padding-bottom: 20em;
+
+    }
+
+    .page-padding.is-are-weforyou {
+
+        padding-top: 4em;
+
+    }
+
+    .page-padding.is-about-hero {
+
+        padding-top: 20em;
+
+    }
+
+    .page-padding.is-journal {
+
+        padding-top: 15rem;
+
+    }
+
+    .section {
+
+        position: static;
+
+    }
+
+    .container-small {
+
+        max-width: 48rem;
+
+    }
+
+    .container-small.text-align-center {
+
+        z-index: 170;
+
+    }
+
+    .container-small.text-align-center.is-testimonail {
+
+        width: 80%;
+
+    }
+
+    .container-small.is-personalised {
+
+        width: 436px;
+        max-width: 27.25rem;
+
+    }
+
+    .divider-image.is-foryou {
+
+        bottom: 100%;
+
+    }
+
+    .divider-image.is-contact {
+
+        bottom: 35%;
+
+    }
+
+    .divider-image.is-blog {
+
+        top: -103px;
+
+    }
+
+    .flex-h-spacebetween {
+
+        flex-flow: column;
+
+    }
+
+    .flex-h-spacebetween.gap-2em.is-privacy {
+
+        flex-flow: row;
+
+    }
+
+    .flex-h-spacebetween.gap-1em {
+
+        grid-column-gap: 1rem;
+        grid-row-gap: 1rem;
+
+    }
+
+    .flex-h-spacebetween.is-founder {
+
+        grid-column-gap: 4rem;
+        grid-row-gap: 4rem;
+
+    }
+
+    .flex-h-spacebetween.is-top-aligned {
+
+        grid-column-gap: 2rem;
+        grid-row-gap: 2rem;
+
+    }
+
+    .flex-h-spacebetween.is-center-aligned.is-hero-journal {
+
+        grid-column-gap: 2.5rem;
+        grid-row-gap: 2.5rem;
+        justify-content: space-between;
+        align-items: flex-start;
+
+    }
+
+    .flex-h-spacebetween.is-about-hero {
+
+        grid-column-gap: 4em;
+        grid-row-gap: 4em;
+        flex-flow: wrap-reverse;
+
+    }
+
+    .flex-v-stretched.gap-1-5em {
+
+        grid-column-gap: 3em;
+        grid-row-gap: 3em;
+
+    }
+
+    .container-xsmall {
+
+        width: 100%;
+        max-width: 50em;
+
+    }
+
+    .icon-2 {
+
+        margin-right: 0;
+        position: static;
+
+    }
+
+    .pw-largeheading.text-color-white {
+
+        font-size: 4.5em;
+
+    }
+
+    .grid-4 {
+
+        flex-flow: column;
+
+    }
+
+    .grid-4.gap-2em.is-privacy {
+
+        flex-flow: row;
+
+    }
+
+    .grid-4.gap-1em {
+
+        grid-column-gap: 1rem;
+        grid-row-gap: 1rem;
+
+    }
+
+    .grid-4.is-founder {
+
+        grid-column-gap: 4rem;
+        grid-row-gap: 4rem;
+
+    }
+
+    .grid-4.is-top-aligned {
+
+        grid-column-gap: 2rem;
+        grid-row-gap: 2rem;
+
+    }
+
+    .grid-4.is-center-aligned.is-hero-journal {
+
+        grid-column-gap: 2.5rem;
+        grid-row-gap: 2.5rem;
+        justify-content: space-between;
+        align-items: flex-start;
+
+    }
+
+    .grid-4.is-privacy {
+
+        grid-column-gap: 2em;
+        grid-row-gap: 2em;
+
+    }
+
+    .grid-4.is-about-hero {
+
+        grid-column-gap: 4em;
+        grid-row-gap: 4em;
+        flex-flow: wrap-reverse;
+
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .page-padding.is-home-personalized {
+
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+
+    }
+
+    .page-padding.is-are-weforyou {
+
+        padding-top: 10em;
+
+    }
+
+    .page-padding.is-testimonial {
+
+        padding-top: 0;
+        padding-bottom: 12rem;
+
+    }
+
+    .page-padding.is-about-hero {
+
+        padding-bottom: 8em;
+
+    }
+
+    .page-padding.is-explore {
+
+        border-top-left-radius: 2rem;
+        border-top-right-radius: 2rem;
+
+    }
+
+    .subheading {
+        font-size: 2.5em;
+
+    }
+
+    .section.is-explore {
+
+        border-top-left-radius: 3.5em;
+        border-top-right-radius: 3.5em;
+
+    }
+
+    .container-small.text-align-center.is-testimonail {
+
+        width: 95%;
+
+    }
+
+    .container-small.is-personalised {
+
+        width: auto;
+
+    }
+
+    .margin-bottom-large {
+
+        margin-bottom: 1.5em;
+
+    }
+
+    .divider-image.is-contact {
+
+        bottom: 35%;
+
+    }
+
+    .divider-image.is-blog {
+
+        top: -75px;
+
+    }
+
+    .container-large,
+    .container-large.is-testimonial {
+
+        width: 100%;
+
+    }
+
+    .flex-h-spacebetween.gap-2em.is-privacy {
+
+        text-align: center;
+        order: -1;
+
+    }
+
+    .flex-h-spacebetween.is-about-hero {
+
+        flex-flow: row-reverse wrap;
+
+    }
+
+    .flex-v-stretched.gap-1-5em {
+
+        grid-column-gap: 1em;
+        grid-row-gap: 1em;
+
+    }
+
+    .paragraph-regular {
+
+        font-size: 14px;
+
+    }
+
+    .explore-toggle.background-color-torquoise.w--open {
+
+        z-index: 1;
+
+    }
+
+    .explore-dropdown-list.w--open {
+
+        z-index: 101;
+        top: 54px;
+
+    }
+
+    .grid-4.gap-2em.is-privacy {
+
+        text-align: center;
+        order: -1;
+
+    }
+
+    .grid-4.is-about-hero {
+
+        flex-flow: row-reverse wrap;
+
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .page-padding.is-contact {
+
+        padding-left: 2em;
+        padding-right: 2em;
+
+    }
+
+    .page-padding.is-testimonial {
+
+        padding-bottom: 6rem;
+
+    }
+
+    .page-padding.is-full-screen {
+
+        padding-top: 0;
+
+    }
+
+    .page-padding.is-journal {
+
+        padding-top: 10rem;
+
+    }
+
+    .page-padding.is-no-right {
+
+        padding-right: 2.5em;
+
+    }
+
+    .button-tertiary {
+
+        font-size: 14px;
+
+    }
+
+    .section.is-full-screen {
+
+        height: 75vh;
+
+    }
+
+    .divider-image.is-blog {
+
+        top: -42px;
+
+    }
+
+    .flex-h-spacebetween {
+
+        justify-content: flex-start;
+
+    }
+
+    .flex-h-spacebetween.gap-2em.is-privacy,
+    .flex-h-spacebetween.is-founder {
+
+        flex-flow: column;
+
+    }
+
+    .container-50.is-center:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611),
+    .container-50.is-center.direction-reversed-5 {
+
+        justify-content: center;
+        align-items: flex-start;
+
+    }
+
+    .flex-v-stretched.gap-1-5em:where(.w-variant-b7f0f785-b8f9-5aeb-c842-2a689b3382d1) {
+
+        grid-column-gap: 1rem;
+        grid-row-gap: 1rem;
+
+    }
+
+    .paragraph-regular.is-link {
+
+        word-break: break-all;
+
+    }
+
+    .hero-container-image.is-right-aligned {
+
+        border-radius: 2rem;
+
+    }.destination-card-collection-wrap {
+
+        display: none;
+
+    }
+
+    .blog-rich-text h2 {
+
+        margin-bottom: .5em;
+
+    }
+
+    .blog-rich-text h3 {
+
+        margin-bottom: .5em;
+        font-style: italic;
+
+    }
+
+    .blog-rich-text p {
+
+        font-size: 15px;
+
+    }
+
+    .pw-largeheading.text-color-white {
+
+        font-size: 4em;
+        line-height: 1;
+
+    }
+
+    .grid-4 {
+
+        justify-content: flex-start;
+        display: flex;
+
+    }
+
+    .grid-4.gap-2em.is-privacy,
+    .grid-4.is-founder {
+
+        flex-flow: column;
+
+    }
+
+    .grid-4.is-privacy {
+
+        grid-column-gap: 1em;
+        grid-row-gap: 1em;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    .form-section-rich-text li,
+    .form-section-rich-text li:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611) {
+
+        font-size: 14px;
+
+    }
+
+    .content-img.is-lrg:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611),
+    .content-img.is-lrg.direction-reversed-13 {
+
+        border-radius: 12.31em;
+        left: -50%;
+
+    }
+
+    .content-img-container:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611),
+    .content-img-container.direction-reversed-10 {
+
+        padding-left: 0;
+
+    }
+
+    .container-100.is-center:where(.w-variant-39bf4d16-b44e-efe1-ba1e-6d693eef9611) {
+
+        justify-content: center;
+        align-items: flex-start;
+
+    }
+}
+
+#w-node-_2cc2391c-dd49-b9f6-2a6d-2b3d70008406-2d47ac38,
+#w-node-_80611fef-2008-a9a6-d7b4-9087e3e4f76e-2d47ac38,
+#w-node-e4c124fb-f587-09af-f56a-e992eb4ec24f-aa61f348,
+#w-node-_0850a606-edf1-e96d-b28c-9bc0cbe4b3e2-aa61f348,
+#w-node-e18fc871-6ff3-d0ca-a5af-780242e7587a-aa61f348,
+#w-node-_75a286a6-2252-5742-d88f-299d252d7ea5-aa61f348,
+#w-node-d8f1c1fd-4e50-097a-11cd-4367ee307885-aa61f348 {
+
+    place-self: center;
+
+}
+
+@media screen and (max-width: 767px) {
+
+    #w-node-e4c124fb-f587-09af-f56a-e992eb4ec24f-aa61f348,
+    #w-node-_0850a606-edf1-e96d-b28c-9bc0cbe4b3e2-aa61f348,
+    #w-node-_75a286a6-2252-5742-d88f-299d252d7ea5-aa61f348,
+    #w-node-d8f1c1fd-4e50-097a-11cd-4367ee307885-aa61f348 {
+
+        place-self: center;
+
+    }
+}
+
+/* ==============================================
+   Global Travel Moments - Booking Tool Updates
+   Date: 30 March 2026
+   ============================================== */
+
+/* 2. Style Browse & Book button as orange pill */
+
+/* Center the nav container */
+.rvlx-app-container .profile-new-search-nav {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 2. Browse & Book button — kill every Revelex property creating the blue circle */
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel {
+    /* Kill the background image (Hotels-Book-Now-Banner-Option.jpg) */
+    background: transparent !important;
+    background-image: none !important;
+    background-size: auto !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    /* Kill the oversized dimensions from .profile-action-wrapper */
+    height: auto !important;
+    width: auto !important;
+    flex: none !important;
+    flex-basis: auto !important;
+    /* Kill the circle shape */
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+    /* Kill .profile-action-wrapper padding/gap that creates the outer ring */
+    padding: 0.75em 2em !important;
+    gap: 0 !important;
+    position: static !important;
+    /* Our pill style */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 2.5em !important;
+    cursor: pointer !important;
+    color: white !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    transition: background-color 0.2s ease !important;
+}
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel::before,
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel::after,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel::before,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel::after {
+    content: none !important;
+    display: none !important;
+    backdrop-filter: none !important;
+    background-color: transparent !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel > span,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel > span {
+    background: #FF640F !important;
+    color: white !important;
+    border-radius: 2.5em !important;
+    padding: 0.75em 2em !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    transition: background-color 0.2s ease !important;
+}
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel:hover > span,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel:hover > span {
+    background: #0b152d !important;
+}
+.rvlx-app-container .profile-new-search-nav a.profile-action-wrapper.profile-action-hotel:hover,
+.rvlx-app-container a.profile-action-wrapper.profile-action-hotel:hover {
+    background: transparent !important;
+    background-image: none !important;
+    color: white !important;
+}
+
+/* 1. Search prompt text - increase size by 6pt */
+.rvlx-app-container .profile-new-search-menu {
+    font-size: calc(1em + 6pt) !important;
+}
+
+
+/* 3. Dropdown - remove repeated title */
+.rvlx-app-container .dropdown-rvlx-menu-title {
+    display: none !important;
+}
+
+/* 4. Dropdown - Manrope font */
+.rvlx-app-container .dropdown-rvlx,
+.rvlx-app-container .dropdown-rvlx * {
+    font-family: Manrope, sans-serif !important;
+}
+
+/* 5. Trips content label - capitalise */
+.rvlx-app-container .trips-content {
+    text-transform: capitalize !important;
+}
+
+/* 6. Refresh button - Manrope font */
+.rvlx-app-container .icon-refresh {
+    font-family: Manrope, sans-serif !important;
+}
+
+/* 13. Loading splash - cycling text below logo (1.5s per phrase, 10 phrases, 15s cycle) */
+@keyframes gtm-loading-text {
+    0%,   9.9% { content: "Curating Your Stay"; }
+    10%, 19.9% { content: "Preparing Arrival"; }
+    20%, 29.9% { content: "Securing Your Suite"; }
+    30%, 39.9% { content: "Refining Selections"; }
+    40%, 49.9% { content: "Confirming Your Booking"; }
+    50%, 59.9% { content: "Arranging the Details"; }
+    60%, 69.9% { content: "Tailoring Your Room"; }
+    70%, 79.9% { content: "Perfecting the Stay"; }
+    80%, 89.9% { content: "Anticipating Your Arrival"; }
+    90%, 100%  { content: "Finalising the Reservation"; }
+}
+.rvlx-app-container .loader-container::after {
+    content: "Curating Your Stay";
+    display: block !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: white !important;
+    text-align: center !important;
+    margin-top: 1.5em !important;
+    letter-spacing: 0.05em !important;
+    animation: gtm-loading-text 15s steps(1) infinite !important;
+}
+
+/* 14. Rate disclaimer text - Manrope */
+.rvlx-app-container .table-pricing-disclaimer {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Partner Benefits block - Manrope throughout */
+.rvlx-app-container .hotel-rooms-rate-wrapper,
+.rvlx-app-container .hotel-rooms-rate-wrapper *,
+.rvlx-app-container .hotel-rooms-rate-content,
+.rvlx-app-container .hotel-rooms-rate-content * {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Payment titles - Manrope */
+.rvlx-app-container .panel-payment-expandable-title,
+.rvlx-app-container .panel-section-block-title,
+.rvlx-app-container .panel-section-legend,
+.rvlx-app-container .panel-section-header,
+.rvlx-app-container .review-info-title,
+.rvlx-app-container .static-list-title,
+.rvlx-app-container .order-item-section-title,
+.rvlx-app-container .order-item-list {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+}
+
+/* 14. Panel edit link - Manrope */
+.rvlx-app-container .panel-edit {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Star rating label - Manrope */
+.rvlx-app-container .star-rating-label {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Hotel info subtitles and body text - Manrope */
+.rvlx-app-container .tabs-contents-subtitle,
+.rvlx-app-container .tabs-contents-text {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. "What's around?" - Manrope and uppercase places */
+.rvlx-app-container .tabs-contents-aside-title,
+.rvlx-app-container .tabs-contents-aside-body {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+.rvlx-app-container .tabs-contents-aside-body {
+    text-transform: uppercase !important;
+}
+
+/* 14. Street View / Map / Gallery tab labels - Manrope */
+.rvlx-app-container .tabs-contents-title > span {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Back to Search Results / section links — Pearl bg, clear breadcrumbs on mobile */
+.rvlx-app-container .section-links {
+    background-color: #FFF9EE !important;
+}
+@media screen and (max-width: 767px) {
+    .rvlx-app-container .section-links {
+        margin-top: 5.5em !important;
+    }
+}
+.rvlx-app-container .section-links-back {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+/* Filter Results + Modify Search buttons — Manrope */
+.rvlx-app-container .section-links-results .section-links-filter,
+.rvlx-app-container .section-links-results .modify-search-trigger {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Item summary title and subtitle - Manrope */
+.rvlx-app-container .item-summary-title,
+.rvlx-app-container .item-summary-title *,
+.rvlx-app-container .item-summary-subtitle {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. All hyperlinks - orange */
+.rvlx-app-container a:not([class*="button"]):not([class*="profile-action"]):not([class*="profile-nav"]):not([class*="breadcrumbs"]) {
+    color: #FF640F !important;
+}
+
+/* 14. Pricing labels - Manrope */
+.rvlx-app-container .hotel-room-price-label,
+.rvlx-app-container .is-anchor .button.is-anchor {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. "Book Now, Pay Later" text - Manrope, Midnight */
+.rvlx-app-container .item-summary-is-required {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+    color: var(--color--dark-blue) !important;
+    border-color: var(--color--dark-blue) !important;
+}
+/* Room rate details — Manrope (ClientID, Rate Plan, Bed Type, Cancellation, Rate Rules) */
+.rvlx-app-container .hotel-room-rate-type,
+.rvlx-app-container .hotel-room-rate-type *,
+.rvlx-app-container .item-summary-room-bed-type,
+.rvlx-app-container .item-summary-room-bed-type *,
+.rvlx-app-container .item-summary-room-cancellation,
+.rvlx-app-container .item-summary-room-cancellation *,
+.rvlx-app-container .item-summary-rate-rules-link {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 14. Room rate tabs - add spacing below pill */
+.rvlx-app-container .tabs-container-wrapper {
+    margin-bottom: 12px !important;
+}
+/* Mobile rate tab slider — Pearl bg on arrows and label */
+.rvlx-app-container .tabs-container-mobile-arrows::before,
+.rvlx-app-container .tabs-container-mobile-arrows::after,
+.rvlx-app-container .tabs-container-mobile-arrows-separation span {
+    background-color: #FFF9EE !important;
+}
+
+/* 14. Panel titles and section titles - Manrope */
+.rvlx-app-container .panel-title,
+.rvlx-app-container .panel-title *,
+.rvlx-app-container .panel-section-title,
+.rvlx-app-container .panel-section-title *,
+.rvlx-app-container .panel-section-title-type {
+    font-family: Manrope, sans-serif !important;
+    font-weight: 400 !important;
+}
+
+/* 14. Hide supplier name (Synxis/UNKNOWN) on hotel search results only */
+.rvlx-app-container .item-summary-hotel .item-summary-subtitle {
+    display: none !important;
+}
+
+/* 14. Remove bold from all headings */
+.rvlx-app-container h1,
+.rvlx-app-container h2,
+.rvlx-app-container h3,
+.rvlx-app-container h4,
+.rvlx-app-container h5,
+.rvlx-app-container h6 {
+    font-weight: 400 !important;
+}
+
+/* 14. Order item empty state - Manrope, not italic, vertically centred */
+.rvlx-app-container .order-item-wrapper {
+    align-items: center !important;
+}
+.rvlx-app-container .order-item-title {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 12. Add spacing between profile nav buttons and content below */
+.rvlx-app-container .tabs-container.profile-nav {
+    margin-bottom: 12px !important;
+}
+
+/* 7. Info bar - Manrope font, not italic, 2pt larger */
+.rvlx-app-container .message-content,
+.rvlx-app-container .message-content * {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+    font-size: calc(1em + 2pt) !important;
+}
+
+/* 9. Center the hero profile header */
+.rvlx-app-container .hero.hero-profile {
+    justify-content: center !important;
+    align-items: center !important;
+}
+.rvlx-app-container .hero-profile-header-content {
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+.rvlx-app-container .hero-profile-header-text,
+.rvlx-app-container .hero-profile-header-text span {
+    text-align: center !important;
+    width: 100% !important;
+    font-weight: 400 !important;
+}
+/* Hide customer email, member since, and gravatar */
+.rvlx-app-container .hero-profile-header-list {
+    display: none !important;
+}
+.rvlx-app-container .hero-profile-header-image {
+    display: none !important;
+}
+
+/* 10. Background image for home page hero area — DISABLED for now */
+/* (merged into rule 16 below) */
+
+/* 15. Registration/login page background image — REMOVED, Revelex now cycles images from their folder */
+
+/* 11. Login page - replace sidebar image with Amanyara photo + hover credit */
+.rvlx-app-container .members-content-benefits-image {
+    content: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
+    width: 100% !important;
+    height: 260px !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+    display: block !important;
+}
+.rvlx-app-container .members-content-benefits-section {
+    position: relative !important;
+    overflow: hidden !important;
+    align-self: flex-start !important;
+    padding-bottom: 2em !important;
+    border-radius: 8px !important;
+}
+.rvlx-app-container .members-content-benefits-section::after {
+    content: "Amanyara \2014  Turks & Caicos" !important;
+    position: absolute !important;
+    top: 232px !important;
+    left: 32px !important;
+    right: 32px !important;
+    background: rgba(17, 28, 60, 0.75) !important;
+    color: white !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    text-align: center !important;
+    padding: 8px !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+    pointer-events: none !important;
+}
+.rvlx-app-container .members-content-benefits-section:hover::after {
+    opacity: 1 !important;
+}
+
+/* 16. Grey bar at top - transparent with rounded corners */
+.rvlx-app-container .body-top {
+    background-image: none !important;
+    background-color: transparent !important;
+    padding: 2em !important;
+    border-radius: 2em !important;
+}
+/* Constrain the white search area width */
+.rvlx-app-container .main-area-container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding-bottom: 2em !important;
+}
+/* 27. Registration/login headline — title case, centred, blue bg, cream text */
+.rvlx-app-container .members-container-header {
+    text-transform: capitalize !important;
+    text-align: center !important;
+    background-color: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+/* 28. Sub-heading title case */
+.rvlx-app-container .members-content-title {
+    text-transform: capitalize !important;
+}
+
+/* 26. Full-width layout for login and registration pages */
+.members-area-page .main-area-container,
+.members-area-registration .main-area-container {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.rvlx-app-container .main-area-subactions,
+.rvlx-app-container .main-area-subactions-wrapper {
+    background-color: transparent !important;
+    background: transparent !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+}
+
+/* 17. Rounded corners on content containers */
+.rvlx-app-container .tabs-contents {
+    border-radius: 2em !important;
+    border: none !important;
+}
+/* 29. Content blocks — Pearl background instead of white */
+.rvlx-app-container .members-content,
+.rvlx-app-container .tabs-contents {
+    background-color: var(--color--cream) !important;
+}
+/* 30. Form fields — Pearl background with Midnight borders */
+.rvlx-app-container input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
+.rvlx-app-container select,
+.rvlx-app-container textarea {
+    background-color: #FFF9EE !important;
+    border-color: var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container label,
+.rvlx-app-container .checkbox-label,
+.rvlx-app-container .form-field label,
+.rvlx-app-container .is-label {
+    background-color: #FFF9EE !important;
+}
+/* Override Chrome autofill background */
+.rvlx-app-container input:-webkit-autofill,
+.rvlx-app-container select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #FFF9EE inset !important;
+    background-color: #FFF9EE !important;
+}
+/* 31. Registration button — Magic Orange bg + Pearl text, inverts on hover */
+.rvlx-app-container .members-actions .button {
+    background-color: var(--color--orange) !important;
+    background: var(--color--orange) !important;
+    color: #FFF9EE !important;
+}
+.rvlx-app-container .members-actions .button:hover,
+.rvlx-app-container .members-actions .button:focus,
+.rvlx-app-container .members-actions .button:active {
+    background-color: #FFF9EE !important;
+    background: #FFF9EE !important;
+    color: var(--color--orange) !important;
+    border-color: var(--color--orange) !important;
+}
+/* 32. "Click here" link — underlined */
+.rvlx-app-container .members-register-extras a {
+    text-decoration: underline !important;
+}
+/* 33. Speak to a Travel Designer — Magic Orange */
+.rvlx-app-container .members-contact-item.call-section {
+    color: var(--color--orange) !important;
+}
+
+/* 34. Hotel results page — FFFAF0 backgrounds with Midnight borders and 2em curves */
+.rvlx-app-container .item-summary-hotel,
+.rvlx-app-container .modify-search {
+    background-color: #FFF9EE !important;
+    border: 1px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+}
+/* Modify Search panel — full-width on mobile */
+@media screen and (max-width: 767px) {
+    .rvlx-app-container .modify-search {
+        left: 0 !important;
+        right: 0 !important;
+        border-radius: 0 !important;
+        border: none !important;
+        max-width: none !important;
+    }
+}
+/* Search fields — FFFAF0 bg, Midnight borders, rounded */
+.rvlx-app-container .modify-search-item {
+    background-color: #FFF9EE !important;
+    border: 1px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* Remove inner borders on inputs inside search items to prevent double border */
+.rvlx-app-container .modify-search-item input,
+.rvlx-app-container .modify-search-item .calendar-input {
+    border: none !important;
+}
+/* Hide empty placeholder fields in More Options */
+.rvlx-app-container .modify-search-placeholder {
+    display: none !important;
+}
+/* Stepper +/- buttons — transparent bg */
+.rvlx-app-container .stepper-component-control {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+/* Search button — Magic Orange with FFFAF0 text */
+.rvlx-app-container .modify-search-submit {
+    background-color: var(--color--orange) !important;
+    background: var(--color--orange) !important;
+    color: #FFF9EE !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .item-summary-hotel,
+.rvlx-app-container .filter-section {
+    background-color: #FFF9EE !important;
+    border: 1px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static {
+    border: none !important;
+    box-shadow: none !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static:not(.is-sticky) {
+    width: 100% !important;
+    margin: 0 !important;
+}
+/* Shrink image when card is sticky/collapsed */
+.rvlx-app-container .item-summary-hotel.is-static.is-sticky .item-summary-feature-image {
+    max-height: 100% !important;
+    height: 100% !important;
+    width: auto !important;
+    overflow: hidden !important;
+}
+.rvlx-app-container .item-summary-hotel.is-static.is-sticky .item-summary-feature-image img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+/* 39. Breadcrumb steps — Midnight styling */
+.rvlx-app-container .breadcrumbs-item {
+    background-color: transparent !important;
+}
+.rvlx-app-container .breadcrumbs-item-title,
+.rvlx-app-container .breadcrumbs-item .breadcrumbs-item-title,
+.rvlx-app-container .breadcrumbs-item.is-active .breadcrumbs-item-title,
+.rvlx-app-container .breadcrumbs-item-title:link,
+.rvlx-app-container .breadcrumbs-item-title:visited {
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container .breadcrumbs-item.is-active {
+    background-color: transparent !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+
+/* 40. Room selection rate tabs — Midnight/FFFAF0 styling */
+.rvlx-app-container .hotel-rooms-rate-tabs .is-active {
+    background-color: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+.rvlx-app-container .hotel-rooms-rate-tabs .is-active .hotel-rooms-rate-tabs-title,
+.rvlx-app-container .hotel-rooms-rate-tabs .is-active .hotel-rooms-rate-tabs-price {
+    color: #FFF9EE !important;
+}
+.rvlx-app-container .hotel-rooms-rate-tabs .hotel-rooms-rate-tabs-title,
+.rvlx-app-container .hotel-rooms-rate-tabs .hotel-rooms-rate-tabs-price,
+.rvlx-app-container .hotel-rooms-rate-tabs small {
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container .hotel-rooms-rate-tabs .is-active small {
+    color: #FFF9EE !important;
+}
+/* "Choose your room" heading — Manrope */
+.rvlx-app-container .tabs-contents-title {
+    font-family: Manrope, sans-serif !important;
+}
+
+/* 41. Partner Benefits section — clean up borders, FFFAF0 bg */
+.rvlx-app-container .hotel-rooms-rate-description {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .tabs-content.is-active {
+    background-color: transparent !important;
+}
+.rvlx-app-container .hotel-rooms-rate-trigger {
+    color: var(--color--dark-blue) !important;
+    font-family: Manrope, sans-serif !important;
+}
+
+/* 42. Room selection cards — FFFAF0 bg, midnight border, grey text fix */
+.rvlx-app-container .item-summary-hotel-room {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .item-summary-hotel-room .item-summary-wrapper {
+    border: none !important;
+}
+/* Rate details list — clear Total price on mobile */
+.rvlx-app-container .item-summary-hotel-room .item-summary-list {
+    margin-top: 1.5em !important;
+}
+.rvlx-app-container .hotel-room-price-label,
+.rvlx-app-container .hotel-room-price-taxes,
+.rvlx-app-container .hotel-room-price-taxes *,
+.rvlx-app-container .hotel-room-price-total,
+.rvlx-app-container .hotel-room-price-total * {
+    color: var(--color--dark-blue) !important;
+}
+
+/* Room card details — Manrope fonts, midnight text, curved select button */
+.rvlx-app-container .hotel-room-rate-details {
+    font-family: Manrope, sans-serif !important;
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container .hotel-room-price-total {
+    font-family: Manrope, sans-serif !important;
+}
+.rvlx-app-container .hotel-room-select-button {
+    border-radius: 2em !important;
+}
+.rvlx-app-container .item-summary-hotel-room .item-summary-content,
+.rvlx-app-container .item-summary-hotel-room .item-summary-content * {
+    color: var(--color--dark-blue) !important;
+}
+
+/* 43. Room selection page only — 3-column grid (not when collapsed) */
+.rvlx-app-container .hotel-hero-collage-wrapper .item-summary-hotel.is-static:not(.is-sticky) .item-summary-content {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 4px 24px !important;
+    width: 100% !important;
+    flex: 1 !important;
+}
+.rvlx-app-container .hotel-hero-collage-wrapper .item-summary-hotel.is-static:not(.is-sticky) .item-summary-title {
+    grid-column: 1 !important;
+    grid-row: 1 / 3 !important;
+}
+.rvlx-app-container .hotel-hero-collage-wrapper .item-summary-hotel.is-static:not(.is-sticky) .item-summary-address {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+}
+.rvlx-app-container .hotel-hero-collage-wrapper .item-summary-hotel.is-static:not(.is-sticky) .item-summary-checkin {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+}
+.rvlx-app-container .hotel-hero-collage-wrapper .item-summary-hotel.is-static:not(.is-sticky) .item-summary-checkout {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+}
+.rvlx-app-container .hotel-hero-collage-wrapper .item-summary-hotel.is-static:not(.is-sticky) .item-summary-room-guests {
+    grid-column: 2 !important;
+    grid-row: 4 !important;
+}
+.rvlx-app-container .hotel-hero-collage-wrapper .item-summary-hotel.is-static:not(.is-sticky) .amenities-wrapper-container {
+    grid-column: 3 !important;
+    grid-row: 1 / 4 !important;
+}
+.rvlx-app-container .hotel-hero-collage-wrapper .item-summary-hotel.is-static:not(.is-sticky) .item-summary-content-link {
+    grid-column: 3 !important;
+    grid-row: 4 !important;
+    justify-self: end !important;
+    align-self: end !important;
+}
+
+
+/* Payment + Review pages — redesigned layout (excludes room selection) */
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static {
+    position: relative !important;
+}
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static .item-summary-content {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 4px 24px !important;
+    width: 100% !important;
+    flex: 1 !important;
+}
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static .item-summary-title {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+}
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static .item-summary-address {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+}
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static .item-summary-checkin {
+    grid-column: 1 !important;
+    grid-row: 3 !important;
+    margin-top: 8px !important;
+}
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static .item-summary-checkout {
+    grid-column: 1 !important;
+    grid-row: 4 !important;
+}
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static .item-summary-room-guests {
+    grid-column: 1 !important;
+    grid-row: 5 !important;
+}
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static .amenities-wrapper-container {
+    position: absolute !important;
+    top: 16px !important;
+    right: 16px !important;
+}
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static .item-summary-content-link {
+    position: absolute !important;
+    bottom: 16px !important;
+    right: 16px !important;
+}
+
+/* 54. Confirmation page */
+/* All text — Manrope, Midnight */
+.rvlx-app-container .confirmation-wrapper,
+.rvlx-app-container .confirmation-wrapper * {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+    color: var(--color--dark-blue) !important;
+}
+/* Heading — not uppercase, Instrument Serif, orange (must come after wildcard) */
+.rvlx-app-container .confirmation-wrapper .confirmation-wrapper-title,
+.rvlx-app-container .confirmation-wrapper .confirmation-wrapper-title * {
+    text-transform: none !important;
+    font-family: "Instrument Serif", serif !important;
+    background-color: #FFF9EE !important;
+    color: var(--color--orange) !important;
+    font-weight: 400 !important;
+}
+.rvlx-app-container .confirmation-wrapper .confirmation-wrapper-title {
+    font-size: 32px !important;
+}
+/* White block — FFFAF0, Midnight border, 2em curves */
+.rvlx-app-container .confirmation-items {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+    overflow: hidden !important;
+}
+/* Image wrapper — curved corners */
+.rvlx-app-container .confirmation-wrapper.confirmation-hotel {
+    border-radius: 2em !important;
+    overflow: hidden !important;
+}
+
+/* 55. View Details button — Midnight fill, FFFAF0 text */
+.rvlx-app-container .order-item-details-button {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+
+/* 53. T&C checkbox — Magic Orange when checked */
+.rvlx-app-container .form-field-checkbox.is-valid label {
+    color: var(--color--orange) !important;
+}
+.rvlx-app-container .form-field-checkbox input[type="checkbox"] {
+    accent-color: var(--color--orange) !important;
+}
+
+/* 44. Hotel details dialog — full restyle */
+/* Dialog background */
+.dialog-hotel-details .dialog {
+    background-color: #FFF9EE !important;
+    overflow: hidden !important;
+}
+.dialog-hotel-details .tabs-contents {
+    background-color: #FFF9EE !important;
+}
+/* Dialog hotel info card */
+.dialog-hotel-details .item-summary-hotel,
+.dialog-hotel-details .item-summary-content {
+    background-color: #FFF9EE !important;
+}
+/* Dialog tabs — midnight/FFFAF0 */
+.dialog-hotel-details .tabs-container a.is-active {
+    background-color: var(--color--dark-blue) !important;
+    border-color: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+.dialog-hotel-details .tabs-container a:not(.is-active) {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    color: var(--color--dark-blue) !important;
+}
+/* 5 star hotel, address, room — Manrope + Midnight */
+.dialog-hotel-details .item-summary-subtitle,
+.dialog-hotel-details .star-rating-label,
+.dialog-hotel-details .item-summary-address,
+.dialog-hotel-details .item-summary-room-guests,
+.dialog-hotel-details .item-summary-checkin,
+.dialog-hotel-details .item-summary-checkout {
+    font-family: Manrope, sans-serif !important;
+    color: var(--color--dark-blue) !important;
+}
+/* Headings — Manrope */
+.dialog-hotel-details .tabs-contents-title,
+.dialog-hotel-details .tabs-contents-subtitle,
+.dialog-hotel-details .hotel-detail-content h3,
+.dialog-hotel-details .hotel-detail-content h4,
+.dialog-hotel-details h3,
+.dialog-hotel-details h4 {
+    font-family: Manrope, sans-serif !important;
+}
+/* Amenity icons — transparent bg */
+.dialog-hotel-details .amenities-item {
+    background-color: transparent !important;
+}
+
+/* 45. Rate Rules dialog — FFFAF0 bg, rounded, Manrope (sits outside .rvlx-app-container) */
+.dialog-overlay .dialog {
+    background-color: #FFF9EE !important;
+    border-radius: 2em !important;
+}
+.dialog-overlay .dialog-title,
+.dialog-overlay .dialog-head {
+    font-family: Manrope, sans-serif !important;
+}
+.dialog-overlay .dialog-body,
+.dialog-overlay .dialog-body * {
+    font-family: Manrope, sans-serif !important;
+    font-style: normal !important;
+}
+
+/* 56. Trip Details dialog (outside .rvlx-app-container) */
+/* Dialog — FFFAF0, Midnight border, curved */
+.order-item-trip-details .dialog {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* Top header section — curved */
+.order-item-trip-details .dialog-head {
+    border-radius: 2em 2em 0 0 !important;
+    overflow: hidden !important;
+}
+/* White areas — FFFAF0 */
+.order-item-trip-details .order-item-wrapper,
+.order-item-trip-details .table-row,
+.order-item-trip-details .table-collapsable-row,
+.order-item-trip-details .table-pricing-item-total,
+.order-item-trip-details .table-pricing-item-taxes,
+.order-item-trip-details .table-pricing-total,
+.order-item-trip-details td,
+.order-item-trip-details th {
+    background-color: #FFF9EE !important;
+}
+/* Grey table header — FFFAF0 */
+.order-item-trip-details thead {
+    background-color: #FFF9EE !important;
+}
+/* Cancel button — Magic Orange border + text */
+.order-item-trip-details .order-item-cancel-button {
+    border-color: var(--color--orange) !important;
+    color: var(--color--orange) !important;
+}
+/* Expand arrow — Magic Orange */
+.order-item-trip-details .pricing-itemized-trigger {
+    color: var(--color--orange) !important;
+}
+.order-item-trip-details .pricing-itemized-trigger::before {
+    color: var(--color--orange) !important;
+}
+/* Separators/lines — Midnight */
+.order-item-trip-details table,
+.order-item-trip-details tr,
+.order-item-trip-details td,
+.order-item-trip-details th {
+    border-color: var(--color--dark-blue) !important;
+}
+/* Remove lines in pricing table */
+.order-item-trip-details table,
+.order-item-trip-details table *,
+.order-item-trip-details tr,
+.order-item-trip-details td,
+.order-item-trip-details th {
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+/* Grand Total bar — Midnight bg, curved all corners */
+.order-item-trip-details .payment-total {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+
+/* 57. Cancel Booking page */
+/* Headline — all Midnight */
+.rvlx-app-container .title-area-content-title,
+.rvlx-app-container .title-area-content-title * {
+    color: var(--color--dark-blue) !important;
+}
+/* Hotel info box — FFFAF0, Midnight border, curved */
+.rvlx-app-container .item-summary-post {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* Return to My Account button — Midnight outline, FFFAF0 fill */
+.rvlx-app-container a.button.button-icon {
+    background-color: #FFF9EE !important;
+    background: #FFF9EE !important;
+    color: var(--color--dark-blue) !important;
+    border: 2px solid var(--color--dark-blue) !important;
+}
+.rvlx-app-container a.button.button-icon:hover {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+
+/* 58. System message (e.g. booking cancelled) — Midnight fill */
+.rvlx-app-container .message.message-notice {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+    color: #FFF9EE !important;
+}
+.rvlx-app-container .message.message-notice *,
+.rvlx-app-container .message.message-notice .message-content {
+    color: #FFF9EE !important;
+}
+.rvlx-app-container .message.message-notice .icon-info-alt {
+    display: none !important;
+}
+.rvlx-app-container .message.message-notice {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 59. Session Expired dialog (outside .rvlx-app-container) */
+.dialog-expired-session .dialog {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+    overflow: hidden !important;
+}
+.dialog-expired-session .dialog,
+.dialog-expired-session .dialog * {
+    font-family: Manrope, sans-serif !important;
+    color: var(--color--dark-blue) !important;
+}
+.dialog-expired-session .dialog-footer {
+    background-color: #FFF9EE !important;
+}
+/* Search Again button — Midnight fill, Pearl text */
+.dialog-expired-session .button-action-alternate {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* New Search button — Magic Orange fill, Pearl text */
+.dialog-expired-session .button-action:not(.button-action-alternate) {
+    background-color: var(--color--orange) !important;
+    background: var(--color--orange) !important;
+    color: #FFF9EE !important;
+    border: 2px solid var(--color--orange) !important;
+    border-radius: 2em !important;
+}
+
+/* 46. Payment page — pricing summary styling */
+/* Outer grey block — FFFAF0 with midnight border */
+.rvlx-app-container .content-wrapper.is-itemized {
+    background-color: #FFF9EE !important;
+    border: none !important;
+    border-radius: 2em !important;
+    overflow: hidden !important;
+    outline: none !important;
+    box-shadow: 0 0 0 16px #FFF9EE, 0 0 0 18px var(--color--dark-blue) !important;
+}
+/* All white elements inside pricing — FFFAF0 */
+.rvlx-app-container .content-wrapper.is-itemized tr,
+.rvlx-app-container .content-wrapper.is-itemized td,
+.rvlx-app-container .content-wrapper.is-itemized th,
+.rvlx-app-container .content-wrapper.is-itemized thead,
+.rvlx-app-container .content-wrapper.is-itemized tbody,
+.rvlx-app-container .table-pricing-summary-room-details,
+.rvlx-app-container .table-pricing-icon,
+.rvlx-app-container .table-pricing-product-wrapper,
+.rvlx-app-container .table-pricing-price {
+    background-color: #FFF9EE !important;
+}
+/* Pricing Summary heading — Manrope, bed icon Magic Orange */
+.rvlx-app-container .table-pricing-title {
+    font-family: Manrope, sans-serif !important;
+}
+.rvlx-app-container .table-pricing-title::before {
+    color: var(--color--orange) !important;
+}
+/* Room 1 text — Magic Orange */
+.rvlx-app-container .table-pricing-product {
+    color: var(--color--orange) !important;
+}
+/* Rooms header row headings — Manrope + FFFAF0 */
+.rvlx-app-container .content-wrapper.is-itemized thead {
+    background-color: #FFF9EE !important;
+    font-family: Manrope, sans-serif !important;
+}
+.rvlx-app-container .content-wrapper.is-itemized thead th {
+    font-family: Manrope, sans-serif !important;
+    background-color: #FFF9EE !important;
+}
+/* Room Total text — midnight instead of orange */
+.rvlx-app-container .table-pricing-price-subtotal,
+.rvlx-app-container .table-pricing-price-subtotal * {
+    color: var(--color--dark-blue) !important;
+}
+/* Hotel Total Cost bar — midnight */
+.rvlx-app-container .payment-total,
+.rvlx-app-container .payment-total-deposit {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+}
+/* Panel — FFFAF0, midnight border, curves */
+.rvlx-app-container .panel {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .panel-section {
+    background-color: #FFF9EE !important;
+}
+/* Panel collapsible header — FFFAF0 + midnight arrow */
+.rvlx-app-container .panel-title.is-expandable-trigger {
+    background-color: #FFF9EE !important;
+}
+.rvlx-app-container .panel-close.icon-expand {
+    color: var(--color--dark-blue) !important;
+}
+
+/* 47. Payment page — bottom action bar */
+.rvlx-app-container .panel-submit {
+    background-color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* Back button — midnight border + text, FFFAF0 fill, no hover */
+.rvlx-app-container .button-back,
+.rvlx-app-container .button-back:hover {
+    background: #FFF9EE !important;
+    background-color: #FFF9EE !important;
+    background-image: none !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container .button-back::before {
+    content: "\2039\00a0" !important;
+    font-size: 1.2em !important;
+}
+/* Continue button — magic orange fill + border, FFFAF0 text, no hover */
+.rvlx-app-container .button-action {
+    background: var(--color--orange) !important;
+    background-color: var(--color--orange) !important;
+    background-image: none !important;
+    border: 2px solid var(--color--orange) !important;
+    color: #FFF9EE !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .button-action:hover {
+    background: #FFF9EE !important;
+    background-color: #FFF9EE !important;
+    background-image: none !important;
+    border: 2px solid var(--color--orange) !important;
+    color: var(--color--orange) !important;
+    border-radius: 2em !important;
+}
+
+/* 48. Profile pages — section containers styled */
+.rvlx-app-container .profile-section-container {
+    background: #FFF9EE !important;
+    background-color: #FFF9EE !important;
+    background-image: none !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .profile-section-container *:not(a) {
+    background: transparent !important;
+    background-image: none !important;
+}
+/* Separator lines inside profile sections — midnight */
+.rvlx-app-container .profile-section-container hr,
+.rvlx-app-container .profile-section-container .profile-section-item {
+    border-color: var(--color--dark-blue) !important;
+}
+/* All text in profile sections — midnight (except action links stay orange) */
+.rvlx-app-container .profile-section-container,
+.rvlx-app-container .profile-section-container * {
+    color: var(--color--dark-blue) !important;
+}
+/* Action links (EDIT, ADD, CHANGE PASSWORD, UPDATE, REFRESH) — keep orange */
+.rvlx-app-container .profile-section-container a,
+.rvlx-app-container .profile-section-addon a,
+.rvlx-app-container .profile-section-action a {
+    color: var(--color--orange) !important;
+}
+/* 49. Add Card button — Midnight fill, FFFAF0 text */
+.rvlx-app-container a.button.button-alternate-cta {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container a.button.button-alternate-cta:hover {
+    background-color: #FFF9EE !important;
+    background: #FFF9EE !important;
+    color: var(--color--dark-blue) !important;
+}
+/* 50. Refresh button + icon — Midnight colour */
+.rvlx-app-container button.button.is-anchor.icon-refresh {
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container button.button.is-anchor.icon-refresh::before {
+    color: var(--color--dark-blue) !important;
+}
+
+/* Order item wrapper (My Reservations) */
+.rvlx-app-container .order-item-wrapper {
+    background-color: #FFF9EE !important;
+}
+
+/* Hotel results — remaining white blocks to FFFAF0 */
+.rvlx-app-container .amenities-item,
+.rvlx-app-container .pagination-wrapper {
+    background-color: #FFF9EE !important;
+    border-radius: 2em !important;
+}
+
+.rvlx-app-container .item-summary-content,
+.rvlx-app-container .item-summary-extras {
+    background-color: #FFF9EE !important;
+}
+.rvlx-app-container .filter-section-head {
+    background-color: #FFF9EE !important;
+    border: none !important;
+    border-radius: 2em 2em 0 0 !important;
+}
+.rvlx-app-container .filter-section {
+    overflow: hidden !important;
+    margin-bottom: 1em !important;
+}
+.rvlx-app-container .filter-section-body {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+.rvlx-app-container .filter-section-group {
+    overflow: visible !important;
+}
+.rvlx-app-container .filter-section .button.icon-look {
+    border-radius: 0 2em 2em 0 !important;
+}
+.rvlx-app-container .filter-section-head {
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container .filter-section-head,
+.rvlx-app-container .filter-section-head *,
+.rvlx-app-container .filter-section-head-prefix,
+.rvlx-app-container .filter-section-head::before,
+.rvlx-app-container .filter-section-head::after {
+    color: var(--color--dark-blue) !important;
+}
+/* 35. Details button — Midnight outline, Select stays Magic Orange */
+.rvlx-app-container .results-details-action {
+    background-color: transparent !important;
+    background: transparent !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    color: var(--color--dark-blue) !important;
+}
+.rvlx-app-container .results-details-action:hover {
+    background-color: var(--color--dark-blue) !important;
+    background: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+.rvlx-app-container .results-details-online {
+    background-color: var(--color--orange) !important;
+    background: var(--color--orange) !important;
+    color: #FFF9EE !important;
+}
+
+
+/* 21. Universal button rules — ensure consistent states across all pages */
+/* Inactive: orange outline, orange text, transparent bg */
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel),
+.rvlx-app-container .profile-nav-sections,
+.rvlx-app-container .tabs-container a,
+.rvlx-app-container .tabs-container a[data-tabs-label] {
+    background-color: transparent !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    color: var(--color--dark-blue) !important;
+    border-radius: 2.5em !important;
+    font-family: Manrope, sans-serif !important;
+    cursor: pointer !important;
+}
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel) span,
+.rvlx-app-container .profile-nav-sections span {
+    color: var(--color--dark-blue) !important;
+}
+/* Hover: dark blue bg, white text (action buttons only, not tabs) */
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel):hover {
+    background-color: #0b152d !important;
+    border-color: #0b152d !important;
+    color: white !important;
+}
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel):hover span {
+    color: white !important;
+}
+/* Active/Selected: midnight bg, FFFAF0 text */
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active,
+.rvlx-app-container .profile-nav-sections.is-active {
+    background-color: var(--color--dark-blue) !important;
+    border-color: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+.rvlx-app-container .profile-action-wrapper:not(.profile-action-hotel).is-active span,
+.rvlx-app-container .profile-nav-sections.is-active span {
+    color: #FFF9EE !important;
+}
+/* Tab buttons (hotel details) — active: midnight bg, FFFAF0 text */
+.rvlx-app-container .tabs-container a.is-active,
+.rvlx-app-container .tabs.hotel-details .tabs-container a.is-active,
+.rvlx-app-container .tabs-container a[data-tabs-label].is-active {
+    background-color: var(--color--dark-blue) !important;
+    border-color: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+    font-size: 1rem !important;
+    text-decoration: none !important;
+}
+/* Tab buttons — inactive: midnight outline + midnight text */
+.rvlx-app-container .tabs-container a:not(.is-active),
+.rvlx-app-container .tabs.hotel-details .tabs-container a:not(.is-active),
+.rvlx-app-container .tabs-container a[data-tabs-label]:not(.is-active) {
+    background-color: transparent !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    color: var(--color--dark-blue) !important;
+}
+/* Tab hover — invert to midnight bg */
+.rvlx-app-container .tabs-container a:hover {
+    background-color: var(--color--dark-blue) !important;
+    border-color: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+/* Rate programme tabs — FFFAF0 fill when inactive, no hover change */
+.rvlx-app-container .hotel-rooms-rate-tabs .tabs-container a:not(.is-active),
+.rvlx-app-container .hotel-rooms-rate-tabs .tabs-container a:not(.is-active):hover {
+    background: #FFF9EE !important;
+    background-color: #FFF9EE !important;
+    background-image: none !important;
+    border: 2px solid var(--color--dark-blue) !important;
+    color: var(--color--dark-blue) !important;
+}
+/* Price text — orange instead of blue */
+.rvlx-app-container .item-summary-price .from-price-container,
+.rvlx-app-container .item-summary-price .item-summary-price-starting,
+.rvlx-app-container .item-summary-price .item-summary-price-concurrency,
+.rvlx-app-container .item-summary-price .item-summary-price-nights,
+.rvlx-app-container .item-summary-price .item-summary-price-disclaimer {
+    color: #000000 !important;
+}
+
+/* Details + Select buttons — smaller text */
+.rvlx-app-container .item-summary-cta .button {
+    font-size: 0.85rem !important;
+    padding: 0.6em 1.8em !important;
+}
+
+/* Hotel name header — remove accidental button styling */
+.rvlx-app-container .tabs-contents-header .tabs-contents-title {
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    cursor: default !important;
+}
+
+/* 22. My Reservations button — match Browse & Book style */
+.rvlx-app-container .authentication-module-account .button.is-anchor.icon-user {
+    background: #FF640F !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 32px !important;
+    padding: 12px 20px !important;
+    font-family: Manrope, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+    font-size: 0 !important;
+    overflow: hidden !important;
+}
+.rvlx-app-container .authentication-module-account .button.is-anchor.icon-user::after {
+    content: "My Profile" !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    color: white !important;
+}
+.rvlx-app-container .authentication-module-account .button.is-anchor.icon-user:hover {
+    background: #0b152d !important;
+    color: white !important;
+}
+
+/* 20. Curve the white search box */
+.rvlx-app-container .search-form-app {
+    border-radius: 2em !important;
+}
+
+/* 18. Hide suitcase image on Personal Information page */
+.rvlx-app-container .profile-section-container.profile-information {
+    background-image: none !important;
+}
+
+/* 51. Hotel Search page — rebrand sub-heading to "The Hotel Desk by Global Travel Moments" */
+.rvlx-app-container .gt-search-title sub {
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+.rvlx-app-container .gt-search-title sub::after {
+    content: "The Hotel Desk by Global Travel Moments" !important;
+    font-size: 14px !important;
+    letter-spacing: 6.3px !important;
+    line-height: normal !important;
+}
+
+/* 52. Hotel Search page — search wrapper styling */
+.rvlx-app-container .gt-search-wrapper {
+    background-color: #FFF9EE !important;
+    border: none !important;
+    border-radius: 2em !important;
+}
+.rvlx-app-container .gt-search-bar-item {
+    border: 2px solid var(--color--dark-blue) !important;
+    border-radius: 2em !important;
+}
+/* Remove inner borders on inputs inside search items to prevent double border */
+.rvlx-app-container .gt-search-bar-item input,
+.rvlx-app-container .gt-search-bar-item select {
+    border: none !important;
+}
+/* Search bar dropdowns — Pearl bg */
+.rvlx-app-container .gt-search-bar .output-view,
+.rvlx-app-container .gt-search-bar .output-view *,
+.rvlx-app-container .gt-search-bar .selection-list-search,
+.rvlx-app-container .gt-search-bar .selection-list-search *,
+.rvlx-app-container .gt-search-bar .panel-section-passenger-type,
+.rvlx-app-container .gt-search-bar .panel-section-passenger-type * {
+    background-color: #FFF9EE !important;
+}
+/* Calendar selected date states — Midnight bg so white text is visible */
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-start,
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-end,
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-selected {
+    background-color: var(--color--dark-blue) !important;
+    color: #FFF9EE !important;
+}
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-between,
+.rvlx-app-container .gt-search-bar .calendar-month-day.is-range {
+    background-color: #ADD1CF !important;
+    color: var(--color--dark-blue) !important;
+}
+/* Search dropdown Done button — Midnight with Pearl text, curved */
+.gt-search-bar-item.search-item .modify-search-item-button-close {
+    background: #0B152D !important;
+    background-image: none !important;
+    color: #FFF9EE !important;
+    border-color: #FFF9EE !important;
+    border-radius: 2em !important;
+    box-shadow: none !important;
+}
+/* Search dropdown header — Pearl bg */
+.gt-search-bar-item.search-item .modify-search-item-header {
+    background-color: #FFF9EE !important;
+}
+
+/* 8. Hotel Search page - add marketing text below heading */
+.rvlx-app-container .gt-search-title h1::after {
+    content: "Your private access to exclusive rates and amenities at the world's best hotels & resorts.";
+    display: block !important;
+    font-size: 16px !important;
+    font-family: Manrope, sans-serif !important;
+    font-weight: 400 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    color: var(--color--dark-blue) !important;
+    margin-top: 10px !important;
+}
