@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTM Link Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  GTM LINK GENERATOR - the single choke point for booking-site links.
+  ---------------------------------------------------------------------
+  Every link into book.globaltravelmoments.com should be born here, so that
+  (a) it is tagged, (b) it is tagged the SAME WAY every time, and (c) it is
+  written down. A hand-built link arrives untracked and that placement's
+  numbers are wrong for the whole campaign - and untagged sessions cannot be
+  fixed afterwards, because GA4 records attribution at the moment it happens.
+
+  Supersedes hotel-deeplink-generator.html, which only did single-hotel
+  Brevo links. That file is left in place; this one covers all endpoints.
+
+  Three things it does that hand-writing does not:
+   1. Controlled vocabulary. Source, medium and type are dropdowns, so
+      "outthere" never becomes "OutThere" or "out-there" in reports.
+   2. The hash copy. The two search endpoints answer with a 302 that drops
+      the query string, so the UTMs are repeated in the fragment.
+   3. A registry. Every link you build is kept, and exports as JSON - the
+      placement inventory that does not currently exist.
+
+  Hotel IDs: load GTCHotels.csv with the file picker to search by name.
+  Local only, nothing is sent anywhere, registry lives in localStorage.
+-->
+<style>
+:root {
+  --pearl: #FFF9EE;
+  --orange: #FF640F;
+  --midnight: #0B152D;
+  --caribbean: #ADD1CF;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  background: var(--pearl);
+  color: var(--midnight);
+  margin: 0;
+  padding: 2.5rem 1rem 4rem;
+  line-height: 1.5;
+}
+.wrap { max-width: 860px; margin: 0 auto; }
+h1 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 2.75rem;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
+}
+.subtitle { opacity: 0.7; margin: 0 0 2rem; font-size: 0.95rem; }
+.card {
+  background: white;
+  border: 1px solid var(--midnight);
+  border-radius: 2em;
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.25rem;
+}
+.section-title {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin: 0 0 0.35rem;
+}
+.section-note { font-size: 0.82rem; opacity: 0.7; margin: 0 0 1.1rem; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+@media (max-width: 620px) { .grid, .grid-3 { grid-template-columns: 1fr; } }
+.field { margin-bottom: 0.85rem; }
+.field.searchable { position: relative; }
+.field.wide { grid-column: 1 / -1; }
+label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+label .req { color: var(--orange); }
+input, select {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--midnight);
+  border-radius: 0.75em;
+  background: var(--pearl);
+  color: var(--midnight);
+  font-family: inherit;
+  font-size: 1rem;
+}
+select { cursor: pointer; }
+input:focus, select:focus { outline: 2px solid var(--orange); outline-offset: 1px; }
+input[type="file"] { padding: 0.5rem; font-size: 0.85rem; cursor: pointer; }
+input.missing, select.missing { border-color: var(--orange); background: #fff3ec; }
+small.hint { display: block; font-size: 0.78rem; opacity: 0.65; margin-top: 0.3rem; }
+small.hint.loaded { color: #1a7a3c; opacity: 1; font-weight: 600; }
+small.hint.busy { color: var(--orange); opacity: 1; font-weight: 600; }
+small.hint.failed { color: #c0392b; opacity: 1; font-weight: 600; }
+small.hint.warn { color: #a35200; opacity: 1; font-weight: 600; }
+
+.suggestions {
+  position: absolute; top: 100%; left: 0; right: 0; margin-top: 4px;
+  background: white; border: 1px solid var(--midnight); border-radius: 0.9em;
+  z-index: 20; box-shadow: 0 10px 28px rgba(11,21,45,0.18);
+  max-height: 320px; overflow-y: auto;
+}
+.suggestions.hidden { display: none; }
+.suggestion { padding: 0.55rem 0.9rem; cursor: pointer; border-bottom: 1px solid rgba(11,21,45,0.08); }
+.suggestion:last-child { border-bottom: none; }
+.suggestion:hover, .suggestion.active { background: var(--caribbean); }
+.suggestion .s-main { font-weight: 600; font-size: 0.9rem; }
+.suggestion .s-sub { font-size: 0.76rem; opacity: 0.7; }
+.suggestion .s-id { font-family: 'Menlo', monospace; font-size: 0.72rem; opacity: 0.85; }
+.s-status { padding: 0.6rem 0.9rem; font-size: 0.82rem; opacity: 0.6; font-style: italic; }
+
+.children-ages { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 0.5rem; margin-top: 0.6rem; }
+.children-ages.hidden { display: none; }
+.children-ages label { font-size: 0.7rem; text-transform: none; letter-spacing: 0; }
+
+.stars { display: flex; gap: 1rem; align-items: center; margin-top: 0.2rem; }
+.stars label { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 0.35rem; margin: 0; }
+.stars input { width: auto; }
+
+.output {
+  background: var(--midnight); color: var(--pearl);
+  padding: 1.25rem 1.5rem; border-radius: 1.25em;
+  font-family: 'Menlo', 'Courier New', monospace;
+  font-size: 0.8rem; word-break: break-all; line-height: 1.65; min-height: 5rem;
+}
+.output.empty { opacity: 0.5; font-style: italic; }
+.blockers { margin-top: 0.9rem; font-size: 0.85rem; }
+.blockers ul { margin: 0.35rem 0 0; padding-left: 1.15rem; }
+.blockers li { margin-bottom: 0.2rem; }
+.blockers .ok { color: #1a7a3c; font-weight: 600; }
+.blockers .no { color: var(--orange); font-weight: 600; }
+
+.actions { display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap; }
+button {
+  background: var(--orange); color: var(--pearl); border: 1px solid var(--orange);
+  padding: 0.75rem 1.4rem; font-family: 'Manrope', sans-serif; font-weight: 600;
+  font-size: 0.9rem; border-radius: 2em; cursor: pointer;
+  text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.18s;
+}
+button:hover { background: var(--midnight); border-color: var(--midnight); }
+button:disabled { opacity: 0.4; cursor: default; }
+button.secondary, .btn-link.secondary { background: transparent; color: var(--midnight); border-color: var(--midnight); }
+button.secondary:hover, .btn-link.secondary:hover { background: var(--midnight); color: var(--pearl); }
+.btn-link {
+  display: inline-block; background: var(--orange); color: var(--pearl);
+  border: 1px solid var(--orange); padding: 0.75rem 1.4rem;
+  font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 0.9rem;
+  border-radius: 2em; cursor: pointer; text-transform: uppercase;
+  letter-spacing: 0.05em; transition: all 0.18s; text-decoration: none; line-height: 1;
+}
+.btn-link[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+.status { font-size: 0.85rem; color: var(--orange); margin-top: 0.6rem; min-height: 1.2em; font-weight: 600; }
+.toggle-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; font-size: 0.85rem; }
+.toggle-row input[type="checkbox"] { width: auto; }
+.toggle-row label { text-transform: none; letter-spacing: 0; font-weight: 500; margin: 0; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid rgba(11,21,45,0.12); vertical-align: top; }
+th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.7; }
+td.url { font-family: 'Menlo', monospace; font-size: 0.7rem; word-break: break-all; max-width: 300px; }
+.registry-empty { font-size: 0.85rem; opacity: 0.6; font-style: italic; }
+.row-btn { padding: 0.3rem 0.7rem; font-size: 0.66rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>GTM Link Generator</h1>
+  <p class="subtitle">Every link into the booking site, tagged the same way every time, and written down.</p>
+
+  <div class="card">
+    <h2 class="section-title">1 &middot; Where does it go?</h2>
+    <p class="section-note">The two search endpoints answer with a redirect that eats the query string, so for those the UTMs are written twice: once in the query and once in the fragment, which survives.</p>
+    <div class="field">
+      <label for="endpoint">Destination <span class="req">*</span></label>
+      <select id="endpoint">
+        <option value="hotel">Single hotel &mdash; straight to one property's rooms and rates</option>
+        <option value="area">Area search &mdash; results list for a destination</option>
+        <option value="register">Registration page</option>
+        <option value="login">Sign in page</option>
+        <option value="custom">Something else on the booking site</option>
+      </select>
+      <small class="hint" id="endpoint-hint"></small>
+    </div>
+    <div class="field" id="custom-wrap" hidden>
+      <label for="custom-url">Full booking-site URL <span class="req">*</span></label>
+      <input type="text" id="custom-url" placeholder="https://book.globaltravelmoments.com/app/0/...">
+      <small class="hint">Paste any booking-site URL. Existing parameters are kept; the UTMs are added.</small>
+    </div>
+  </div>
+
+  <div class="card" id="hotel-card">
+    <h2 class="section-title">2 &middot; Which hotel?</h2>
+    <p class="section-note">Load GTCHotels.csv once per session to search by name, or type a GDS ID straight in.</p>
+    <div class="field">
+      <label for="csv-file">Hotel database</label>
+      <input type="file" id="csv-file" accept=".csv">
+      <small class="hint" id="db-status">No database loaded. Pick <strong>GTCHotels.csv</strong> to search by name.</small>
+    </div>
+    <div class="grid">
+      <div class="field searchable">
+        <label for="hotel-name">Hotel name</label>
+        <input type="text" id="hotel-name" autocomplete="off" placeholder="e.g. Capella Bangkok">
+        <div class="suggestions hidden" id="hotel-suggestions"></div>
+      </div>
+      <div class="field">
+        <label for="gds-id">GDS hotel ID <span class="req">*</span></label>
+        <input type="number" id="gds-id" placeholder="100731601" min="0">
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="area-card" hidden>
+    <h2 class="section-title">2 &middot; Which destination?</h2>
+    <p class="section-note">Revelex searches on coordinates, not on the name &mdash; the name is only a display label. Pick a suggestion to lock the lat/long or the search returns nothing.</p>
+    <div class="field searchable">
+      <label for="place-name">Destination <span class="req">*</span></label>
+      <input type="text" id="place-name" autocomplete="off" placeholder="e.g. Bangkok">
+      <div class="suggestions hidden" id="place-suggestions"></div>
+      <small class="hint" id="place-status">Type at least three characters, then pick a suggestion.</small>
+    </div>
+    <div class="grid-3">
+      <div class="field">
+        <label for="lat">Latitude <span class="req">*</span></label>
+        <input type="text" id="lat" placeholder="13.7563">
+      </div>
+      <div class="field">
+        <label for="lng">Longitude <span class="req">*</span></label>
+        <input type="text" id="lng" placeholder="100.5018">
+      </div>
+      <div class="field">
+        <label for="distance">Radius (miles)</label>
+        <input type="number" id="distance" value="20" min="1" max="20">
+        <small class="hint">Revelex caps this at 20.</small>
+      </div>
+    </div>
+    <div class="field">
+      <label>Star rating filter</label>
+      <div class="stars">
+        <label><input type="checkbox" id="star5"> 5-star</label>
+        <label><input type="checkbox" id="star4"> 4-star</label>
+      </div>
+      <small class="hint">Deeplinks correctly. Brand filters do not &mdash; those are applied client-side after the page loads.</small>
+    </div>
+  </div>
+
+  <div class="card" id="stay-card">
+    <h2 class="section-title">3 &middot; Dates and occupancy</h2>
+    <div class="grid">
+      <div class="field">
+        <label for="check-in">Check-in <span class="req">*</span></label>
+        <input type="date" id="check-in">
+      </div>
+      <div class="field">
+        <label for="check-out">Check-out <span class="req">*</span></label>
+        <input type="date" id="check-out">
+      </div>
+      <div class="field">
+        <label for="rooms">Rooms</label>
+        <input type="number" id="rooms" value="1" min="1" max="4">
+      </div>
+      <div class="field">
+        <label for="adults">Adults (per room)</label>
+        <input type="number" id="adults" value="2" min="1" max="8">
+      </div>
+      <div class="field wide">
+        <label for="children">Children (per room)</label>
+        <input type="number" id="children" value="0" min="0" max="6">
+        <div id="children-ages" class="children-ages hidden"></div>
+        <small class="hint">Revelex requires an age for every child.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">4 &middot; Tracking</h2>
+    <p class="section-note">Six fields, six distinct meanings. Hold the meanings steady across campaigns or nothing aggregates and you end up reading URLs by eye.</p>
+    <div class="grid">
+      <div class="field">
+        <label for="utm-source">Source <span class="req">*</span></label>
+        <select id="utm-source"></select>
+        <small class="hint">Who sent the click.</small>
+      </div>
+      <div class="field">
+        <label for="utm-medium">Medium <span class="req">*</span></label>
+        <select id="utm-medium"></select>
+        <small class="hint" id="medium-hint">The channel type.</small>
+      </div>
+      <div class="field">
+        <label for="utm-campaign">Campaign <span class="req">*</span></label>
+        <input type="text" id="utm-campaign" list="campaign-list" placeholder="outthere-capella">
+        <datalist id="campaign-list">
+          <option value="outthere-capella"></option>
+          <option value="warwick-competition"></option>
+          <option value="departures-board"></option>
+          <option value="between-journeys"></option>
+        </datalist>
+        <small class="hint">The campaign this belongs to.</small>
+      </div>
+      <div class="field">
+        <label for="utm-id">Campaign ID</label>
+        <input type="text" id="utm-id" placeholder="otc-q4-2026">
+        <small class="hint">The wave. Stable across every link in one push.</small>
+      </div>
+      <div class="field">
+        <label for="utm-content">Placement <span class="req">*</span></label>
+        <input type="text" id="utm-content" placeholder="capella-bangkok-hero">
+        <small class="hint">Which property, which slot. This is the per-property granularity.</small>
+      </div>
+      <div class="field">
+        <label for="utm-term">Link type</label>
+        <select id="utm-term"></select>
+        <small class="hint">What kind of thing was clicked.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">5 &middot; The link</h2>
+    <div class="output empty" id="output">Fill in the required fields to build the link.</div>
+    <div class="blockers" id="blockers"></div>
+    <div class="toggle-row">
+      <input type="checkbox" id="readable">
+      <label for="readable">Show readable version, with the brackets unencoded. Use the encoded one everywhere real.</label>
+    </div>
+    <div class="actions">
+      <button id="copy-btn">Copy link</button>
+      <button id="save-btn" class="secondary">Save to registry</button>
+      <a id="open-link" class="btn-link secondary" href="#" target="_blank" rel="noopener">Test in new tab</a>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">6 &middot; Registry</h2>
+    <p class="section-note">Kept in this browser. Export the JSON to keep the inventory somewhere real.</p>
+    <div id="registry-body"><p class="registry-empty">Nothing saved yet.</p></div>
+    <div class="actions">
+      <button id="send-btn">Send to sheet</button>
+      <button id="export-btn" class="secondary">Export JSON</button>
+      <button id="clear-btn" class="secondary">Clear registry</button>
+    </div>
+    <div class="status" id="registry-status"></div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">7 &middot; Google Sheet</h2>
+    <p class="section-note">Point this at the deployed Apps Script from <code>gtm-link-registry-appsscript.gs</code> and every saved link is pushed to the shared sheet. Kept in this browser, so each person enters it once.</p>
+    <div class="field">
+      <label for="sheet-url">Web app URL</label>
+      <input type="text" id="sheet-url" placeholder="https://script.google.com/macros/s/.../exec">
+    </div>
+    <div class="field">
+      <label for="sheet-token">Shared token</label>
+      <input type="text" id="sheet-token" placeholder="the SHARED_TOKEN from the script">
+      <small class="hint">Not a password to anything else — it just stops a stranger who finds the URL appending junk.</small>
+    </div>
+    <div class="toggle-row">
+      <input type="checkbox" id="sheet-auto">
+      <label for="sheet-auto">Push automatically whenever I save a link</label>
+    </div>
+    <div class="status" id="sheet-status"></div>
+  </div>
+</div>
+
+<script>
+const HOST = 'https://book.globaltravelmoments.com';
+const HATOKEN = 'GTCGTM01';
+const PHOTON_URL = 'https://photon.komoot.io/api/';
+const REGISTRY_KEY = 'gtm-link-registry-v1';
+const $ = id => document.getElementById(id);
+
+/* ---------------------------------------------------------------
+   Endpoints. `redirects` decides whether the UTMs need the hash copy:
+   those two answer with a 302 that drops the query string entirely.
+   `clearAll` is per the playbook - area searches need clear=all to
+   drop prior session state, and sign-in must NOT carry it.
+----------------------------------------------------------------*/
+const ENDPOINTS = {
+  hotel: {
+    path: '/app/0/hotel/0/room_availability.html',
+    redirects: true, clearAll: false, stay: true,
+    hint: 'Lands on one hotel’s live rates. Redirects to room_selection.html, so the UTMs go in the fragment too. Allow 20 seconds on a first search before calling it broken.'
+  },
+  area: {
+    path: '/app/0/hotel/0/search_hotels.html',
+    redirects: true, clearAll: true, stay: true,
+    hint: 'Lands on a results list. Redirects to hotel_selection.html, so the UTMs go in the fragment too.'
+  },
+  register: {
+    path: '/app/0/registration.html',
+    redirects: false, clearAll: true, stay: false,
+    hint: 'No redirect, so the query string survives and the UTMs work on their own.'
+  },
+  login: {
+    path: '/app/0/login.html',
+    redirects: false, clearAll: false, stay: false,
+    hint: 'No redirect. Note this one must NOT carry clear=all — it breaks the sign-in.'
+  },
+  custom: {
+    path: '', redirects: true, clearAll: false, stay: false,
+    hint: 'Paste the URL. The hash copy is added as a precaution, since anything might redirect.'
+  }
+};
+
+/* Controlled vocabulary. Legacy values are kept so history still lines up:
+   website/button and linkedin/paid_social are already live in the data. */
+const SOURCES = [
+  ['outthere', 'outthere — OutThere Travel'],
+  ['gtm-website', 'gtm-website — our own site'],
+  ['website', 'website — legacy, matches existing data'],
+  ['brevo', 'brevo — our email'],
+  ['linkedin', 'linkedin'],
+  ['instagram', 'instagram'],
+  ['facebook', 'facebook'],
+  ['twobadtourists', 'twobadtourists — partner email'],
+  ['iglta', 'iglta'],
+  ['tbt', 'tbt'],
+  ['capella', 'capella — hotel partner'],
+  ['partner', 'partner — other, name it in placement']
+];
+
+/* GA4 sorts traffic into channels off the medium value. Anything outside
+   its recognised list lands in Unassigned - flagged in the UI rather than
+   forbidden, because two non-standard mediums are already live. */
+const MEDIUMS = [
+  ['referral', 'referral — a link on someone’s site', true],
+  ['email', 'email', true],
+  ['affiliate', 'affiliate', true],
+  ['cpc', 'cpc — paid search', true],
+  ['display', 'display — banners', true],
+  ['social', 'social — organic posts', true],
+  ['partner', 'partner — descriptive, lands in Unassigned', false],
+  ['paid_social', 'paid_social — legacy, lands in Unassigned', false],
+  ['button', 'button — legacy, lands in Unassigned', false]
+];
+
+const TERMS = [
+  ['', '— none —'],
+  ['single-hotel', 'single-hotel — one property embed'],
+  ['area-search', 'area-search — search bar embed'],
+  ['static-link', 'static-link — plain text or button link'],
+  ['banner', 'banner — image placement'],
+  ['email-button', 'email-button']
+];
+
+function fillSelect(el, rows) {
+  rows.forEach(r => {
+    const o = document.createElement('option');
+    o.value = r[0];
+    o.textContent = r[1];
+    el.appendChild(o);
+  });
+}
+fillSelect($('utm-source'), [['', '— pick one —']].concat(SOURCES));
+fillSelect($('utm-medium'), [['', '— pick one —']].concat(MEDIUMS.map(m => [m[0], m[1]])));
+fillSelect($('utm-term'), TERMS);
+
+/* slug hygiene - the whole point of the dropdowns is that "OutThere" and
+   "outthere" never become two rows in a report. Free-text fields get the
+   same treatment on the way out. */
+function slug(s) {
+  return (s || '').toString().trim().toLowerCase()
+    .replace(/['’]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/* ---------------- hotel database (GTCHotels.csv) ---------------- */
+let HOTELS = [];
+let hotelTimer = null, hotelActive = -1, hotelResults = [];
+
+function parseLine(line) {
+  if (line.indexOf('"') === -1) return line.split(',');
+  const out = []; let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQ) {
+      if (ch === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else inQ = false; }
+      else cur += ch;
+    } else {
+      if (ch === '"') inQ = true;
+      else if (ch === ',') { out.push(cur); cur = ''; }
+      else cur += ch;
+    }
+  }
+  out.push(cur);
+  return out;
+}
+
+function parseCSV(text) {
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const lines = text.split(/\r?\n/);
+  const hotels = [];
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line) continue;
+    const f = parseLine(line);
+    if (f.length < 11) continue;
+    const id = (f[2] || '').trim();
+    const name = (f[3] || '').trim();
+    if (!id || !name || !/^[0-9]+$/.test(id)) continue;
+    hotels.push({ id: id, name: name, nameLC: name.toLowerCase(), city: (f[6] || '').trim(), cc: (f[8] || '').trim() });
+  }
+  return hotels;
+}
+
+function setDbStatus(text, cls) {
+  const el = $('db-status');
+  el.textContent = text;
+  el.className = 'hint' + (cls ? ' ' + cls : '');
+}
+
+$('csv-file').addEventListener('change', e => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  setDbStatus('Reading ' + file.name + ' …', 'busy');
+  const reader = new FileReader();
+  reader.onload = () => {
+    setDbStatus('Parsing rows — this can take a few seconds…', 'busy');
+    setTimeout(() => {
+      try {
+        HOTELS = parseCSV(reader.result);
+        if (!HOTELS.length) { setDbStatus('No hotels found in that file — is it the right CSV?', 'failed'); return; }
+        setDbStatus('✓ ' + HOTELS.length.toLocaleString() + ' hotels loaded — type a name above.', 'loaded');
+      } catch (err) {
+        setDbStatus('Could not parse that file. ' + err.message, 'failed');
+      }
+    }, 30);
+  };
+  reader.onerror = () => setDbStatus('Could not read that file.', 'failed');
+  reader.readAsText(file);
+});
+
+function searchHotels(query) {
+  const q = query.toLowerCase();
+  const starts = [], contains = [];
+  for (let i = 0; i < HOTELS.length; i++) {
+    const h = HOTELS[i];
+    const pos = h.nameLC.indexOf(q);
+    if (pos === 0) { if (starts.length < 15) starts.push(h); }
+    else if (pos > 0) { if (contains.length < 15) contains.push(h); }
+    if (starts.length >= 15) break;
+  }
+  return starts.concat(contains).slice(0, 15);
+}
+
+function boxStatus(box, text) {
+  box.replaceChildren();
+  const d = document.createElement('div');
+  d.className = 's-status';
+  d.textContent = text;
+  box.appendChild(d);
+  box.classList.remove('hidden');
+}
+
+function renderHotelSuggestions(results) {
+  hotelResults = results; hotelActive = -1;
+  const box = $('hotel-suggestions');
+  box.replaceChildren();
+  if (!results.length) { boxStatus(box, 'No hotels match that name.'); return; }
+  results.forEach((h, i) => {
+    const row = document.createElement('div');
+    row.className = 'suggestion';
+    const main = document.createElement('div'); main.className = 's-main'; main.textContent = h.name;
+    const sub = document.createElement('div'); sub.className = 's-sub';
+    sub.textContent = [h.city, h.cc].filter(Boolean).join(', ') || '—';
+    const idEl = document.createElement('div'); idEl.className = 's-id'; idEl.textContent = 'GDS ID ' + h.id;
+    row.appendChild(main); row.appendChild(sub); row.appendChild(idEl);
+    row.addEventListener('mousedown', ev => { ev.preventDefault(); pickHotel(i); });
+    box.appendChild(row);
+  });
+  box.classList.remove('hidden');
+}
+
+function pickHotel(i) {
+  const h = hotelResults[i];
+  if (!h) return;
+  $('hotel-name').value = h.name;
+  $('gds-id').value = h.id;
+  if (!$('utm-content').value.trim()) $('utm-content').value = slug(h.name);
+  $('hotel-suggestions').classList.add('hidden');
+  rebuild();
+}
+
+$('hotel-name').addEventListener('input', () => {
+  const q = $('hotel-name').value.trim();
+  clearTimeout(hotelTimer);
+  if (!HOTELS.length || q.length < 2) { $('hotel-suggestions').classList.add('hidden'); return; }
+  boxStatus($('hotel-suggestions'), 'Searching…');
+  hotelTimer = setTimeout(() => {
+    if ($('hotel-name').value.trim() === q) renderHotelSuggestions(searchHotels(q));
+  }, 200);
+});
+
+/* ---------------- destination lookup (Photon) ---------------- */
+let placeTimer = null, placeResults = [];
+
+function describe(feature) {
+  const p = feature.properties || {};
+  const c = feature.geometry.coordinates;
+  const main = p.name || p.city || p.street || p.country || 'Unknown';
+  const parts = [];
+  if (p.city && p.city !== main) parts.push(p.city);
+  if (p.state && p.state !== main) parts.push(p.state);
+  if (p.country && p.country !== main) parts.push(p.country);
+  return { name: main, sub: parts.join(', '), lat: c[1], lng: c[0] };
+}
+
+function renderPlaceSuggestions(results) {
+  placeResults = results;
+  const box = $('place-suggestions');
+  box.replaceChildren();
+  if (!results.length) { boxStatus(box, 'No matches. Try a different spelling.'); return; }
+  results.forEach((r, i) => {
+    const row = document.createElement('div');
+    row.className = 'suggestion';
+    const main = document.createElement('div'); main.className = 's-main'; main.textContent = r.name;
+    const sub = document.createElement('div'); sub.className = 's-sub'; sub.textContent = r.sub || '—';
+    row.appendChild(main); row.appendChild(sub);
+    row.addEventListener('mousedown', ev => { ev.preventDefault(); pickPlace(i); });
+    box.appendChild(row);
+  });
+  box.classList.remove('hidden');
+}
+
+function pickPlace(i) {
+  const r = placeResults[i];
+  if (!r) return;
+  $('place-name').value = r.name;
+  $('lat').value = r.lat;
+  $('lng').value = r.lng;
+  $('place-status').textContent = '✓ Coordinates locked — ' + r.lat.toFixed(4) + ', ' + r.lng.toFixed(4);
+  $('place-status').className = 'hint loaded';
+  $('place-suggestions').classList.add('hidden');
+  rebuild();
+}
+
+$('place-name').addEventListener('input', () => {
+  const q = $('place-name').value.trim();
+  clearTimeout(placeTimer);
+  $('lat').value = ''; $('lng').value = '';
+  $('place-status').textContent = 'Type at least three characters, then pick a suggestion.';
+  $('place-status').className = 'hint';
+  if (q.length < 3) { $('place-suggestions').classList.add('hidden'); rebuild(); return; }
+  boxStatus($('place-suggestions'), 'Searching…');
+  placeTimer = setTimeout(() => {
+    fetch(PHOTON_URL + '?q=' + encodeURIComponent(q) + '&limit=6&lang=en')
+      .then(r => r.json())
+      .then(d => {
+        if ($('place-name').value.trim() === q) renderPlaceSuggestions((d.features || []).map(describe));
+      })
+      .catch(() => boxStatus($('place-suggestions'), 'Lookup unavailable. Enter lat/long by hand.'));
+  }, 280);
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.field.searchable')) {
+    $('hotel-suggestions').classList.add('hidden');
+    $('place-suggestions').classList.add('hidden');
+  }
+});
+
+/* ---------------- children ages ---------------- */
+function renderChildrenAges() {
+  const n = parseInt($('children').value, 10) || 0;
+  const wrap = $('children-ages');
+  wrap.replaceChildren();
+  if (n <= 0) { wrap.classList.add('hidden'); rebuild(); return; }
+  wrap.classList.remove('hidden');
+  for (let i = 1; i <= n; i++) {
+    const div = document.createElement('div');
+    const label = document.createElement('label');
+    label.setAttribute('for', 'child-age-' + i);
+    label.textContent = 'Child ' + i + ' age';
+    const input = document.createElement('input');
+    input.type = 'number'; input.id = 'child-age-' + i;
+    input.min = '0'; input.max = '17'; input.value = '5';
+    input.addEventListener('input', rebuild);
+    div.appendChild(label); div.appendChild(input);
+    wrap.appendChild(div);
+  }
+  rebuild();
+}
+
+/* ---------------- url building ---------------- */
+function fmtDate(iso) {
+  if (!iso) return '';
+  const b = iso.split('-');
+  return b[1] + '/' + b[2] + '/' + b[0];
+}
+
+function enc(key, value, readable) {
+  return (readable ? key : encodeURIComponent(key)) + '=' + encodeURIComponent(value);
+}
+
+function utmValues() {
+  return {
+    utm_source: $('utm-source').value,
+    utm_medium: $('utm-medium').value,
+    utm_campaign: slug($('utm-campaign').value),
+    utm_id: slug($('utm-id').value),
+    utm_content: slug($('utm-content').value),
+    utm_term: $('utm-term').value
+  };
+}
+
+function missingFields() {
+  const kind = $('endpoint').value;
+  const cfg = ENDPOINTS[kind];
+  const u = utmValues();
+  const out = [];
+  if (kind === 'hotel' && !$('gds-id').value.trim()) out.push('a GDS hotel ID');
+  if (kind === 'area' && (!$('lat').value || !$('lng').value)) out.push('a destination with locked coordinates');
+  if (kind === 'custom' && !$('custom-url').value.trim()) out.push('the booking-site URL');
+  if (cfg.stay && (!$('check-in').value || !$('check-out').value)) out.push('both dates');
+  if (cfg.stay && $('check-in').value && $('check-out').value && $('check-out').value <= $('check-in').value) {
+    out.push('a check-out after the check-in');
+  }
+  if (!u.utm_source) out.push('a source');
+  if (!u.utm_medium) out.push('a medium');
+  if (!u.utm_campaign) out.push('a campaign');
+  if (!u.utm_content) out.push('a placement');
+  return out;
+}
+
+function buildURL(readable) {
+  if (missingFields().length) return null;
+  const kind = $('endpoint').value;
+  const cfg = ENDPOINTS[kind];
+  const u = utmValues();
+
+  let base, p = [];
+  if (kind === 'custom') {
+    const raw = $('custom-url').value.trim();
+    const qIndex = raw.indexOf('?');
+    base = qIndex === -1 ? raw : raw.slice(0, qIndex);
+    if (qIndex !== -1) {
+      raw.slice(qIndex + 1).split('&').filter(Boolean).forEach(pair => {
+        if (!/^utm_/i.test(pair)) p.push(pair);
+      });
+    }
+    if (!p.some(x => /^hatoken=/.test(x))) p.unshift(enc('hatoken', HATOKEN, readable));
+  } else {
+    base = HOST + cfg.path;
+    p.push(enc('hatoken', HATOKEN, readable));
+    if (cfg.clearAll) p.push(enc('clear', 'all', readable));
+  }
+
+  if (kind === 'hotel') {
+    p.push(enc('search[hotel_list][gds_id][' + $('gds-id').value.trim() + ']', '3', readable));
+  }
+  if (kind === 'area') {
+    p.push(enc('search[name]', $('place-name').value.trim(), readable));
+    p.push(enc('search[latitude]', $('lat').value.trim(), readable));
+    p.push(enc('search[longitude]', $('lng').value.trim(), readable));
+    p.push(enc('search[distance]', $('distance').value || '20', readable));
+  }
+
+  if (cfg.stay) {
+    const roomCount = parseInt($('rooms').value, 10) || 1;
+    const adults = parseInt($('adults').value, 10) || 2;
+    const children = parseInt($('children').value, 10) || 0;
+    p.push(enc('search[check_in_date]', fmtDate($('check-in').value), readable));
+    p.push(enc('search[check_out_date]', fmtDate($('check-out').value), readable));
+    p.push(enc('number-of-rooms', roomCount, readable));
+    for (let r = 1; r <= roomCount; r++) {
+      p.push(enc('search[rooms][' + r + '][number_adults]', adults, readable));
+      p.push(enc('search[rooms][' + r + '][number_children]', children, readable));
+      for (let c = 1; c <= children; c++) {
+        const age = $('child-age-' + c);
+        p.push(enc('search[rooms][' + r + '][children_ages][' + c + ']', age ? (age.value || '5') : '5', readable));
+      }
+    }
+    if (kind === 'area') {
+      const stars = [];
+      if ($('star5').checked) stars.push('5');
+      if ($('star4').checked) stars.push('4');
+      stars.forEach((s, i) => p.push(enc('search[star_ratings][' + i + ']', s, readable)));
+    }
+  }
+
+  const utmPairs = [];
+  Object.keys(u).forEach(k => { if (u[k]) utmPairs.push(enc(k, u[k], readable)); });
+  p = p.concat(utmPairs);
+
+  /* The redirect drops the query string, so the fragment carries a second
+     copy. GA4 does not read campaign values out of a fragment on its own -
+     that still needs a reader on the booking site - but without this copy
+     there is nothing for a reader to find. */
+  const hash = (cfg.redirects && utmPairs.length) ? '#' + utmPairs.join('&') : '';
+  return base + '?' + p.join('&') + hash;
+}
+
+function renderBlockers() {
+  const box = $('blockers');
+  box.replaceChildren();
+  const missing = missingFields();
+  const u = utmValues();
+
+  if (missing.length) {
+    const p = document.createElement('p');
+    p.className = 'no';
+    p.textContent = 'Still needs: ' + missing.join(', ') + '.';
+    box.appendChild(p);
+    return;
+  }
+
+  const notes = [];
+  const cfg = ENDPOINTS[$('endpoint').value];
+  if (cfg.redirects) notes.push('This endpoint redirects, so the UTMs are repeated in the fragment.');
+  if (!u.utm_id) notes.push('No campaign ID. Not fatal, but it is the field that ties a wave together.');
+  if (!u.utm_term) notes.push('No link type. You lose the ability to split embed types apart later.');
+  const mediumRow = MEDIUMS.find(m => m[0] === u.utm_medium);
+  if (mediumRow && !mediumRow[2]) notes.push('Medium "' + u.utm_medium + '" is outside GA4’s recognised list, so this traffic lands in Unassigned unless you build a custom channel group.');
+
+  const p = document.createElement('p');
+  p.className = 'ok';
+  p.textContent = '✓ Complete.';
+  box.appendChild(p);
+  if (notes.length) {
+    const ul = document.createElement('ul');
+    notes.forEach(n => { const li = document.createElement('li'); li.textContent = n; ul.appendChild(li); });
+    box.appendChild(ul);
+  }
+}
+
+/* Keep the link type honest when the destination changes. Only overwrites
+   a blank value or the other endpoint's default - a deliberate choice like
+   "banner" is left alone. Without this you silently ship an area-search
+   link labelled single-hotel, which is the exact mislabelling this tool
+   exists to stop. */
+const TERM_DEFAULTS = { hotel: 'single-hotel', area: 'area-search' };
+function syncTerm(kind) {
+  const el = $('utm-term');
+  const auto = Object.keys(TERM_DEFAULTS).map(k => TERM_DEFAULTS[k]);
+  if (TERM_DEFAULTS[kind] && (!el.value || auto.indexOf(el.value) !== -1)) {
+    el.value = TERM_DEFAULTS[kind];
+  }
+}
+
+let lastKind = null;
+function rebuild() {
+  const kind = $('endpoint').value;
+  const cfg = ENDPOINTS[kind];
+  if (kind !== lastKind) { syncTerm(kind); lastKind = kind; }
+  $('endpoint-hint').textContent = cfg.hint;
+  $('hotel-card').hidden = kind !== 'hotel';
+  $('area-card').hidden = kind !== 'area';
+  $('stay-card').hidden = !cfg.stay;
+  $('custom-wrap').hidden = kind !== 'custom';
+
+  const mediumRow = MEDIUMS.find(m => m[0] === $('utm-medium').value);
+  const mh = $('medium-hint');
+  if (mediumRow && !mediumRow[2]) {
+    mh.textContent = 'Lands in Unassigned in GA4’s default channel grouping.';
+    mh.className = 'hint warn';
+  } else {
+    mh.textContent = 'The channel type.';
+    mh.className = 'hint';
+  }
+
+  const url = buildURL($('readable').checked);
+  const out = $('output');
+  const link = $('open-link');
+  if (!url) {
+    out.textContent = 'Fill in the required fields to build the link.';
+    out.classList.add('empty');
+    link.setAttribute('href', '#');
+    link.setAttribute('aria-disabled', 'true');
+    $('save-btn').disabled = true;
+  } else {
+    out.textContent = url;
+    out.classList.remove('empty');
+    link.setAttribute('href', buildURL(false));
+    link.removeAttribute('aria-disabled');
+    $('save-btn').disabled = false;
+  }
+  renderBlockers();
+}
+
+/* ---------------- registry ---------------- */
+function loadRegistry() {
+  try { return JSON.parse(localStorage.getItem(REGISTRY_KEY) || '[]'); }
+  catch (e) { return []; }
+}
+function saveRegistry(rows) {
+  localStorage.setItem(REGISTRY_KEY, JSON.stringify(rows));
+}
+
+function renderRegistry() {
+  const rows = loadRegistry();
+  const body = $('registry-body');
+  body.replaceChildren();
+  if (!rows.length) {
+    const p = document.createElement('p');
+    p.className = 'registry-empty';
+    p.textContent = 'Nothing saved yet.';
+    body.appendChild(p);
+    return;
+  }
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const hr = document.createElement('tr');
+  ['Saved', 'Sheet', 'Campaign', 'Placement', 'Source / medium', 'Link', ''].forEach(h => {
+    const th = document.createElement('th'); th.textContent = h; hr.appendChild(th);
+  });
+  thead.appendChild(hr);
+  table.appendChild(thead);
+  const tbody = document.createElement('tbody');
+  rows.slice().reverse().forEach(row => {
+    const tr = document.createElement('tr');
+    const cells = [
+      row.saved ? row.saved.slice(0, 10) : '',
+      row.sent ? 'sent' : '—',
+      row.utm.utm_campaign || '',
+      row.utm.utm_content || '',
+      (row.utm.utm_source || '') + ' / ' + (row.utm.utm_medium || '')
+    ];
+    cells.forEach(c => { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); });
+    const urlTd = document.createElement('td');
+    urlTd.className = 'url';
+    urlTd.textContent = row.url;
+    tr.appendChild(urlTd);
+    const actTd = document.createElement('td');
+    const del = document.createElement('button');
+    del.className = 'secondary row-btn';
+    del.textContent = 'Delete';
+    del.addEventListener('click', () => {
+      const all = loadRegistry().filter(r => r.url !== row.url || r.saved !== row.saved);
+      saveRegistry(all);
+      renderRegistry();
+    });
+    actTd.appendChild(del);
+    tr.appendChild(actTd);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  body.appendChild(table);
+}
+
+$('save-btn').addEventListener('click', () => {
+  const url = buildURL(false);
+  if (!url) return;
+  const rows = loadRegistry();
+  if (rows.some(r => r.url === url)) {
+    $('registry-status').textContent = 'That exact link is already in the registry.';
+    setTimeout(() => { $('registry-status').textContent = ''; }, 3500);
+    return;
+  }
+  rows.push({
+    saved: new Date().toISOString(),
+    endpoint: $('endpoint').value,
+    hotel: $('hotel-name').value.trim() || null,
+    gdsId: $('gds-id').value.trim() || null,
+    destination: $('place-name').value.trim() || null,
+    utm: utmValues(),
+    url: url
+  });
+  saveRegistry(rows);
+  renderRegistry();
+  $('registry-status').textContent = 'Saved. ' + rows.length + ' link' + (rows.length === 1 ? '' : 's') + ' in the registry.';
+  setTimeout(() => { $('registry-status').textContent = ''; }, 3500);
+  if (loadSheetCfg().auto) sendToSheet([rows[rows.length - 1]], true);
+});
+
+/* ---------------- google sheet ----------------
+   Apps Script web apps redirect their response through googleusercontent,
+   which breaks CORS, so this posts no-cors: the row lands, but the page
+   cannot read a confirmation. Rows are therefore marked "sent" rather than
+   "confirmed", and localStorage stays the working copy. The sheet is the
+   shared record; check it if you want certainty. */
+const SHEET_CFG_KEY = 'gtm-link-sheet-cfg-v1';
+
+function loadSheetCfg() {
+  try { return JSON.parse(localStorage.getItem(SHEET_CFG_KEY) || '{}'); }
+  catch (e) { return {}; }
+}
+function saveSheetCfg() {
+  localStorage.setItem(SHEET_CFG_KEY, JSON.stringify({
+    url: $('sheet-url').value.trim(),
+    token: $('sheet-token').value.trim(),
+    auto: $('sheet-auto').checked
+  }));
+}
+
+function sheetStatus(text) {
+  $('sheet-status').textContent = text;
+  if (text) setTimeout(() => { $('sheet-status').textContent = ''; }, 5000);
+}
+
+async function sendToSheet(rows, quiet) {
+  const cfg = loadSheetCfg();
+  if (!cfg.url || !cfg.token) {
+    if (!quiet) sheetStatus('Add the web app URL and token below first.');
+    return false;
+  }
+  if (!rows.length) {
+    if (!quiet) sheetStatus('Nothing new to send — everything here is already on the sheet.');
+    return false;
+  }
+  try {
+    await fetch(cfg.url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ token: cfg.token, links: rows })
+    });
+    const all = loadRegistry();
+    const sentUrls = {};
+    rows.forEach(r => { sentUrls[r.url] = true; });
+    all.forEach(r => { if (sentUrls[r.url]) r.sent = new Date().toISOString(); });
+    saveRegistry(all);
+    renderRegistry();
+    sheetStatus('Sent ' + rows.length + ' link' + (rows.length === 1 ? '' : 's') + ' to the sheet. Check the sheet to confirm — the response cannot be read back.');
+    return true;
+  } catch (e) {
+    sheetStatus('Could not reach the web app. ' + e.message);
+    return false;
+  }
+}
+
+$('send-btn').addEventListener('click', () => {
+  const unsent = loadRegistry().filter(r => !r.sent);
+  sendToSheet(unsent, false);
+});
+
+['sheet-url', 'sheet-token', 'sheet-auto'].forEach(id => {
+  $(id).addEventListener('input', saveSheetCfg);
+  $(id).addEventListener('change', saveSheetCfg);
+});
+
+$('export-btn').addEventListener('click', () => {
+  const rows = loadRegistry();
+  if (!rows.length) { $('registry-status').textContent = 'Nothing to export yet.'; return; }
+  const blob = new Blob([JSON.stringify(rows, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'gtm-link-registry.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+});
+
+$('clear-btn').addEventListener('click', () => {
+  if (!loadRegistry().length) return;
+  if (!confirm('Clear every saved link? Export first if you want to keep them.')) return;
+  saveRegistry([]);
+  renderRegistry();
+});
+
+/* ---------------- copy ---------------- */
+function tryCopy(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) { return false; }
+}
+
+$('copy-btn').addEventListener('click', async () => {
+  const url = buildURL($('readable').checked);
+  if (!url) { $('status').textContent = 'Fill the required fields first.'; return; }
+  let ok = false;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    try { await navigator.clipboard.writeText(url); ok = true; } catch (e) {}
+  }
+  if (!ok) ok = tryCopy(url);
+  $('status').textContent = ok ? 'Copied.' : 'Auto-copy blocked — select the link and press Cmd+C.';
+  setTimeout(() => { $('status').textContent = ''; }, 4000);
+});
+
+/* ---------------- wiring ---------------- */
+['endpoint', 'custom-url', 'gds-id', 'hotel-name', 'lat', 'lng', 'distance', 'star5', 'star4',
+ 'check-in', 'check-out', 'rooms', 'adults', 'readable',
+ 'utm-source', 'utm-medium', 'utm-campaign', 'utm-id', 'utm-content', 'utm-term'
+].forEach(id => {
+  $(id).addEventListener('input', rebuild);
+  $(id).addEventListener('change', rebuild);
+});
+$('children').addEventListener('input', renderChildrenAges);
+
+/* default stay: 30 days out, 3 nights - same as the embeds */
+function fmtLocal(d) {
+  const mm = ('0' + (d.getMonth() + 1)).slice(-2);
+  const dd = ('0' + d.getDate()).slice(-2);
+  return d.getFullYear() + '-' + mm + '-' + dd;
+}
+const ci = new Date(); ci.setDate(ci.getDate() + 30);
+const co = new Date(); co.setDate(co.getDate() + 33);
+$('check-in').value = fmtLocal(ci);
+$('check-out').value = fmtLocal(co);
+$('check-in').min = fmtLocal(new Date());
+
+/* restore the sheet connection for this browser */
+const savedCfg = loadSheetCfg();
+if (savedCfg.url) $('sheet-url').value = savedCfg.url;
+if (savedCfg.token) $('sheet-token').value = savedCfg.token;
+$('sheet-auto').checked = !!savedCfg.auto;
+
+renderRegistry();
+rebuild();
+</script>
+</body>
+</html>
