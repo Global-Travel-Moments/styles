@@ -25,8 +25,11 @@
    3. A registry. Every link you build is kept, and exports as JSON - the
       placement inventory that does not currently exist.
 
-  Hotel IDs: load GTCHotels.csv with the file picker to search by name.
-  Local only, nothing is sent anywhere, registry lives in localStorage.
+  Hotel IDs: type three letters and the matching slice of hotels/pack.bin is
+  fetched with an HTTP Range request and gunzipped in the browser (the pack and
+  its byte-offset map are built by build-hotel-index.py). A local GTCHotels.csv
+  picker is kept as a fallback for offline use.
+  Registry lives in localStorage; nothing else is sent anywhere.
 -->
 <style>
 :root {
@@ -101,6 +104,10 @@ small.hint.loaded { color: #1a7a3c; opacity: 1; font-weight: 600; }
 small.hint.busy { color: var(--orange); opacity: 1; font-weight: 600; }
 small.hint.failed { color: #c0392b; opacity: 1; font-weight: 600; }
 small.hint.warn { color: #a35200; opacity: 1; font-weight: 600; }
+.db-fallback { margin-top: 10px; }
+.db-fallback summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.db-fallback summary:hover { color: var(--ink); }
+.db-fallback input[type=file] { margin-top: 8px; }
 
 .suggestions {
   position: absolute; top: 100%; left: 0; right: 0; margin-top: 4px;
@@ -198,11 +205,14 @@ td.url { font-family: 'Menlo', monospace; font-size: 0.7rem; word-break: break-a
 
   <div class="card" id="hotel-card">
     <h2 class="section-title">2 &middot; Which hotel?</h2>
-    <p class="section-note">Load GTCHotels.csv once per session to search by name, or type a GDS ID straight in.</p>
+    <p class="section-note">Type at least three letters of the hotel name, or enter a GDS ID straight in.</p>
     <div class="field">
-      <label for="csv-file">Hotel database</label>
-      <input type="file" id="csv-file" accept=".csv">
-      <small class="hint" id="db-status">No database loaded. Pick <strong>GTCHotels.csv</strong> to search by name.</small>
+      <small class="hint" id="db-status">Checking the hotel database&hellip;</small>
+      <details class="db-fallback" id="db-fallback" hidden>
+        <summary>Load a local GTCHotels.csv instead</summary>
+        <input type="file" id="csv-file" accept=".csv">
+        <small class="hint">For offline use, or when this page is opened straight from disk. Searches the full Revelex export in memory.</small>
+      </details>
     </div>
     <div class="grid">
       <div class="field searchable">
@@ -413,41 +423,41 @@ const ENDPOINTS = {
 /* Controlled vocabulary. Legacy values are kept so history still lines up:
    website/button and linkedin/paid_social are already live in the data. */
 const SOURCES = [
-  ['outthere', 'outthere — OutThere Travel'],
-  ['gtm-website', 'gtm-website — our own site'],
-  ['website', 'website — legacy, matches existing data'],
-  ['brevo', 'brevo — our email'],
+  ['outthere', 'outthere (OutThere Travel)'],
+  ['gtm-website', 'gtm-website (our own site)'],
+  ['website', 'website (legacy, matches existing data)'],
+  ['brevo', 'brevo (our email)'],
   ['linkedin', 'linkedin'],
   ['instagram', 'instagram'],
   ['facebook', 'facebook'],
-  ['twobadtourists', 'twobadtourists — partner email'],
+  ['twobadtourists', 'twobadtourists (partner email)'],
   ['iglta', 'iglta'],
   ['tbt', 'tbt'],
-  ['capella', 'capella — hotel partner'],
-  ['partner', 'partner — other, name it in placement']
+  ['capella', 'capella (hotel partner)'],
+  ['partner', 'partner (other, name it in placement)']
 ];
 
 /* GA4 sorts traffic into channels off the medium value. Anything outside
    its recognised list lands in Unassigned - flagged in the UI rather than
    forbidden, because two non-standard mediums are already live. */
 const MEDIUMS = [
-  ['referral', 'referral — a link on someone’s site', true],
+  ['referral', 'referral (a link on someone’s site)', true],
   ['email', 'email', true],
   ['affiliate', 'affiliate', true],
-  ['cpc', 'cpc — paid search', true],
-  ['display', 'display — banners', true],
-  ['social', 'social — organic posts', true],
-  ['partner', 'partner — descriptive, lands in Unassigned', false],
-  ['paid_social', 'paid_social — legacy, lands in Unassigned', false],
-  ['button', 'button — legacy, lands in Unassigned', false]
+  ['cpc', 'cpc (paid search)', true],
+  ['display', 'display (banners)', true],
+  ['social', 'social (organic posts)', true],
+  ['partner', 'partner (descriptive, lands in Unassigned)', false],
+  ['paid_social', 'paid_social (legacy, lands in Unassigned)', false],
+  ['button', 'button (legacy, lands in Unassigned)', false]
 ];
 
 const TERMS = [
   ['', '— none —'],
-  ['single-hotel', 'single-hotel — one property embed'],
-  ['area-search', 'area-search — search bar embed'],
-  ['static-link', 'static-link — plain text or button link'],
-  ['banner', 'banner — image placement'],
+  ['single-hotel', 'single-hotel (one property embed)'],
+  ['area-search', 'area-search (search bar embed)'],
+  ['static-link', 'static-link (plain text or button link)'],
+  ['banner', 'banner (image placement)'],
   ['email-button', 'email-button']
 ];
 
@@ -473,9 +483,114 @@ function slug(s) {
     .replace(/^-+|-+$/g, '');
 }
 
-/* ---------------- hotel database (GTCHotels.csv) ---------------- */
-let HOTELS = [];
+/* ---------------- hotel database ---------------- */
+/* Two modes. Normally we fetch one small shard of the index per search from
+   HOTEL_DB_BASE (see build-hotel-index.py). If that is unreachable - opening
+   this file straight from disk, say - the user can load the full GTCHotels.csv
+   with the fallback picker and we search that in memory instead. */
+const HOTEL_DB_BASE = 'hotels/';
+const PREFIX_LEN = 3;
+
+let HOTELS = [];              // populated only by the local-CSV fallback
+let SHARD_META = null;        // prefix -> [byteOffset, byteLength, rowCount]
+let PACK_BYTES = 0;           // total size of pack.bin, for the Range sanity check
+let SHARD_CACHE = new Map();  // prefix -> parsed rows
+let dbMode = 'remote';        // 'remote' | 'local'
+let hotelSeq = 0;             // guards against out-of-order fetches
 let hotelTimer = null, hotelActive = -1, hotelResults = [];
+
+/* Must mirror normalise() in build-hotel-index.py or the prefixes drift. */
+function normalise(value) {
+  return (value || '').toString()
+    .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[^a-z0-9 ]+/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+}
+
+function queryTokens(query) {
+  return normalise(query).split(' ').filter(Boolean);
+}
+
+async function loadShardMeta() {
+  if (SHARD_META) return SHARD_META;
+  const res = await fetch(HOTEL_DB_BASE + 'meta.json');
+  if (!res.ok) throw new Error('meta.json returned ' + res.status);
+  const body = await res.json();
+  SHARD_META = body.shards || {};
+  PACK_BYTES = body.packBytes || 0;
+  return SHARD_META;
+}
+
+/* Of the words typed, fetch the rarest one's shard. Typing "hotel capella"
+   should pull the 89KB "cap" range, not the enormous "hot" one. */
+function chooseShard(tokens, meta) {
+  let best = null, bestCount = Infinity;
+  tokens.forEach(token => {
+    if (token.length < PREFIX_LEN) return;
+    const prefix = token.slice(0, PREFIX_LEN);
+    const entry = meta[prefix];
+    if (!entry) return;
+    if (entry[2] < bestCount) { best = prefix; bestCount = entry[2]; }
+  });
+  return best;
+}
+
+async function gunzip(buffer) {
+  const stream = new Blob([buffer]).stream().pipeThrough(new DecompressionStream('gzip'));
+  return new Response(stream).text();
+}
+
+/* One Range request per shard. If the host ignores Range it answers 200 with
+   the whole pack, which would be a 50MB download - refuse rather than do that. */
+async function loadShard(prefix, meta) {
+  if (SHARD_CACHE.has(prefix)) return SHARD_CACHE.get(prefix);
+  const [offset, length] = meta[prefix];
+  const res = await fetch(HOTEL_DB_BASE + 'pack.bin', {
+    headers: { Range: 'bytes=' + offset + '-' + (offset + length - 1) }
+  });
+  if (!res.ok) throw new Error('pack.bin returned ' + res.status);
+  if (res.status !== 206 && PACK_BYTES && length < PACK_BYTES) {
+    throw new Error('server ignored the Range request');
+  }
+  const text = await gunzip(await res.arrayBuffer());
+  const rows = text.split(/\r?\n/).reduce((acc, line) => {
+    if (!line) return acc;
+    const f = parseLine(line);
+    if (f.length >= 4 && /^[0-9]+$/.test(f[0])) {
+      acc.push({ id: f[0], name: f[1], nameNorm: normalise(f[1]), city: f[2], cc: f[3] });
+    }
+    return acc;
+  }, []);
+  SHARD_CACHE.set(prefix, rows);
+  return rows;
+}
+
+/* Every word typed must appear somewhere in the name, so "bangkok capella"
+   finds Capella Bangkok just as "capella bangkok" does. */
+function rankMatches(rows, tokens) {
+  const joined = tokens.join(' ');
+  const scored = [];
+  for (const row of rows) {
+    if (!tokens.every(token => row.nameNorm.includes(token))) continue;
+    let score = 3;
+    if (row.nameNorm.startsWith(joined)) score = 0;
+    else if (row.nameNorm.includes(joined)) score = 1;
+    else if (row.nameNorm.startsWith(tokens[0])) score = 2;
+    scored.push({ row, score });
+    if (scored.length > 400) break;
+  }
+  scored.sort((a, b) => a.score - b.score || a.row.name.length - b.row.name.length);
+  return scored.slice(0, 15).map(entry => entry.row);
+}
+
+async function searchRemote(query) {
+  const tokens = queryTokens(query);
+  if (!tokens.some(token => token.length >= PREFIX_LEN)) return null;
+  const meta = await loadShardMeta();
+  const prefix = chooseShard(tokens, meta);
+  if (!prefix) return [];
+  return rankMatches(await loadShard(prefix, meta), tokens);
+}
 
 function parseLine(line) {
   if (line.indexOf('"') === -1) return line.split(',');
@@ -518,6 +633,21 @@ function setDbStatus(text, cls) {
   el.className = 'hint' + (cls ? ' ' + cls : '');
 }
 
+function useLocalMode(message, cls) {
+  dbMode = 'local';
+  $('db-fallback').hidden = false;
+  $('db-fallback').open = true;
+  setDbStatus(message, cls || 'warn');
+}
+
+/* Probe the hosted index once on load so the mode is known before anyone types. */
+loadShardMeta().then(meta => {
+  setDbStatus('\u2713 Hotel database ready \u2014 type a name above.', 'loaded');
+  $('db-fallback').hidden = false;
+}).catch(() => {
+  useLocalMode('Hosted hotel database unreachable. Load a local GTCHotels.csv below to search by name, or type a GDS ID straight in.');
+});
+
 $('csv-file').addEventListener('change', e => {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
@@ -529,7 +659,8 @@ $('csv-file').addEventListener('change', e => {
       try {
         HOTELS = parseCSV(reader.result);
         if (!HOTELS.length) { setDbStatus('No hotels found in that file — is it the right CSV?', 'failed'); return; }
-        setDbStatus('✓ ' + HOTELS.length.toLocaleString() + ' hotels loaded — type a name above.', 'loaded');
+        dbMode = 'local';
+        setDbStatus('✓ ' + HOTELS.length.toLocaleString() + ' hotels loaded from file — type a name above.', 'loaded');
       } catch (err) {
         setDbStatus('Could not parse that file. ' + err.message, 'failed');
       }
@@ -592,11 +723,29 @@ function pickHotel(i) {
 
 $('hotel-name').addEventListener('input', () => {
   const q = $('hotel-name').value.trim();
+  const box = $('hotel-suggestions');
   clearTimeout(hotelTimer);
-  if (!HOTELS.length || q.length < 2) { $('hotel-suggestions').classList.add('hidden'); return; }
-  boxStatus($('hotel-suggestions'), 'Searching…');
-  hotelTimer = setTimeout(() => {
-    if ($('hotel-name').value.trim() === q) renderHotelSuggestions(searchHotels(q));
+
+  const minChars = dbMode === 'local' ? 2 : PREFIX_LEN;
+  if (q.length < minChars) { box.classList.add('hidden'); return; }
+  if (dbMode === 'local' && !HOTELS.length) { box.classList.add('hidden'); return; }
+
+  boxStatus(box, 'Searching…');
+  const seq = ++hotelSeq;
+
+  hotelTimer = setTimeout(async () => {
+    if (seq !== hotelSeq) return;
+    if (dbMode === 'local') { renderHotelSuggestions(searchHotels(q)); return; }
+    try {
+      const results = await searchRemote(q);
+      if (seq !== hotelSeq) return;
+      if (results === null) { box.classList.add('hidden'); return; }
+      renderHotelSuggestions(results);
+    } catch (err) {
+      if (seq !== hotelSeq) return;
+      boxStatus(box, 'Could not reach the hotel database.');
+      useLocalMode('Hotel database unreachable (' + err.message + '). Load a local GTCHotels.csv below, or type a GDS ID straight in.', 'failed');
+    }
   }, 200);
 });
 
@@ -1105,6 +1254,43 @@ const co = new Date(); co.setDate(co.getDate() + 33);
 $('check-in').value = fmtLocal(ci);
 $('check-out').value = fmtLocal(co);
 $('check-in').min = fmtLocal(new Date());
+$('check-out').min = addDays($('check-in').value, 1);
+
+/* Moving the check-in drags the check-out with it, so nobody has to page
+   through months to fix it - same behaviour as the search-bar embeds, except
+   that a stay already set to something other than 3 nights keeps its length. */
+function addDays(iso, n) {
+  const parts = iso.split('-');
+  const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+  d.setDate(d.getDate() + n);
+  return fmtLocal(d);
+}
+
+function nightsBetween(fromISO, toISO) {
+  const a = new Date(fromISO), b = new Date(toISO);
+  const nights = Math.round((b - a) / 86400000);
+  return nights > 0 ? nights : 3;
+}
+
+/* The length of stay has to be measured against the check-in we are moving
+   away from, not the one just picked - otherwise every jump forward in the
+   calendar silently resets the stay to three nights. */
+let previousCheckIn = $('check-in').value;
+
+$('check-in').addEventListener('change', () => {
+  const from = $('check-in').value;
+  if (!from) return;
+  const nights = (previousCheckIn && $('check-out').value)
+    ? nightsBetween(previousCheckIn, $('check-out').value)
+    : 3;
+  $('check-out').value = addDays(from, nights);
+  $('check-out').min = addDays(from, 1);
+  previousCheckIn = from;
+  rebuild();
+});
+
+/* Editing the check-out by hand redefines the stay length. */
+$('check-out').addEventListener('change', () => { previousCheckIn = $('check-in').value; });
 
 /* restore the sheet connection for this browser */
 const savedCfg = loadSheetCfg();
