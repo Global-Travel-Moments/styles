@@ -11,3 +11,8 @@ deploy.zip
 
 # Local Netlify folder
 .netlify
+
+# Local analytics scratch: GA4 exports, working xlsx and the scripts that build
+# them. Client data, and this repo is PUBLIC (jsDelivr only serves public repos),
+# so none of it belongs here. Keep it local.
+Analytics/
