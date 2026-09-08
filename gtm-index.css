@@ -4395,3 +4395,24 @@ body {
     color: var(--color--dark-blue) !important;
     opacity: 0.6 !important;
 }
+
+/* ============================================================================
+   61. THE ACCOUNT PILL - hide it from signed-out visitors (Paul, 8 Sep 2026)
+   ==========================================================================*/
+
+/* The orange "My Profile" pill (our rule 22) is useful once you are signed in
+   and meaningless before that - it is at its worst on the registration page,
+   where by definition the visitor has no profile yet.
+   Revelex keeps ALL FOUR account links in the DOM at once and toggles them:
+   the logged-in items (My Reservations, Log out) carry `data-status-true` and
+   pick up `.is-hidden` while signed out; the signed-out items (Log in,
+   Register) carry `data-status-false`. So the auth state IS expressible in
+   pure CSS via :has() - no JavaScript, and it works on every page.
+   ⚠️ Do NOT test auth with `document.querySelector('a[href*="logout"]')` - the
+   logout link is present in the DOM even when signed out. Test for the absence
+   of `.is-hidden` on it instead.
+   If a browser lacks :has() the rule simply does not match and the pill stays
+   as it is today, which is a safe degradation rather than a broken header. */
+.rvlx-app-container .authentication-module-account:has(.authentication-module-logout.is-hidden) .button.is-anchor.icon-user {
+    display: none !important;
+}
