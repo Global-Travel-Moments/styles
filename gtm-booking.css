@@ -3427,13 +3427,30 @@ body {
       own app.css intends #FFF9EE (Pearl): confirmed live by disabling
       css/webflow.css and re-reading the computed value. */
 
+/* ⚠️ THERE ARE TWO `.rvlx-app-container` ELEMENTS ON EVERY PAGE, as siblings:
+   the first is the thin language/subactions bar, the second (which also carries
+   `app-container` plus a page-type class such as `members-are`) is the real page
+   content. A bare `.rvlx-app-container` rule therefore applies TWICE and the
+   offset comes out at 256px, not 128px - which is exactly what Paul saw as a
+   "huge gap" on the login page. Offset the FIRST one only and explicitly zero
+   every later one. Both are padding-top 0 by default, so zeroing is safe.
+   Never write a bare `.rvlx-app-container` box-model rule without this guard. */
+
 .rvlx-app-container {
     padding-top: 128px !important;
+}
+
+.rvlx-app-container ~ .rvlx-app-container {
+    padding-top: 0 !important;
 }
 
 @media (max-width: 479px) {
     .rvlx-app-container {
         padding-top: 96px !important;
+    }
+
+    .rvlx-app-container ~ .rvlx-app-container {
+        padding-top: 0 !important;
     }
 }
 
