@@ -3395,3 +3395,48 @@ body {
 .rvlx-app-container .authentication-module-account:has(.authentication-module-logout.is-hidden) .button.is-anchor.icon-user {
     display: none !important;
 }
+
+/* ============================================================================
+   62. PROD CUTOVER FALLOUT - fixed header overlap + white page background
+       (10 Sep 2026, found by Paul on the profile and search-results pages)
+   ==========================================================================*/
+
+/* Both of these arrived the moment Revelex repointed PROD at our self-contained
+   header. Neither is caused by this stylesheet; both are the header bundle's
+   global rules landing on the Revelex app for the first time.
+
+   1. THE OVERLAP. The OLD Dang header was `.navbar.is-website-primary
+      { position: relative }` (rule lived in gtm-index.css), so it occupied
+      128px of normal flow and every Revelex page began below it. OUR header is
+      `.navbar.is-primary { position: fixed; z-index: 1500 }` from
+      css/gtm-header.webflow.css, so it is OUT of flow and the first 128px of
+      every page renders underneath it. Measured live: `.rvlx-app-container` has
+      padding-top 0 and its first child sits at y=0 on search, hotel_selection,
+      registration and login alike - there is no page that compensates for
+      itself, so a single rule is correct and cannot double up.
+      Restoring the flow space reproduces old-Prod layout exactly, and keeps the
+      nicer fixed/sticky behaviour on scroll.
+      Header height is content-driven (the logo), NOT set by any height rule.
+      Measured: 128px at >=480px, 96px at <=479px. Webflow's 479 breakpoint.
+      Re-measure if Dang ever changes the logo size.
+
+   2. THE WHITE BACKGROUND. css/webflow.css line 48-56 is the same global body
+      reset that gave us the grey text in June - we neutralised `color` and
+      `line-height` then but not `background-color: #fff`, because on UAT the
+      pages anyone had eyeballed all had full-bleed heroes hiding it. Revelex's
+      own app.css intends #FFF9EE (Pearl): confirmed live by disabling
+      css/webflow.css and re-reading the computed value. */
+
+.rvlx-app-container {
+    padding-top: 128px !important;
+}
+
+@media (max-width: 479px) {
+    .rvlx-app-container {
+        padding-top: 96px !important;
+    }
+}
+
+body {
+    background-color: #FFF9EE !important;
+}
