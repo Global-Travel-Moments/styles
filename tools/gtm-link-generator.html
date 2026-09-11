@@ -421,11 +421,16 @@ const ENDPOINTS = {
 };
 
 /* Controlled vocabulary. Legacy values are kept so history still lines up:
-   website/button and linkedin/paid_social are already live in the data. */
+   website/button and linkedin/paid_social are already live in the data.
+   SOURCE FOR OUR OWN SITE IS gtm-website (settled 2026-09-10). Every link on
+   the four September journal articles - 18 hand-placed in CMS rich text plus
+   every embed - carries gtm-website. The older `website` value is kept only so
+   pre-September rows still line up; picking it for anything new re-opens the
+   split. See the note in renderBlockers(). */
 const SOURCES = [
+  ['gtm-website', 'gtm-website (our own site - use this)'],
   ['outthere', 'outthere (OutThere Travel)'],
-  ['gtm-website', 'gtm-website (our own site)'],
-  ['website', 'website (legacy, matches existing data)'],
+  ['website', 'website (legacy, pre-Sept 2026 only)'],
   ['brevo', 'brevo (our email)'],
   ['linkedin', 'linkedin'],
   ['instagram', 'instagram'],
@@ -967,6 +972,7 @@ function renderBlockers() {
   if (cfg.redirects) notes.push('This endpoint redirects, so the UTMs are repeated in the fragment.');
   if (!u.utm_id) notes.push('No campaign ID. Not fatal, but it is the field that ties a wave together.');
   if (!u.utm_term) notes.push('No link type. You lose the ability to split embed types apart later.');
+  if (u.utm_source === 'website') notes.push('Source "website" is the legacy value. Everything live since September 2026 uses "gtm-website", including every link on the four September journal articles. Picking "website" for a new link splits the same traffic across two sources in GA4.');
   const mediumRow = MEDIUMS.find(m => m[0] === u.utm_medium);
   if (mediumRow && !mediumRow[2]) notes.push('Medium "' + u.utm_medium + '" is outside GA4’s recognised list, so this traffic lands in Unassigned unless you build a custom channel group.');
 

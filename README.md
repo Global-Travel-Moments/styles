@@ -36,9 +36,30 @@ CLI deploy, so nothing in here affects the live generator until you run it.
 
 Run both **from inside `tools/`**. See `tools/netlify.toml`.
 
+## `embeds/`: shared JavaScript for the Webflow embeds
+
+Served to visitors' browsers from GitHub Pages, like everything in `css/`:
+
+    https://global-travel-moments.github.io/styles/embeds/<file>
+
+- **`gtm-search-bar.js`** - the whole behaviour of the hotel search bar. Added
+  2026-09-11. Before it, the same ~300 lines were duplicated inside 15 Webflow
+  embeds and mirrored by hand; a single fix meant re-pasting every page, and the
+  four partner-site copies could only be fixed by emailing the partner. Now the
+  embeds are markup + CSS + a `<script src>`, they configure themselves through
+  `data-hsb-*` attributes on the root div, and a change here reaches every
+  placement inside the 10 minute Pages cache. The embeds themselves still live in
+  `~/Desktop/GTM Embeds/search-bars/`; that folder's README is the guide.
+
+**This folder is NOT part of the frozen root.** Revelex points at nothing in here,
+so files can be added or renamed - but a rename breaks every embed already pasted
+into Webflow, which is a re-paste of every page. Treat the filenames as fixed.
+
 ## What is deliberately not here
 
-- The Webflow search-bar embeds. They live in `~/Desktop/GTM Embeds/search-bars/`
-  and are pasted into Webflow, not hosted. Five stale May copies were deleted
-  from this repo on 2026-09-08 so nobody pastes the wrong one.
+- The Webflow search-bar embeds themselves (the markup and CSS). They live in
+  `~/Desktop/GTM Embeds/search-bars/` and are pasted into Webflow. Only their
+  shared JavaScript is hosted here, in `embeds/`. Five stale May copies of the
+  whole embeds were deleted from this repo on 2026-09-08 so nobody pastes the
+  wrong one.
 - `Analytics/`, GA4 exports and working spreadsheets. Local only, git-ignored.
