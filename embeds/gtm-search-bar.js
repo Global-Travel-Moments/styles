@@ -63,6 +63,10 @@
   ------------------------------------------------------------------- */
   var UTM_KEYS = ['source', 'medium', 'campaign', 'id', 'content', 'term'];
 
+  /* Several bars can share a page, so every listbox and option needs an id of
+     its own or aria-activedescendant points at the wrong bar's row. */
+  var instanceCount = 0;
+
   function readUTM(root) {
     var utm = {};
     UTM_KEYS.forEach(function (k) {
@@ -132,6 +136,41 @@
 
     if (!destInput || !searchBtn) return; // markup is not a search bar
 
+    /* --- accessibility ---------------------------------------------------
+       The suggestion list is a combobox + listbox. All of it is applied from
+       here rather than from the embed markup, so no page has to be re-pasted
+       to get it - which is the whole point of the shared file.
+
+       A screen reader needs three things the sighted user gets for free: that
+       a list opened, which row is currently highlighted, and how many rows
+       there are. aria-expanded, aria-activedescendant and the live region
+       below are those three.
+    --------------------------------------------------------------------- */
+    var listId = sugBox.id || ('hsb-list-' + (++instanceCount));
+    sugBox.id = listId;
+    sugBox.setAttribute('role', 'listbox');
+    destInput.setAttribute('role', 'combobox');
+    destInput.setAttribute('aria-autocomplete', 'list');
+    destInput.setAttribute('aria-expanded', 'false');
+    destInput.setAttribute('aria-controls', listId);
+
+    /* Announcements go in their own polite region, NOT in the listbox: a
+       listbox whose children are not options is invalid, and the "Searching"
+       line is decoration for the eye, not a choice. Styled inline so the
+       embeds need no new CSS. */
+    var live = document.createElement('div');
+    live.setAttribute('aria-live', 'polite');
+    live.setAttribute('role', 'status');
+    live.style.cssText = 'position:absolute;width:1px;height:1px;margin:-1px;' +
+      'padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;';
+    root.appendChild(live);
+    function announce(msg) { live.textContent = msg; }
+
+    function setActiveDescendant(id) {
+      if (id) destInput.setAttribute('aria-activedescendant', id);
+      else destInput.removeAttribute('aria-activedescendant');
+    }
+
     var selectedGeo = null;
     var activeIndex = -1;
     var currentResults = [];
@@ -149,6 +188,7 @@
     function resetResults() {
       currentResults = [];
       activeIndex = -1;
+      setActiveDescendant('');
     }
 
     function showStatus(text) {
@@ -159,6 +199,7 @@
       div.textContent = text;
       sugBox.appendChild(div);
       sugBox.classList.remove('hsb-hidden');
+      destInput.setAttribute('aria-expanded', 'false'); // open, but nothing to choose
     }
 
     function renderSuggestions(results) {
@@ -172,6 +213,9 @@
       results.forEach(function (r, i) {
         var rowEl = document.createElement('div');
         rowEl.className = 'hsb-suggestion';
+        rowEl.id = listId + '-opt-' + i;
+        rowEl.setAttribute('role', 'option');
+        rowEl.setAttribute('aria-selected', 'false');
         var mainEl = document.createElement('div');
         mainEl.className = 'hsb-s-main';
         mainEl.textContent = r.name;
@@ -186,10 +230,14 @@
         sugBox.appendChild(rowEl);
       });
       sugBox.classList.remove('hsb-hidden');
+      destInput.setAttribute('aria-expanded', 'true');
+      announce(results.length + (results.length === 1 ? ' place found. ' : ' places found. ') +
+               'Use the up and down arrows to review, Return to choose.');
     }
 
     function hideSuggestions() {
       sugBox.classList.add('hsb-hidden');
+      destInput.setAttribute('aria-expanded', 'false');
       resetResults();
     }
 
@@ -199,6 +247,7 @@
       selectedGeo = { name: r.name, label: r.label, lat: r.lat, lng: r.lng };
       destInput.value = r.label;
       lockFlag.textContent = ' \u00B7 coordinates locked';
+      announce(r.label + ' selected. Location locked.');
       hideSuggestions();
     }
 
@@ -321,6 +370,7 @@
         }).catch(function () {
           if (seq !== requestSeq) return;
           showStatus('Location lookup unavailable. Check your connection.');
+          announce('Location lookup unavailable.');
         });
       }, 280);
     });
@@ -333,7 +383,16 @@
         activeIndex = (activeIndex + dir + currentResults.length) % currentResults.length;
         var rows = sugBox.children;
         for (var i = 0; i < rows.length; i++) {
-          rows[i].classList.toggle('hsb-active', i === activeIndex);
+          var on = (i === activeIndex);
+          rows[i].classList.toggle('hsb-active', on);
+          rows[i].setAttribute('aria-selected', on ? 'true' : 'false');
+        }
+        var active = rows[activeIndex];
+        if (active) {
+          setActiveDescendant(active.id);
+          // Keep the highlighted row inside the scrolling box, or a keyboard
+          // user is moving a selection they cannot see.
+          if (active.scrollIntoView) active.scrollIntoView({ block: 'nearest' });
         }
       } else if (e.key === 'Enter') {
         if (activeIndex >= 0) { e.preventDefault(); pick(activeIndex); }
@@ -367,7 +426,7 @@
     searchBtn.addEventListener('click', function () {
       var err = validate();
       errorEl.textContent = err;
-      if (err) return;
+      if (err) { announce(err); return; }
       var url = buildURL();
       if (!url) return;
 
