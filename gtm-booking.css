@@ -3457,3 +3457,63 @@ body {
 body {
     background-color: #FFF9EE !important;
 }
+
+
+/* ============================================================================
+   63. ROOM & RATE TABS - bigger pills, less curve, full-width stack on mobile
+       (15 Sep 2026, Paul's call on the hotel room_selection page)
+   ==========================================================================*/
+
+/* The heading is Revelex's own CSS `content` string, NOT their markup, so it is
+   ours to override - no content-manager change and no Revelex ticket needed.
+   app.css ships:
+     .hotel-room-results-container .hotel-rooms-rate-tabs
+       .tabs-container-wrapper::before { content: "Choose your room:" }
+   Same family of trap as section 60a: what looks like Revelex copy often isn't.
+   ⚠️ If Revelex ever rewrites that rule, this override goes stale silently -
+   the heading would revert, not break, so it needs an eyeball after their
+   releases. */
+.hotel-room-results-container .hotel-rooms-rate-tabs .tabs-container-wrapper::before {
+    content: "Choose your room & rate:" !important;
+}
+
+/* Revelex ships the ACTIVE tab at 16px text / 40px radius and the INACTIVE one
+   at 14px / 35px, so the pair never matches whichever is selected. Normalise
+   both first, then size up and take some curve out. */
+.hotel-room-results-container .hotel-rooms-rate-tabs .tabs-container > a {
+    padding: 20px 24px !important;
+    border-radius: 28px !important;
+    font-size: 16px !important;
+    gap: 12px !important;
+    min-width: 260px !important;
+}
+
+.hotel-room-results-container .hotel-rooms-rate-tabs .tabs-container > a .hotel-rooms-rate-tabs-title {
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+}
+
+.hotel-room-results-container .hotel-rooms-rate-tabs .tabs-container > a .hotel-rooms-rate-tabs-price {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+}
+
+/* Mobile: full width and stacked, so they line up with the date changer and the
+   room cards below instead of sitting as two odd-sized pills on one row. */
+@media (max-width: 767px) {
+    .hotel-room-results-container .hotel-rooms-rate-tabs .tabs-container {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    /* ⚠️ Revelex ships `flex: 0 1 180px` on these tabs, sized for a ROW where
+       180px is the width. Turning the container to a column makes that basis
+       the HEIGHT, so every tab became a 180px-tall box with a hole in the
+       middle. Same trap as the date changer's own mobile bug - in a column
+       flex container, always reset the basis. */
+    .hotel-room-results-container .hotel-rooms-rate-tabs .tabs-container > a {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: 0 0 auto !important;
+    }
+}

@@ -22,8 +22,10 @@ window.CLIENTJS = window.CLIENTJS || {};
    and most of them leave instead.
 
    THE FIX. Read the hotel and the current search off the page, render our own
-   date control above the hotel card, and on submit rebuild the original
-   single-hotel deeplink with the new dates and load it.
+   date control between the hotel details and the room cards, and on submit
+   rebuild the original single-hotel deeplink with the new dates and load it.
+   On mobile it starts COLLAPSED as a "Choose your dates" bar, because the
+   expanded card pushed the rooms themselves below the fold.
 
    THREE CONSTRAINTS, all load-bearing:
      1. Our own element only (rule 2 above).
@@ -42,6 +44,7 @@ window.CLIENTJS.dateChanger = (function () {
   var ENDPOINT = '/app/0/hotel/0/room_availability.html';
   var GDS_SOURCE_TYPE = 3;          /* constant, per the integration guide */
   var ROOT = 'gtm-dc';
+  var PANEL_ID = 'gtm-dc-panel';
   var MAX_WAIT_MS = 30000;          /* Revelex can take 20s to render */
   var POLL_MS = 500;
 
@@ -104,6 +107,23 @@ window.CLIENTJS.dateChanger = (function () {
     return Math.round((b - a) / 86400000);
   }
 
+  /* "12 Nov 2026". Used for the collapsed mobile summary line. */
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun',
+                'Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function fmtShort(iso, withYear) {
+    var b = iso.split('-');
+    if (b.length !== 3) return iso;
+    var d = String(parseInt(b[2], 10));
+    var mo = MONTHS[parseInt(b[1], 10) - 1] || b[1];
+    return withYear ? d + ' ' + mo + ' ' + b[0] : d + ' ' + mo;
+  }
+
+  function summary(fromIso, toIso) {
+    var sameYear = fromIso.slice(0, 4) === toIso.slice(0, 4);
+    return fmtShort(fromIso, !sameYear) + ' to ' + fmtShort(toIso, true);
+  }
+
   /* --- building the new deeplink ----------------------------------------- */
 
   function buildURL(id, params, checkInIso, checkOutIso) {
@@ -141,24 +161,56 @@ window.CLIENTJS.dateChanger = (function () {
   function styles() {
     if (document.getElementById('gtm-dc-styles')) return;
     var css = [
-      '.' + ROOT + '{font-family:Manrope,system-ui,sans-serif;background:#FFF9EE;border:1px solid #0B152D;border-radius:2em;padding:1.1rem 1.4rem;margin:0 0 1.25rem;color:#0B152D;}',
+      '.' + ROOT + '{font-family:Manrope,system-ui,sans-serif;background:#FFF9EE;border:1px solid #0B152D;border-radius:2em;padding:0;margin:1.5rem 0;color:#0B152D;}',
       '.' + ROOT + ' *{box-sizing:border-box;}',
-      '.' + ROOT + '-head{font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.75;margin:0 0 0.6rem;}',
+      /* The whole bar is ONE button, so the label, the dates and the chevron
+         are all the same target - there is no chevron-only hit area. */
+      '.' + ROOT + '-toggle{display:flex;width:100%;align-items:center;justify-content:space-between;gap:0.9rem;background:none;border:0;padding:1.05rem 1.5rem;font-family:inherit;color:#0B152D;text-align:left;cursor:pointer;}',
+      /* Sentence case, still bold. The 0.1em tracking was set for capitals and
+         reads airy without them, so it comes back to near-normal at the same
+         time - the same correction made to the registration button in
+         gtm-booking.css section 60a. Sized up so it still outranks the date
+         line beneath it now that the capitals are not doing that work. */
+      '.' + ROOT + '-tlabel{display:block;font-size:0.9rem;font-weight:700;letter-spacing:0.01em;}',
+      '.' + ROOT + '-tnarrow{display:none;}',
+      '.' + ROOT + '-tdates{display:block;font-size:0.82rem;margin-top:0.15rem;opacity:0.75;}',
+      '.' + ROOT + '-chev{flex:0 0 auto;width:0.55rem;height:0.55rem;margin-right:0.3rem;border-right:2px solid #FF640F;border-bottom:2px solid #FF640F;transform:rotate(45deg);transition:transform 0.2s;}',
+      '.' + ROOT + '.is-open .' + ROOT + '-chev{transform:rotate(-135deg);}',
+      '.' + ROOT + '-panel{display:none;padding:0 1.5rem 1.35rem;}',
+      '.' + ROOT + '.is-open .' + ROOT + '-panel{display:block;}',
       '.' + ROOT + '-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:0.75rem;}',
       '.' + ROOT + '-field{display:flex;flex-direction:column;flex:1 1 150px;min-width:140px;}',
       '.' + ROOT + '-field small{font-size:0.55rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;opacity:0.65;margin-bottom:0.25rem;}',
       '.' + ROOT + ' input[type="date"]{font-family:inherit;font-size:16px;color:#0B152D;background:#FFFFFF;border:1px solid #0B152D;border-radius:2em;padding:0.5rem 0.9rem;width:100%;height:auto;}',
       '.' + ROOT + '-btn{flex:0 0 auto;background:#FF640F;color:#FFF9EE;border:1px solid #FF640F;border-radius:2em;font-family:inherit;font-weight:700;font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.62rem 1.6rem;cursor:pointer;transition:background 0.18s,border-color 0.18s;}',
       '@media (hover:hover){.' + ROOT + '-btn:hover:not(:disabled){background:#0B152D;border-color:#0B152D;}}',
+      '.' + ROOT + ' :focus-visible{outline:2px solid #FF640F;outline-offset:2px;}',
       '.' + ROOT + '-btn:active{transform:translateY(1px);}',
       '.' + ROOT + '-btn.is-busy{cursor:progress;opacity:0.72;}',
       '.' + ROOT + '-spin{display:none;width:0.75em;height:0.75em;margin-right:0.5em;vertical-align:-0.1em;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:gtm-dc-spin 0.6s linear infinite;}',
       '.' + ROOT + '-btn.is-busy .' + ROOT + '-spin{display:inline-block;}',
       '@keyframes gtm-dc-spin{to{transform:rotate(360deg);}}',
-      '@media (prefers-reduced-motion:reduce){.' + ROOT + '-spin{animation:none;opacity:0.55;}}',
+      '@media (prefers-reduced-motion:reduce){.' + ROOT + '-spin{animation:none;opacity:0.55;}.' + ROOT + '-chev{transition:none;}}',
       '.' + ROOT + '-note{font-size:0.72rem;margin:0.55rem 0 0;min-height:1.1em;}',
       '.' + ROOT + '-note.is-error{color:#FF640F;font-weight:600;}',
-      '@media (max-width:767px){.' + ROOT + '-row{flex-direction:column;align-items:stretch;}.' + ROOT + '-field{flex:0 0 auto;}.' + ROOT + '-btn{width:100%;padding:0.75rem;margin-top:0.2rem;}}'
+      /* Mobile: the card starts COLLAPSED as a tappable bar. The panel is shown by
+         a class, not by JS style, so a desktop-width rotation always reveals it. */
+      '@media (max-width:767px){' +
+        /* Revelex insets its mobile content by 16px; the card was running full
+           bleed and sitting wider than the room pills and the heading. */
+        '.' + ROOT + '{margin:1.25rem 16px;}' +
+        '.' + ROOT + '-toggle{padding:0.95rem 1.25rem;}' +
+        '.' + ROOT + '-twide{display:none;}' +
+        '.' + ROOT + '-tnarrow{display:inline;}' +
+        '.' + ROOT + '-tlabel{font-size:0.85rem;}' +
+        '.' + ROOT + '-tdates{font-size:0.78rem;}' +
+        '.' + ROOT + '-panel{padding:0 1.25rem 1.2rem;}' +
+        /* WARNING: `flex: 1 1 150px` in a COLUMN container sets the basis on the
+           HEIGHT, which made every field 150px tall. Reset the basis. */
+        '.' + ROOT + '-row{flex-direction:column;align-items:stretch;}' +
+        '.' + ROOT + '-field{flex:0 0 auto;}' +
+        '.' + ROOT + '-btn{width:100%;padding:0.75rem;margin-top:0.2rem;}' +
+      '}'
     ].join('\n');
     var tag = document.createElement('style');
     tag.id = 'gtm-dc-styles';
@@ -177,23 +229,55 @@ window.CLIENTJS.dateChanger = (function () {
     root.className = ROOT;
     root.setAttribute('data-gtm-dc', '1');
     root.innerHTML =
-      '<p class="' + ROOT + '-head">Travelling on different dates?</p>' +
-      '<div class="' + ROOT + '-row">' +
-        '<label class="' + ROOT + '-field"><small>Check-in</small>' +
-          '<input type="date" data-dc="in"></label>' +
-        '<label class="' + ROOT + '-field"><small>Check-out</small>' +
-          '<input type="date" data-dc="out"></label>' +
-        '<button type="button" class="' + ROOT + '-btn" data-dc="go">' +
-          '<i class="' + ROOT + '-spin" aria-hidden="true"></i>' +
-          '<span data-dc="golabel">Update dates</span></button>' +
-      '</div>' +
-      '<p class="' + ROOT + '-note" data-dc="note"></p>';
+      /* Mobile only (CSS-hidden above 767px): the collapsed bar. It names the
+         action AND the dates currently being viewed, so the visitor can see
+         both what they have and that it can be changed. */
+      '<button type="button" class="' + ROOT + '-toggle" data-dc="toggle"' +
+        ' aria-expanded="false" aria-controls="' + PANEL_ID + '">' +
+        '<span>' +
+          /* Two strings, one per width, rather than one string plus a hidden
+             fragment: each width then reads exactly as written, punctuation
+             included. The hidden one is display:none, so it is not announced. */
+          '<span class="' + ROOT + '-tlabel">' +
+            '<span class="' + ROOT + '-twide">Travelling on different dates? Choose your dates:</span>' +
+            '<span class="' + ROOT + '-tnarrow">Choose your dates</span>' +
+          '</span>' +
+          '<span class="' + ROOT + '-tdates" data-dc="summary"></span>' +
+        '</span>' +
+        '<i class="' + ROOT + '-chev" aria-hidden="true"></i>' +
+      '</button>' +
+      '<div class="' + ROOT + '-panel" id="' + PANEL_ID + '">' +
+        '<div class="' + ROOT + '-row">' +
+          '<label class="' + ROOT + '-field"><small>Check-in</small>' +
+            '<input type="date" data-dc="in"></label>' +
+          '<label class="' + ROOT + '-field"><small>Check-out</small>' +
+            '<input type="date" data-dc="out"></label>' +
+          '<button type="button" class="' + ROOT + '-btn" data-dc="go">' +
+            '<i class="' + ROOT + '-spin" aria-hidden="true"></i>' +
+            '<span data-dc="golabel">Update dates</span></button>' +
+        '</div>' +
+        '<p class="' + ROOT + '-note" data-dc="note"></p>' +
+      '</div>';
 
     var inEl = root.querySelector('[data-dc="in"]');
     var outEl = root.querySelector('[data-dc="out"]');
     var btn = root.querySelector('[data-dc="go"]');
     var label = root.querySelector('[data-dc="golabel"]');
     var note = root.querySelector('[data-dc="note"]');
+    var toggle = root.querySelector('[data-dc="toggle"]');
+
+    root.querySelector('[data-dc="summary"]').textContent =
+      summary(checkIn, checkOut);
+
+    /* The panel's visibility is CSS's job; this only flips the class.
+       Deliberately NOT focusing the first field on open: on Android that can
+       raise the native date picker before the visitor has looked at the panel,
+       and the panel follows the toggle in DOM order so a keyboard user tabs
+       straight into it anyway. */
+    toggle.addEventListener('click', function () {
+      var open = root.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
 
     inEl.value = checkIn;
     outEl.value = checkOut;
@@ -249,7 +333,7 @@ window.CLIENTJS.dateChanger = (function () {
       window.location.href = buildURL(id, params, inEl.value, outEl.value);
     });
 
-    anchor.parentNode.insertBefore(root, anchor);
+    anchor.parentNode.insertBefore(root, anchor.nextSibling);
     return true;
   }
 
