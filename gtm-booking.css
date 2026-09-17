@@ -2606,6 +2606,29 @@ body {
     right: 16px !important;
 }
 
+/* 53b. Grey band behind the hotel address.
+   Revelex give .item-summary-address an INSET box-shadow
+   (rgba(0,0,0,.4) 0 18px 14px -20px inset). In their stock stacked layout it
+   reads as a soft shading under the hotel title above it. Our grid rules
+   above move the address to the top of its own column, so the shadow has
+   nothing above it and paints as a grey band exactly one grid column wide
+   (195px) sitting behind the first line of the address.
+
+   ⚠️ It is the box-shadow, NOT the 1px #D5D5D5 border-top and NOT the
+   ::before white gradient, both of which sit on the same element and look
+   like likelier culprits. Removing either on its own changes nothing.
+   Isolated by elimination on the live page 2026-09-17.
+
+   border-top and padding-top are cleared as well, which is cosmetic rather
+   than a fix: it pulls the address up to align with the hotel name.
+   Reproduced identically on Capella Bangkok and Capella Kyoto. */
+.rvlx-app-container .hotel-hero-collage-wrapper .item-summary-hotel.is-static:not(.is-sticky) .item-summary-address,
+.rvlx-app-container :not(.hotel-hero-collage-wrapper) > .item-summary-hotel.is-static .item-summary-address {
+    box-shadow: none !important;
+    border-top: 0 !important;
+    padding-top: 0 !important;
+}
+
 /* 54. Confirmation page */
 /* All text — Manrope, Midnight */
 .rvlx-app-container .confirmation-wrapper,
