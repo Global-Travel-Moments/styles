@@ -3858,11 +3858,15 @@ body {
    Pin it to the bottom of the header's CREAM BAR (.navbar-base: 90px from
    480px up, 67px on a phone; see section 71), so there is no see-through
    gap between them, and pad it so its content starts where it always did
-   (header bottom + 28px), clear of the logo circle that hangs over it. */
+   (header bottom + 28px), clear of the logo circle that hangs over it.
+   It starts 4px ABOVE that edge, tucked under the header: the cream bar's
+   height is fractional (89.59px, 67.19px on a phone), and meeting it exactly
+   left a sub-pixel sliver that scrolling room cards showed through (Paul,
+   23 Sep 2026). The padding carries the same 4px, so nothing moves. */
 @media screen and (max-width: 991px) {
     .rvlx-app-container.hotel-room-page .item-summary-hotel.is-sticky {
-        top: 90px !important;
-        padding-top: 66px !important;
+        top: 86px !important;
+        padding-top: 70px !important;
         /* square top corners: it butts against the header, and rounded ones
            let the room cards' edges peek through */
         border-top-left-radius: 0 !important;
@@ -3872,8 +3876,8 @@ body {
 
 @media screen and (max-width: 479px) {
     .rvlx-app-container.hotel-room-page .item-summary-hotel.is-sticky {
-        top: 67px !important;
-        padding-top: 57px !important;
+        top: 63px !important;
+        padding-top: 61px !important;
     }
 }
 
