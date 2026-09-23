@@ -64,15 +64,20 @@ export default async (request, context) => {
     if (!links.length) return json({ ok: true, added: 0, updated: 0 });
     if (links.length > MAX_LINKS) return json({ ok: false, error: 'Too many links in one go (max ' + MAX_LINKS + ').' }, 413);
 
-    // Apps Script answers a POST with a 302 to googleusercontent; following it
-    // (as a GET, which is what that echo URL expects) returns the JSON reply.
+    // Apps Script runs doPost (the row is written HERE), then answers 302 to a
+    // googleusercontent "echo" URL that holds the reply. That URL must be
+    // fetched with GET. The edge runtime's automatic redirect re-POSTs to it,
+    // and Google answers a POST there with a Drive "file cannot be opened" 404,
+    // so the row landed but the page was told it failed (found 2026-09-23).
+    // Follow the redirect by hand, as a GET.
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ token: token, links: links }),
-      redirect: 'follow'
+      redirect: 'manual'
     });
-    return await relay(res);
+    const echo = res.status >= 300 && res.status < 400 && res.headers.get('location');
+    return await relay(echo ? await fetch(echo, { redirect: 'follow' }) : res);
   } catch (e) {
     return json({ ok: false, error: 'Could not reach the sheet: ' + (e && e.message ? e.message : e) }, 502);
   }
