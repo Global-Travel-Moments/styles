@@ -373,3 +373,261 @@ window.CLIENTJS.dateChanger = (function () {
 
   return { start: start, buildURL: buildURL, hotelId: hotelId, searchParams: searchParams };
 }());
+
+/* ----------------------------------------------------------------------------
+   Account gate
+   ----------------------------------------------------------------------------
+   THE PROBLEM. Anyone can book on the Hotel Desk without an account, and GTC
+   need every booking to come from a signed-in member. Revelex has no setting
+   we can switch for this.
+
+   THE FIX. Search stays open. On the results page and the room page, a
+   signed-out visitor sees our own "Create account" button and "Sign in" link
+   where each Select button was. After they register or sign in we send them
+   back to the page they left, and their results are still there.
+
+   WHY THE RETURN WORKS. Revelex keeps the search in the server session
+   (RVLXSESSID), not in the URL. Verified live 2026-09-23: results ->
+   registration.html -> a bare hotel_selection.html shows the same hotels with
+   no new search. So the return is a plain navigation to the saved path.
+   The gate links must NEVER carry clear=all, which would wipe that session.
+
+   HOW IT STAYS INSIDE RULE 2. We never touch their buttons or forms. We add
+   our own element as a sibling AFTER their form, and CSS hides a form only
+   when our gate sits next to it (form:has(+ .gtm-gate)). The signed-in state
+   is read from their own account menu, never written.
+
+   FAILS OPEN, deliberately. If this file does not load, :has() is not
+   supported, or the sign-in state has not resolved yet, their Select buttons
+   stay visible and the booking works as before. The wall must never become a
+   dead end.
+
+   SIGNED-IN STATE. Revelex renders all four account-menu links with .is-hidden
+   and un-hides one pair after fetch_authentication_status.json answers:
+     signed out -> .authentication-module-login  loses .is-hidden
+     signed in  -> .authentication-module-logout loses .is-hidden
+   Both hidden = not resolved yet. So "logout is hidden" alone does NOT prove
+   signed out; it is also true for the first moment of every page.
+   --------------------------------------------------------------------------*/
+
+window.CLIENTJS.accountGate = (function () {
+  'use strict';
+
+  var HATOKEN = 'GTCGTM01';
+  var KEY = 'gtm_gate_return';
+  var MAX_AGE_MS = 60 * 60 * 1000;  /* a return older than an hour is stale */
+  var ROOT = 'gtm-gate';
+  var PAGES = /\/hotel\/0\/(hotel_selection|room_selection)\.html$/;
+  /* Results: two per hotel (list + map pop-up). Room page: one per rate. */
+  var SELECT_BUTTONS = 'button[data-select-hotel-button], button.hotel-room-select-button';
+
+  var SIGNED_OUT = '.authentication-module-login:not(.is-hidden)';
+  var SIGNED_IN = '.authentication-module-logout:not(.is-hidden)';
+
+  /* --- state (read-only) ------------------------------------------------- */
+
+  function authState() {
+    if (document.querySelector(SIGNED_IN)) return 'in';
+    if (document.querySelector(SIGNED_OUT)) return 'out';
+    return null;
+  }
+
+  function pageName() {
+    return /room_selection/.test(window.location.pathname) ? 'room' : 'results';
+  }
+
+  function track(action) {
+    try {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'account_gate', { gate_action: action, gate_page: pageName() });
+      }
+    } catch (e) { /* tracking must never break the page */ }
+  }
+
+  function readReturn() {
+    try {
+      var v = JSON.parse(window.sessionStorage.getItem(KEY) || 'null');
+      if (v && v.path && (Date.now() - v.t) < MAX_AGE_MS) return v;
+    } catch (e) { /* storage blocked or corrupt */ }
+    return null;
+  }
+
+  function saveReturn() {
+    try {
+      window.sessionStorage.setItem(KEY, JSON.stringify({ path: window.location.pathname, t: Date.now() }));
+    } catch (e) { /* storage blocked: they still get to register, just no return */ }
+  }
+
+  function clearReturn() {
+    try { window.sessionStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+  }
+
+  /* Their own menu links carry the right base for whichever environment we are
+     in (Prod or UAT). Fall back to the Prod paths if the menu is missing. */
+  function accountURL(cls, fallback) {
+    var a = document.querySelector('a.' + cls);
+    var base = (a && a.href) ? a.href.split('?')[0].split('#')[0] : fallback;
+    return base + '?hatoken=' + HATOKEN;
+  }
+
+  /* --- our own markup ---------------------------------------------------- */
+
+  function styles() {
+    if (document.getElementById(ROOT + '-styles')) return;
+    var css = [
+      /* Hidden unless the browser has :has() AND the visitor is confirmed
+         signed out. Without either, their Select stays and ours never shows. */
+      '.' + ROOT + '{display:none;}',
+      '@supports selector(:has(a)){' +
+        'body:has(' + SIGNED_OUT + ') .' + ROOT + '{display:flex;}' +
+        'body:has(' + SIGNED_OUT + ') form:has(+ .' + ROOT + '){display:none !important;}' +
+      '}',
+      /* Column: sign-in line on top, the pill underneath, so the pill's bottom
+         edge lines up with the Details button beside it (their row is
+         align-items:flex-end). */
+      '.' + ROOT + '{flex-direction:column;align-items:center;gap:0.4rem;font-family:Manrope,sans-serif;}',
+      /* NOTE: both links carry "button" in their class on purpose. gtm-booking.css
+         rule 14 turns every <a> orange unless its class contains "button". */
+      '.' + ROOT + ' a.' + ROOT + '-button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:50px;min-width:104px;padding:8.16px 24.48px;' +
+        'background:#FF640F;border:1px solid #FF640F;border-radius:34px;color:#FFF9EE !important;font-family:Manrope,sans-serif;font-size:13.6px;font-weight:700;' +
+        'letter-spacing:1.632px;line-height:13.6px;text-transform:uppercase;text-decoration:none !important;white-space:nowrap;cursor:pointer;transition:background 0.18s,border-color 0.18s;}',
+      '@media (hover:hover){.' + ROOT + ' a.' + ROOT + '-button:hover{background:#0B152D;border-color:#0B152D;}}',
+      '.' + ROOT + ' a.' + ROOT + '-button.is-busy{cursor:progress;opacity:0.72;}',
+      '.' + ROOT + '-note{margin:0;font-size:12px;line-height:1.3;color:#0B152D;white-space:nowrap;}',
+      '.' + ROOT + ' a.' + ROOT + '-signin-button{color:#0B152D !important;font-weight:700;text-decoration:underline !important;text-underline-offset:2px;}',
+      '@media (hover:hover){.' + ROOT + ' a.' + ROOT + '-signin-button:hover{color:#FF640F !important;}}',
+      '.' + ROOT + ' a:focus-visible{outline:2px solid #FF640F;outline-offset:2px;}',
+      '.' + ROOT + '-spin{display:none;width:0.75em;height:0.75em;margin-right:0.5em;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:gtm-gate-spin 0.6s linear infinite;}',
+      '.' + ROOT + ' .is-busy .' + ROOT + '-spin{display:inline-block;}',
+      '@keyframes gtm-gate-spin{to{transform:rotate(360deg);}}',
+      '@media (prefers-reduced-motion:reduce){.' + ROOT + '-spin{animation:none;opacity:0.55;}}',
+      /* Mobile: their Select fills its half of the row (results) or the whole
+         width (room page). Ours takes the same share. */
+      '@media (max-width:767px){' +
+        '.' + ROOT + '{flex:1 1 0;min-width:0;align-items:stretch;}' +
+        '.' + ROOT + '-note{text-align:center;}' +
+        '.' + ROOT + ' a.' + ROOT + '-button{width:100%;height:44px;padding:8px 12px;font-size:13px;letter-spacing:1.2px;}' +
+      '}',
+      /* The room page's Select is 50px tall at every width. */
+      '.hotel-room-page .' + ROOT + ' a.' + ROOT + '-button{height:50px;}'
+    ].join('\n');
+    var tag = document.createElement('style');
+    tag.id = ROOT + '-styles';
+    tag.textContent = css;
+    document.head.appendChild(tag);
+  }
+
+  function busy(link) {
+    link.classList.add('is-busy');
+    var label = link.querySelector('.' + ROOT + '-label');
+    if (label) label.textContent = 'Opening\u2026';
+  }
+
+  function gate() {
+    var root = document.createElement('div');
+    root.className = ROOT;
+    root.setAttribute('data-gtm-gate', '1');
+
+    var note = document.createElement('p');
+    note.className = ROOT + '-note';
+    note.appendChild(document.createTextNode('Already a member? '));
+    var signin = document.createElement('a');
+    signin.className = ROOT + '-signin-button';
+    signin.href = accountURL('authentication-module-login', 'https://book.globaltravelmoments.com/app/0/users/0/login.html');
+    signin.textContent = 'Sign in';
+    note.appendChild(signin);
+
+    var create = document.createElement('a');
+    create.className = ROOT + '-button';
+    create.href = accountURL('authentication-module-register', 'https://book.globaltravelmoments.com/app/0/users/0/registration.html');
+    create.innerHTML = '<span class="' + ROOT + '-spin" aria-hidden="true"></span><span class="' + ROOT + '-label">Create account</span>';
+
+    /* Never preventDefault: these are ordinary links, we only remember where
+       the visitor was before they leave. */
+    signin.addEventListener('click', function () { saveReturn(); track('sign_in'); });
+    create.addEventListener('click', function () { saveReturn(); track('create_account'); busy(create); });
+
+    root.appendChild(note);
+    root.appendChild(create);
+    return root;
+  }
+
+  /* One gate after each of their forms. Their markup is never written to;
+     the WeakSet remembers which forms already have one. */
+  var done = typeof WeakSet === 'function' ? new WeakSet() : null;
+
+  function place() {
+    if (!done) return;
+    var buttons = document.querySelectorAll(SELECT_BUTTONS);
+    for (var i = 0; i < buttons.length; i++) {
+      var form = buttons[i].form;
+      if (!form || done.has(form) || !form.parentNode) continue;
+      var next = form.nextElementSibling;
+      if (!(next && next.getAttribute('data-gtm-gate'))) {
+        form.parentNode.insertBefore(gate(), form.nextSibling);
+      }
+      done.add(form);
+    }
+  }
+
+  /* --- the return trip --------------------------------------------------- */
+
+  function maybeReturn() {
+    var saved = readReturn();
+    if (!saved) return;
+    if (window.location.pathname === saved.path) { clearReturn(); return; }
+    clearReturn();                  /* before leaving, so it can never loop */
+    track('returned');
+    window.location.replace(saved.path);
+  }
+
+  /* --- boot -------------------------------------------------------------- */
+
+  function start() {
+    var onGatedPage = PAGES.test(window.location.pathname);
+    if (onGatedPage) {
+      styles();
+      place();
+      /* Results re-render on filter, sort and "show more", so keep up. */
+      if (typeof MutationObserver === 'function') {
+        var pending = false;
+        new MutationObserver(function () {
+          if (pending) return;
+          pending = true;
+          setTimeout(function () { pending = false; try { place(); } catch (e) { /* never block */ } }, 250);
+        }).observe(document.body, { childList: true, subtree: true });
+      }
+    }
+
+    /* Any page: once the sign-in state resolves to signed in, take them back.
+       Two readings 600ms apart, so a half-rendered menu cannot trigger it. */
+    if (!readReturn()) return;
+    var waited = 0;
+    var last = null;
+    var timer = setInterval(function () {
+      waited += 600;
+      var s = authState();
+      if (s === 'in' && last === 'in') { clearInterval(timer); maybeReturn(); return; }
+      last = s;
+      if (waited >= 20000) clearInterval(timer);
+    }, 600);
+  }
+
+  /* A Back-button return restores the page from cache with the busy label on. */
+  window.addEventListener('pageshow', function () {
+    var links = document.querySelectorAll('.' + ROOT + ' .is-busy');
+    for (var i = 0; i < links.length; i++) {
+      links[i].classList.remove('is-busy');
+      var label = links[i].querySelector('.' + ROOT + '-label');
+      if (label) label.textContent = 'Create account';
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { try { start(); } catch (e) { /* never block */ } });
+  } else {
+    try { start(); } catch (e) { /* never block */ }
+  }
+
+  return { start: start, authState: authState };
+}());
