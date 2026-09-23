@@ -1126,6 +1126,7 @@ function renderRegistry() {
    sheet is the one that matters, so a browser that blocks storage still saves
    there, and the message says exactly which of the two worked. */
 const SAVE_LABEL = 'Save to registry';
+const SAVE_MIN_SPIN = 800;
 function setSaveButton(state) {
   const b = $('save-btn');
   b.classList.toggle('is-saving', state === 'saving');
@@ -1158,7 +1159,12 @@ $('save-btn').addEventListener('click', async () => {
   renderRegistry();
 
   linkStatus('Saving…');
-  const sheet = await sendToSheet([row]);
+  /* A fast save finishes before anyone sees the spinner, which reads as
+     "nothing happened". Hold it for at least SAVE_MIN_SPIN ms. */
+  const [sheet] = await Promise.all([
+    sendToSheet([row]),
+    new Promise(r => setTimeout(r, SAVE_MIN_SPIN))
+  ]);
 
   if (sheet.ok) {
     setSaveButton('saved');
