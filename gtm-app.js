@@ -529,7 +529,9 @@ window.CLIENTJS.accountGate = (function () {
       /* Column: sign-in line on top, the pill underneath, so the pill's bottom
          edge lines up with the Details button beside it (their row is
          align-items:flex-end). */
-      '.' + ROOT + '{flex-direction:column;align-items:center;gap:0.4rem;font-family:Manrope,sans-serif;}',
+      /* Right-aligned column (Paul, 2026-09-23): the Sign in button's right edge
+         sits on Create account's right edge, with "Already a member?" beside it. */
+      '.' + ROOT + '{flex-direction:column;align-items:flex-end;gap:0.5rem;font-family:Manrope,sans-serif;}',
       /* NOTE: both links carry "button" in their class on purpose. gtm-booking.css
          rule 14 turns every <a> orange unless its class contains "button". */
       '.' + ROOT + ' a.' + ROOT + '-button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:50px;min-width:104px;padding:8.16px 24.48px;' +
@@ -541,7 +543,7 @@ window.CLIENTJS.accountGate = (function () {
          button's style (Midnight 2px outline) so it reads as clickable without
          competing with the orange Create account. Paul, 2026-09-23: the
          original underlined text link was too small to notice. */
-      '.' + ROOT + '-note{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0.5rem;margin:0;font-size:13px;line-height:1.3;color:#0B152D;}',
+      '.' + ROOT + '-note{display:flex;align-items:center;justify-content:flex-end;flex-wrap:nowrap;white-space:nowrap;gap:0.5rem;margin:0;font-size:13px;line-height:1.3;color:#0B152D;}',
       '.' + ROOT + ' a.' + ROOT + '-signin-button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:34px;padding:0 16px;' +
         'background:transparent;border:2px solid #0B152D;border-radius:34px;color:#0B152D !important;font-family:Manrope,sans-serif;font-size:12px;font-weight:700;' +
         'letter-spacing:1.2px;line-height:1;text-transform:uppercase;text-decoration:none !important;white-space:nowrap;transition:background 0.18s,color 0.18s;}',
@@ -555,7 +557,7 @@ window.CLIENTJS.accountGate = (function () {
          width (room page). Ours takes the same share. */
       '@media (max-width:767px){' +
         '.' + ROOT + '{flex:1 1 0;min-width:0;align-items:stretch;}' +
-        '.' + ROOT + '-note{text-align:center;}' +
+        '.' + ROOT + '-note{text-align:right;}' +
         '.' + ROOT + ' a.' + ROOT + '-button{width:100%;height:44px;padding:8px 12px;font-size:13px;letter-spacing:1.2px;}' +
       '}',
       /* The room page's Select is 50px tall at every width. */
@@ -654,8 +656,10 @@ window.CLIENTJS.accountGate = (function () {
       var css = [
         '#' + OVERLAY + '{position:fixed;inset:0;z-index:2147483001;visibility:visible;display:flex;align-items:center;justify-content:center;padding:16px;background:#FFF9EE;font-family:Manrope,sans-serif;color:#0B152D;}',
         '#' + OVERLAY + ' .' + OVERLAY + '-card{max-width:380px;text-align:center;}',
-        '#' + OVERLAY + ' .' + OVERLAY + '-spin{display:inline-block;width:28px;height:28px;margin-bottom:1rem;border:3px solid #FF640F;border-right-color:transparent;border-radius:50%;animation:gtm-gate-spin 0.7s linear infinite;}',
-        '#' + OVERLAY + ' .' + OVERLAY + '-title{margin:0;font-size:1.15rem;font-weight:700;line-height:1.3;}',
+        '#' + OVERLAY + ' .' + OVERLAY + '-spin{display:block;box-sizing:border-box;width:28px;height:28px;margin:0 auto 16px;border:3px solid #FF640F;border-right-color:transparent;border-radius:50%;animation:gtm-gate-spin 0.7s linear infinite;}',
+        /* Fixed px geometry (28 spinner + 16 gap + 24 line = 68px, centred) so the
+           header.html pre-cover can draw the same thing in the same place. */
+        '#' + OVERLAY + ' .' + OVERLAY + '-title{margin:0;font-size:18.4px;font-weight:700;line-height:24px;}',
         '@keyframes gtm-gate-spin{to{transform:rotate(360deg);}}',
         '@media (prefers-reduced-motion:reduce){#' + OVERLAY + ' .' + OVERLAY + '-spin{animation:none;opacity:0.55;}}'
       ].join('\n');
