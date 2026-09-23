@@ -3334,6 +3334,22 @@ body {
 .navbar_log-container::before,
 .nav_log-wrap::before { content: none !important; }
 
+/* FIX 3 — the badge logo overflowing its circle on tablet and phone
+   (23 Sep 2026, Paul's screenshot on hotel_selection). gtm-filtered.css pins
+   `.navbar3_logo` to a fixed 100px at <=991px, but the Pearl circle around it
+   is 6rem (96px) on a phone. The image spilled out of its circle and hung
+   28px below the bar. The live website has no such rule: there the image
+   fills the circle (76px) and only the circle overhangs the bar. This
+   restores the website's behaviour. */
+@media screen and (max-width: 991px) {
+    .nav_log-wrap.is-primary .navbar3_logo {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 100% !important;
+        min-height: 0 !important;
+    }
+}
+
 
 /* ============================================================================
    60. REGISTRATION PAGE - Duncan's list, 8 September 2026
