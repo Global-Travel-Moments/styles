@@ -3851,16 +3851,18 @@ body {
    ==========================================================================*/
 
 /* Once you scroll past the hotel summary, Revelex pins it with
-   position:fixed; top:0. Our header is also fixed at the top (96px tall on a
-   phone, 128px from 480px up) and sits above the whole app container, so the
-   bar's hotel name, dates and guests all landed underneath it and only the
-   bottom of its Details button showed, as an empty pill. Pin it to the
-   header's bottom edge instead. The extra top padding clears the logo circle,
-   which hangs 16px below the bar. */
+   position:fixed; top:0. Our header is also fixed at the top and sits above
+   the whole app container, so the bar's hotel name, dates and guests all
+   landed underneath it and only the bottom of its Details button showed, as
+   an empty pill.
+   Pin it to the bottom of the header's CREAM BAR (.navbar-base: 90px from
+   480px up, 67px on a phone; see section 71), so there is no see-through
+   gap between them, and pad it so its content starts where it always did
+   (header bottom + 28px), clear of the logo circle that hangs over it. */
 @media screen and (max-width: 991px) {
     .rvlx-app-container.hotel-room-page .item-summary-hotel.is-sticky {
-        top: 128px !important;
-        padding-top: 28px !important;
+        top: 90px !important;
+        padding-top: 66px !important;
         /* square top corners: it butts against the header, and rounded ones
            let the room cards' edges peek through */
         border-top-left-radius: 0 !important;
@@ -3870,7 +3872,8 @@ body {
 
 @media screen and (max-width: 479px) {
     .rvlx-app-container.hotel-room-page .item-summary-hotel.is-sticky {
-        top: 96px !important;
+        top: 67px !important;
+        padding-top: 57px !important;
     }
 }
 
@@ -4014,20 +4017,15 @@ body {
        (23 Sep 2026, Paul: "can we fix the header background?")
    ==========================================================================*/
 
-/* The fixed .navbar is 96px tall on a phone (128px from 480px up), but its
-   cream layer, .navbar-base, is only 67px. The bottom 29px of the header was
-   see-through beside the logo, so page content scrolled visibly through it,
-   most obviously between the header and the room-selection sticky bar
-   (section 68). The website has the same 67px bar, but it sits over a hero
-   photo there. Stretch the cream to the full header box; the logo circle
-   still hangs 16px below it, as on the website. */
-@media screen and (max-width: 991px) {
-    .navbar.is-primary > .navbar-base {
-        top: 0 !important;
-        bottom: auto !important;
-        height: 100% !important;
-    }
-}
+/* REVERTED the same evening (Paul: "can we not get that to look closer to the
+   correct version?", with the website header beside ours). Stretching the
+   cream to the full 96px header swallowed most of the logo circle, so the
+   badge no longer hung below the bar as it does on the website.
+   The cream bar is back to the website's own height (67px phone, 90px from
+   480px up) and the logo circle overhangs it again. The see-through strip
+   beside the circle is how the website behaves too. The one place it looked
+   broken, the gap above the room-page sticky bar, is closed in section 68 by
+   pinning that bar to the cream bar's bottom edge instead of the header's. */
 
 
 /* ============================================================================
