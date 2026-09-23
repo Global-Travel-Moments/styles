@@ -416,7 +416,6 @@ window.CLIENTJS.accountGate = (function () {
 
   var HATOKEN = 'GTCGTM01';
   var KEY = 'gtm_gate_return';
-  var HOP = 'gtm_gate_hop';         /* the second hop of a room-page return */
   var MAX_AGE_MS = 60 * 60 * 1000;  /* a return older than an hour is stale */
   var ROOT = 'gtm-gate';
   var PAGES = /\/hotel\/0\/(hotel_selection|room_selection)\.html$/;
@@ -477,16 +476,7 @@ window.CLIENTJS.accountGate = (function () {
       var p = dc.searchParams();
       var ci = isoDate(p.check_in_date), co = isoDate(p.check_out_date);
       if (!id || !p || !ci || !co) return null;
-      /* ROOM PAGE RETURNS GO VIA ONE EXTRA NIGHT. Paul's signed-in tests,
-         2026-09-23: after a deeplink -> sign in -> return, every Select room
-         failed with "The selected room is no longer available". Reloading the
-         same dates failed, clear=instance failed; loading ONE EXTRA NIGHT and
-         then the real dates worked. The cause is on Revelex's server and is
-         not visible signed out. So: first hop = check-out + 1 day, second hop
-         (see HOP below) = the real dates. */
-      var d = new Date(Number(co.slice(0, 4)), Number(co.slice(5, 7)) - 1, Number(co.slice(8, 10)) + 1);
-      var coPlus = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
-      return { url: dc.buildURL(id, p, ci, coPlus), then: dc.buildURL(id, p, ci, co) };
+      return dc.buildURL(id, p, ci, co);
     }
     var form = document.querySelector('form[action*="search_hotels.html"]');
     if (!form) return null;
@@ -505,13 +495,10 @@ window.CLIENTJS.accountGate = (function () {
   }
 
   function saveReturn() {
-    var url = null, then = null;
+    var url = null;
+    try { url = searchURL(); } catch (e) { /* fall back to the page alone */ }
     try {
-      var s = searchURL();
-      if (s && typeof s === 'object') { url = s.url; then = s.then; } else { url = s; }
-    } catch (e) { /* fall back to the page alone */ }
-    try {
-      window.sessionStorage.setItem(KEY, JSON.stringify({ path: window.location.pathname, url: url, then: then, t: Date.now() }));
+      window.sessionStorage.setItem(KEY, JSON.stringify({ path: window.location.pathname, url: url, t: Date.now() }));
     } catch (e) { /* storage blocked: they still get to register, just no return */ }
   }
 
@@ -665,7 +652,7 @@ window.CLIENTJS.accountGate = (function () {
     if (document.getElementById(OVERLAY) || !document.body) return;
     if (!document.getElementById(OVERLAY + '-styles')) {
       var css = [
-        '#' + OVERLAY + '{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;background:#FFF9EE;font-family:Manrope,sans-serif;color:#0B152D;}',
+        '#' + OVERLAY + '{position:fixed;inset:0;z-index:2147483001;visibility:visible;display:flex;align-items:center;justify-content:center;padding:16px;background:#FFF9EE;font-family:Manrope,sans-serif;color:#0B152D;}',
         '#' + OVERLAY + ' .' + OVERLAY + '-card{max-width:380px;text-align:center;}',
         '#' + OVERLAY + ' .' + OVERLAY + '-spin{display:inline-block;width:28px;height:28px;margin-bottom:1rem;border:3px solid #FF640F;border-right-color:transparent;border-radius:50%;animation:gtm-gate-spin 0.7s linear infinite;}',
         '#' + OVERLAY + ' .' + OVERLAY + '-title{margin:0;font-size:1.15rem;font-weight:700;line-height:1.3;}',
@@ -690,9 +677,18 @@ window.CLIENTJS.accountGate = (function () {
     document.body.appendChild(el);
   }
 
+  /* header.html may have hidden the account page before it painted (see
+     "account-gate pre-cover" there). Whenever we are NOT taking them back,
+     that cover must come off. */
+  function removePrecover() {
+    var el = document.getElementById(ROOT + '-precover');
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
   function hideReturning() {
     var el = document.getElementById(OVERLAY);
     if (el && el.parentNode) el.parentNode.removeChild(el);
+    removePrecover();
   }
 
   function maybeReturn() {
@@ -707,9 +703,16 @@ window.CLIENTJS.accountGate = (function () {
     if (onPasswordPage()) { hideReturning(); return; }   /* keep the key for later */
     showReturning();
     clearReturn();                  /* before leaving, so it can never loop */
-    if (saved.then) {
-      try { window.sessionStorage.setItem(HOP, JSON.stringify({ url: saved.then, t: Date.now() })); } catch (e) { /* no second hop: they land on the extra-night page, still usable */ }
-    }
+    /* STALE RATES. Revelex's room page saves its rooms and rate ids in
+       sessionStorage.roomsStorage and, for the SAME hotel and dates, renders
+       from that saved copy instead of the fresh server answer (proved
+       2026-09-23: a planted marker came back as the Select room rate id).
+       The copy saved while signed out survives sign-in, so every Select room
+       sent signed-out rate ids: "The selected room is no longer available".
+       New dates overwrite it, which is why the date changer "fixed" it.
+       Removing it before we go leaves the browser as a new tab would be; the
+       room page rebuilds it from the server. We never write to it. */
+    try { window.sessionStorage.removeItem('roomsStorage'); } catch (e) { /* ignore */ }
     track('returned');
     window.location.replace(saved.url || saved.path);
   }
@@ -732,16 +735,28 @@ window.CLIENTJS.accountGate = (function () {
       }
     }
 
-    /* Any page: once the sign-in state resolves to signed in, take them back.
-       Two readings 300ms apart, so a half-rendered menu cannot trigger it. */
+    /* The return fires ONLY from the account page Revelex lands people on
+       after signing in (LANDING). Paul, 2026-09-23: on an older account
+       Revelex's forced password-change page was left after about a second,
+       because this used to fire on ANY signed-in page. Now every other page
+       keeps the saved search; after the new password is saved Revelex goes on
+       to the account page and the return fires from there. On the page they
+       originally left, signed in, the saved search is simply dropped. */
     if (!readReturn()) return;
-    if (LANDING.test(window.location.pathname) && !onPasswordPage()) showReturning();
+    var onLanding = LANDING.test(window.location.pathname);
+    if (onLanding && !onPasswordPage()) showReturning();
     var waited = 0;
     var last = null;
     var timer = setInterval(function () {
       waited += 300;
       var s = authState();
-      if (s === 'in' && last === 'in') { clearInterval(timer); maybeReturn(); return; }
+      if (s === 'in' && last === 'in') {
+        clearInterval(timer);
+        if (onLanding) { maybeReturn(); return; }
+        var saved = readReturn();
+        if (saved && window.location.pathname === saved.path) clearReturn();
+        return;
+      }
       /* Signed out after all: take the message down and leave them be. */
       if (s === 'out' && last === 'out') { clearInterval(timer); hideReturning(); return; }
       last = s;
@@ -775,23 +790,8 @@ window.CLIENTJS.accountGate = (function () {
     }
   } catch (e) { early = false; /* fall back to the normal path below */ }
 
-  /* SECOND HOP. We are on the extra-night room page. Its rates are built by
-     Revelex's server during the redirect that brought us here (no later
-     request fetches them, checked 2026-09-23), so the refresh has already
-     happened: leave at once, under the message, for the real dates. */
-  try {
-    if (!early && /\/hotel\/0\/room_selection\.html$/.test(window.location.pathname) && document.body) {
-      var hop = JSON.parse(window.sessionStorage.getItem(HOP) || 'null');
-      window.sessionStorage.removeItem(HOP);
-      if (hop && hop.url && (Date.now() - hop.t) < 3 * 60 * 1000) {
-        early = true;
-        showReturning();
-        window.location.replace(hop.url);
-      }
-    }
-  } catch (e) { early = false; }
-
   if (!early) {
+    try { removePrecover(); } catch (e) { /* ignore */ }
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function () { try { start(); } catch (e) { /* never block */ } });
     } else {

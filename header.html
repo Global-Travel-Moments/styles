@@ -1,5 +1,11 @@
 <!-- GTM: boot Webflow's interactions engine on the Revelex page (sets the page/site IDs webflow.js needs, since we can't edit Revelex's <html> tag). Required for dropdown + footer animations. -->
 <script>document.documentElement.setAttribute("data-wf-page","6a1ea2379905849d8d83be21");document.documentElement.setAttribute("data-wf-site","6a1ea2339905849d8d83be13");</script>
+<!-- GTM: account-gate pre-cover (2026-09-23). Runs in <head>, before anything paints. Only when a
+     return is pending (sessionStorage gtm_gate_return, under an hour old) AND this is the account page
+     Revelex lands people on after sign-in: hides the page behind a Pearl "Taking you back" screen so it
+     never flashes. gtm-app.js then takes over (or removes this if it is not returning, e.g. a password
+     page), and it removes itself after 10s regardless, so it can never strand anyone. -->
+<script>(function(){try{if(!/\/profile\/0\/home\.html$/.test(location.pathname))return;var v=JSON.parse(sessionStorage.getItem('gtm_gate_return')||'null');if(!v||!v.t||Date.now()-v.t>3600000)return;var s=document.createElement('style');s.id='gtm-gate-precover';s.textContent='html{background:#FFF9EE!important}body{visibility:hidden!important}html::after{content:"Taking you back to your search\\2026";position:fixed;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;padding:16px;text-align:center;font:700 1.15rem/1.3 Manrope,sans-serif;color:#0B152D;visibility:visible;z-index:2147483000}';document.head.appendChild(s);setTimeout(function(){var e=document.getElementById('gtm-gate-precover');if(e&&e.parentNode)e.parentNode.removeChild(e);},10000);}catch(e){}})();</script>
 <link href="https://global-travel-moments.github.io/styles/css/normalize.css" rel="stylesheet" type="text/css">
 <link href="https://global-travel-moments.github.io/styles/css/webflow.css" rel="stylesheet" type="text/css">
 <link href="https://global-travel-moments.github.io/styles/css/gtm-header.webflow.css" rel="stylesheet" type="text/css">
