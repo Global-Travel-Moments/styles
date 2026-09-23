@@ -615,14 +615,79 @@ window.CLIENTJS.accountGate = (function () {
 
   /* --- the return trip --------------------------------------------------- */
 
+  /* Where Revelex lands a visitor after signing in. We show the message here
+     straight away, because the wait before we can confirm the sign-in is
+     theirs (the page plus its authentication-status call) and reads as a
+     dead end without it. */
+  var LANDING = /\/profile\/0\/home\.html$/;
+
+  /* Revelex can force a password change at sign-in (seen by Paul 2026-09-23
+     on an older account). Never take anyone off a page that is asking for a
+     password: keep the saved search and return them after they have saved it. */
+  function onPasswordPage() {
+    var inputs = document.querySelectorAll('input[type="password"]');
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].offsetParent !== null) return true;
+    }
+    return false;
+  }
+
+  var OVERLAY = ROOT + '-returning';
+
+  function node(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) el.className = cls;
+    if (text) el.textContent = text;
+    return el;
+  }
+
+  function showReturning() {
+    if (document.getElementById(OVERLAY) || !document.body) return;
+    if (!document.getElementById(OVERLAY + '-styles')) {
+      var css = [
+        '#' + OVERLAY + '{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;background:#FFF9EE;font-family:Manrope,sans-serif;color:#0B152D;}',
+        '#' + OVERLAY + ' .' + OVERLAY + '-card{max-width:380px;text-align:center;}',
+        '#' + OVERLAY + ' .' + OVERLAY + '-spin{display:inline-block;width:28px;height:28px;margin-bottom:1rem;border:3px solid #FF640F;border-right-color:transparent;border-radius:50%;animation:gtm-gate-spin 0.7s linear infinite;}',
+        '#' + OVERLAY + ' .' + OVERLAY + '-title{margin:0 0 0.4rem;font-size:1.15rem;font-weight:700;line-height:1.3;}',
+        '#' + OVERLAY + ' .' + OVERLAY + '-sub{margin:0;font-size:0.9rem;line-height:1.4;opacity:0.8;}',
+        '@keyframes gtm-gate-spin{to{transform:rotate(360deg);}}',
+        '@media (prefers-reduced-motion:reduce){#' + OVERLAY + ' .' + OVERLAY + '-spin{animation:none;opacity:0.55;}}'
+      ].join('\n');
+      var tag = document.createElement('style');
+      tag.id = OVERLAY + '-styles';
+      tag.textContent = css;
+      document.head.appendChild(tag);
+    }
+    var el = node('div');
+    el.id = OVERLAY;
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    var card = node('div', OVERLAY + '-card');
+    var spin = node('span', OVERLAY + '-spin');
+    spin.setAttribute('aria-hidden', 'true');
+    card.appendChild(spin);
+    card.appendChild(node('p', OVERLAY + '-title', 'Taking you back to your search\u2026'));
+    card.appendChild(node('p', OVERLAY + '-sub', 'You are signed in. Your hotels will appear in a few seconds.'));
+    el.appendChild(card);
+    document.body.appendChild(el);
+  }
+
+  function hideReturning() {
+    var el = document.getElementById(OVERLAY);
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
   function maybeReturn() {
     var saved = readReturn();
-    if (!saved) return;
+    if (!saved) { hideReturning(); return; }
     /* Already back on the page they left, with their hotels showing. */
     if (window.location.pathname === saved.path && document.querySelector(SELECT_BUTTONS)) {
       clearReturn();
+      hideReturning();
       return;
     }
+    if (onPasswordPage()) { hideReturning(); return; }   /* keep the key for later */
+    showReturning();
     clearReturn();                  /* before leaving, so it can never loop */
     track('returned');
     window.location.replace(saved.url || saved.path);
@@ -647,17 +712,20 @@ window.CLIENTJS.accountGate = (function () {
     }
 
     /* Any page: once the sign-in state resolves to signed in, take them back.
-       Two readings 600ms apart, so a half-rendered menu cannot trigger it. */
+       Two readings 300ms apart, so a half-rendered menu cannot trigger it. */
     if (!readReturn()) return;
+    if (LANDING.test(window.location.pathname) && !onPasswordPage()) showReturning();
     var waited = 0;
     var last = null;
     var timer = setInterval(function () {
-      waited += 600;
+      waited += 300;
       var s = authState();
       if (s === 'in' && last === 'in') { clearInterval(timer); maybeReturn(); return; }
+      /* Signed out after all: take the message down and leave them be. */
+      if (s === 'out' && last === 'out') { clearInterval(timer); hideReturning(); return; }
       last = s;
-      if (waited >= 20000) clearInterval(timer);
-    }, 600);
+      if (waited >= 20000) { clearInterval(timer); hideReturning(); }
+    }, 300);
   }
 
   /* A Back-button return restores the page from cache with the busy label on. */
