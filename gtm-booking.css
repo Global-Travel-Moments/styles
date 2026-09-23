@@ -3556,3 +3556,289 @@ body {
         flex: 0 0 auto !important;
     }
 }
+
+
+/* ============================================================================
+   64. RESULTS PAGE, MOBILE - Filter Results + Modify Search as real buttons
+       (23 Sep 2026, Paul's screenshot on hotel_selection)
+   ==========================================================================*/
+
+/* Revelex ships these two as bare uppercase text split by a 1px grey divider,
+   with a grey rule underneath, so on a phone they read as labels, not buttons.
+   Modify Search also picks up a stray 27.5px radius from the `.button` class,
+   which drew a half-circle bracket on its left edge.
+   Now: two equal Midnight-outline pills, 44px tall (thumb-sized). The one
+   whose panel is open (aria-expanded="true") fills Midnight, so the pair also
+   shows which panel is open. Magic Orange stays reserved for the primary
+   actions (Search, Select). Desktop does not show this bar. */
+@media screen and (max-width: 991px) {
+    .rvlx-app-container .section-links.section-links-results {
+        border-bottom: 0 !important;
+        gap: 12px !important;
+        padding: 0 !important;
+    }
+
+    .rvlx-app-container .section-links.section-links-results::after {
+        content: none !important;
+    }
+
+    .rvlx-app-container .section-links.section-links-results > .section-links-filter,
+    .rvlx-app-container .section-links.section-links-results > .modify-search-trigger {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        height: 44px !important;
+        padding: 0 12px !important;
+        margin: 0 !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #FFF9EE !important;
+        background-image: none !important;
+        border: 1.5px solid #0B152D !important;
+        border-radius: 2em !important;
+        color: #0B152D !important;
+        font-family: Manrope, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.06em !important;
+        text-transform: uppercase !important;
+        box-shadow: none !important;
+        cursor: pointer !important;
+    }
+
+    .rvlx-app-container .section-links.section-links-results > .section-links-filter:hover,
+    .rvlx-app-container .section-links.section-links-results > .modify-search-trigger:hover,
+    .rvlx-app-container .section-links.section-links-results > .section-links-filter[aria-expanded="true"],
+    .rvlx-app-container .section-links.section-links-results > .modify-search-trigger[aria-expanded="true"] {
+        background: #0B152D !important;
+        color: #FFF9EE !important;
+    }
+}
+
+
+/* ============================================================================
+   65. RESULTS PAGE, MOBILE - the Filter Results panel
+       (23 Sep 2026, Paul: "fix the filter panel too")
+   ==========================================================================*/
+
+@media screen and (max-width: 767px) {
+
+    /* 65a. The panel opened UNDER our header. Revelex gives .filter-module
+       z-index 9999, but it lives inside .rvlx-app-container, which is a
+       stacking context at z-index 2, so our fixed navbar (1500) sat on top
+       and hid the panel's close button and "Filter by" title. While the panel
+       is open, lift that container above the header. The panel is a
+       full-screen sheet, so nothing else is exposed. */
+    .rvlx-app-container:has(.filter-module.is-expanded) {
+        z-index: 2000 !important;
+    }
+
+    /* 65b. Pearl throughout, not white */
+    .rvlx-app-container .filter-module,
+    .rvlx-app-container .filter-module > form,
+    .rvlx-app-container .filter-module .filter-section-submit {
+        background: #FFF9EE !important;
+        background-image: none !important;
+    }
+
+    /* Revelex frames the panel with an 8px WHITE border */
+    .rvlx-app-container .filter-module {
+        border-color: #FFF9EE !important;
+    }
+
+    .rvlx-app-container .filter-module .filter-section-submit {
+        border-color: #FFF9EE !important;
+        border-top: 1px solid rgba(11, 21, 45, 0.15) !important;
+    }
+
+    /* 65c. "Filter by" title - brand heading face, Midnight not grey */
+    .rvlx-app-container .filter-module .filter-section-description {
+        font-family: "Instrument Serif", serif !important;
+        font-size: 30px !important;
+        font-weight: 400 !important;
+        color: #0B152D !important;
+    }
+
+    /* 65d. Close button - Midnight circle, clear of the screen edge */
+    .rvlx-app-container .filter-module .filter-section-close {
+        top: 12px !important;
+        right: 12px !important;
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 50% !important;
+        background: #0B152D !important;
+        color: #FFF9EE !important;
+    }
+
+    /* 65e. Section headings - were 24px uppercase shouting. Now small caps
+       labels matching the Filter Results / Modify Search pills. Amenities is
+       an <a>, so our sitewide orange link rule (14) caught it - back to Midnight. */
+    .rvlx-app-container .filter-module .filter-section-head,
+    .rvlx-app-container .filter-module a.filter-section-head,
+    .rvlx-app-container .filter-module .filter-section-head-prefix {
+        font-family: Manrope, sans-serif !important;
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.06em !important;
+        text-transform: uppercase !important;
+        color: #0B152D !important;
+    }
+
+    .rvlx-app-container .filter-module .filter-section-head-legend {
+        color: #0B152D !important;
+        opacity: 0.7 !important;
+    }
+
+    /* 65f. Price read "THB 45 THB - THB 21,186 THB". The number already
+       carries the currency, and Revelex's ::after adds it again from
+       data-postfix. On the PRICE range only, keep the dash and drop the
+       repeat. Distance ("0 MI - 6 MI") does not double up, so it is untouched. */
+    .rvlx-app-container .filter-module .range:has([name="pi[min]"]) .range-output:not(.range-output-max)::after {
+        content: " \2013 " !important;
+    }
+
+    .rvlx-app-container .filter-module .range:has([name="pi[min]"]) .range-output-max::after {
+        content: none !important;
+    }
+
+    .rvlx-app-container .filter-module .range-output {
+        color: #0B152D !important;
+    }
+
+    /* 65g. Slider handles - grey squares with a grip icon become Midnight
+       discs with a Pearl ring */
+    .rvlx-app-container .filter-module input.range-slider::-webkit-slider-thumb {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 50% !important;
+        background: #0B152D !important;
+        background-image: none !important;
+        border: 3px solid #FFF9EE !important;
+        box-shadow: 0 0 0 1.5px #0B152D !important;
+    }
+
+    .rvlx-app-container .filter-module input.range-slider::-moz-range-thumb {
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 50% !important;
+        background: #0B152D !important;
+        background-image: none !important;
+        border: 3px solid #FFF9EE !important;
+        box-shadow: 0 0 0 1.5px #0B152D !important;
+    }
+
+    /* 65h. Star-rating checkboxes - pale grey squares become Midnight */
+    .rvlx-app-container .filter-module .filter-section-list input[type="checkbox"] + label::before {
+        border: 1.5px solid #0B152D !important;
+        border-radius: 6px !important;
+        background: #FFF9EE !important;
+    }
+
+    .rvlx-app-container .filter-module .filter-section-list input[type="checkbox"]:checked + label::before {
+        background: #0B152D !important;
+        color: #FFF9EE !important;
+    }
+
+    /* 65i. Hotel-name search arrow - black becomes Midnight, icon Pearl */
+    .rvlx-app-container .filter-module .button.icon-look {
+        background: #0B152D !important;
+        background-image: none !important;
+    }
+
+    .rvlx-app-container .filter-module .button.icon-look::before {
+        color: #FFF9EE !important;
+    }
+
+    /* 65j. Reset / Apply. Reset was a Magic Orange FILL (reads as the main
+       action) and Apply was black (off-palette). Swapped to match the rest of
+       the site: Apply = Magic Orange primary, Reset = Midnight outline. */
+    .rvlx-app-container .filter-module .filter-section-submit .button {
+        height: 44px !important;
+        border-radius: 2em !important;
+        font-family: Manrope, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.06em !important;
+        text-transform: uppercase !important;
+        box-shadow: none !important;
+        background-image: none !important;
+    }
+
+    .rvlx-app-container .filter-module .filter-section-submit .button.button-secondary {
+        background: #FFF9EE !important;
+        color: #0B152D !important;
+        border: 1.5px solid #0B152D !important;
+    }
+
+    .rvlx-app-container .filter-module .filter-section-submit .button:not(.button-secondary) {
+        background: #FF640F !important;
+        color: #FFF9EE !important;
+        border: 1.5px solid #FF640F !important;
+    }
+}
+
+
+/* ============================================================================
+   66. RESULTS PAGE, MOBILE - hotel cards: name and price no longer collide
+       (23 Sep 2026, Paul's screenshot: "the names and everything are running
+       over one another")
+   ==========================================================================*/
+
+/* Revelex pins .item-summary-price to the card's top-right corner
+   (position:absolute) and squeezes the name into max-width:54% beside it.
+   Any name longer than ~16 characters ran underneath the price. On a phone
+   the price comes out of the corner and sits in its own row directly above
+   Details / Select (it already lives in .item-summary-extras with the
+   buttons, so it just drops into the flow), and the name gets the full width
+   beside the photo. Scoped to the results page; the review and payment pages
+   use the same card classes with their own layout (section 43). */
+@media screen and (max-width: 767px) {
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-title {
+        max-width: none !important;
+        width: auto !important;
+    }
+
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-extras {
+        flex-wrap: wrap !important;
+    }
+
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-extras > .item-summary-price {
+        position: static !important;
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-end !important;
+        gap: 12px !important;
+        margin: 0 0 16px !important;
+        text-align: left !important;
+    }
+
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-extras > .item-summary-price .item-summary-price-total {
+        text-align: right !important;
+    }
+}
+
+
+/* ============================================================================
+   67. RESULTS PAGE, MOBILE + TABLET - hotel photos show the whole photo
+       (23 Sep 2026, Paul: "fix the photos too")
+   ==========================================================================*/
+
+/* The card photo is a background-image on .item-summary-feature-image, and
+   Revelex leaves it at background-size:auto / position 0 0. The 90px tile
+   was therefore a window onto the TOP-LEFT corner of a full-size Sabre
+   photo, which is nearly always sky or ceiling. Scale the photo to fill
+   the tile and centre it. */
+@media screen and (max-width: 991px) {
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-feature-image {
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+    }
+}
