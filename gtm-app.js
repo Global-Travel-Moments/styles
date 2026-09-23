@@ -416,6 +416,7 @@ window.CLIENTJS.accountGate = (function () {
 
   var HATOKEN = 'GTCGTM01';
   var KEY = 'gtm_gate_return';
+  var HOP = 'gtm_gate_hop';         /* the second hop of a room-page return */
   var MAX_AGE_MS = 60 * 60 * 1000;  /* a return older than an hour is stale */
   var ROOT = 'gtm-gate';
   var PAGES = /\/hotel\/0\/(hotel_selection|room_selection)\.html$/;
@@ -474,8 +475,18 @@ window.CLIENTJS.accountGate = (function () {
       if (!dc) return null;
       var id = dc.hotelId();
       var p = dc.searchParams();
-      if (!id || !p || !isoDate(p.check_in_date) || !isoDate(p.check_out_date)) return null;
-      return dc.buildURL(id, p, isoDate(p.check_in_date), isoDate(p.check_out_date));
+      var ci = isoDate(p.check_in_date), co = isoDate(p.check_out_date);
+      if (!id || !p || !ci || !co) return null;
+      /* ROOM PAGE RETURNS GO VIA ONE EXTRA NIGHT. Paul's signed-in tests,
+         2026-09-23: after a deeplink -> sign in -> return, every Select room
+         failed with "The selected room is no longer available". Reloading the
+         same dates failed, clear=instance failed; loading ONE EXTRA NIGHT and
+         then the real dates worked. The cause is on Revelex's server and is
+         not visible signed out. So: first hop = check-out + 1 day, second hop
+         (see HOP below) = the real dates. */
+      var d = new Date(Number(co.slice(0, 4)), Number(co.slice(5, 7)) - 1, Number(co.slice(8, 10)) + 1);
+      var coPlus = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+      return { url: dc.buildURL(id, p, ci, coPlus), then: dc.buildURL(id, p, ci, co) };
     }
     var form = document.querySelector('form[action*="search_hotels.html"]');
     if (!form) return null;
@@ -494,10 +505,13 @@ window.CLIENTJS.accountGate = (function () {
   }
 
   function saveReturn() {
-    var url = null;
-    try { url = searchURL(); } catch (e) { /* fall back to the page alone */ }
+    var url = null, then = null;
     try {
-      window.sessionStorage.setItem(KEY, JSON.stringify({ path: window.location.pathname, url: url, t: Date.now() }));
+      var s = searchURL();
+      if (s && typeof s === 'object') { url = s.url; then = s.then; } else { url = s; }
+    } catch (e) { /* fall back to the page alone */ }
+    try {
+      window.sessionStorage.setItem(KEY, JSON.stringify({ path: window.location.pathname, url: url, then: then, t: Date.now() }));
     } catch (e) { /* storage blocked: they still get to register, just no return */ }
   }
 
@@ -536,9 +550,15 @@ window.CLIENTJS.accountGate = (function () {
         'letter-spacing:1.632px;line-height:13.6px;text-transform:uppercase;text-decoration:none !important;white-space:nowrap;cursor:pointer;transition:background 0.18s,border-color 0.18s;}',
       '@media (hover:hover){.' + ROOT + ' a.' + ROOT + '-button:hover{background:#0B152D;border-color:#0B152D;}}',
       '.' + ROOT + ' a.' + ROOT + '-button.is-busy{cursor:progress;opacity:0.72;}',
-      '.' + ROOT + '-note{margin:0;font-size:12px;line-height:1.3;color:#0B152D;white-space:nowrap;}',
-      '.' + ROOT + ' a.' + ROOT + '-signin-button{color:#0B152D !important;font-weight:700;text-decoration:underline !important;text-underline-offset:2px;}',
-      '@media (hover:hover){.' + ROOT + ' a.' + ROOT + '-signin-button:hover{color:#FF640F !important;}}',
+      /* "Already a member?" + a compact outline Sign in button, in the Details
+         button's style (Midnight 2px outline) so it reads as clickable without
+         competing with the orange Create account. Paul, 2026-09-23: the
+         original underlined text link was too small to notice. */
+      '.' + ROOT + '-note{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0.5rem;margin:0;font-size:13px;line-height:1.3;color:#0B152D;}',
+      '.' + ROOT + ' a.' + ROOT + '-signin-button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:34px;padding:0 16px;' +
+        'background:transparent;border:2px solid #0B152D;border-radius:34px;color:#0B152D !important;font-family:Manrope,sans-serif;font-size:12px;font-weight:700;' +
+        'letter-spacing:1.2px;line-height:1;text-transform:uppercase;text-decoration:none !important;white-space:nowrap;transition:background 0.18s,color 0.18s;}',
+      '@media (hover:hover){.' + ROOT + ' a.' + ROOT + '-signin-button:hover{background:#0B152D;color:#FFF9EE !important;}}',
       '.' + ROOT + ' a:focus-visible{outline:2px solid #FF640F;outline-offset:2px;}',
       '.' + ROOT + '-spin{display:none;width:0.75em;height:0.75em;margin-right:0.5em;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:gtm-gate-spin 0.6s linear infinite;}',
       '.' + ROOT + ' .is-busy .' + ROOT + '-spin{display:inline-block;}',
@@ -648,8 +668,7 @@ window.CLIENTJS.accountGate = (function () {
         '#' + OVERLAY + '{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;background:#FFF9EE;font-family:Manrope,sans-serif;color:#0B152D;}',
         '#' + OVERLAY + ' .' + OVERLAY + '-card{max-width:380px;text-align:center;}',
         '#' + OVERLAY + ' .' + OVERLAY + '-spin{display:inline-block;width:28px;height:28px;margin-bottom:1rem;border:3px solid #FF640F;border-right-color:transparent;border-radius:50%;animation:gtm-gate-spin 0.7s linear infinite;}',
-        '#' + OVERLAY + ' .' + OVERLAY + '-title{margin:0 0 0.4rem;font-size:1.15rem;font-weight:700;line-height:1.3;}',
-        '#' + OVERLAY + ' .' + OVERLAY + '-sub{margin:0;font-size:0.9rem;line-height:1.4;opacity:0.8;}',
+        '#' + OVERLAY + ' .' + OVERLAY + '-title{margin:0;font-size:1.15rem;font-weight:700;line-height:1.3;}',
         '@keyframes gtm-gate-spin{to{transform:rotate(360deg);}}',
         '@media (prefers-reduced-motion:reduce){#' + OVERLAY + ' .' + OVERLAY + '-spin{animation:none;opacity:0.55;}}'
       ].join('\n');
@@ -667,7 +686,6 @@ window.CLIENTJS.accountGate = (function () {
     spin.setAttribute('aria-hidden', 'true');
     card.appendChild(spin);
     card.appendChild(node('p', OVERLAY + '-title', 'Taking you back to your search\u2026'));
-    card.appendChild(node('p', OVERLAY + '-sub', 'You are signed in. Your hotels will appear in a few seconds.'));
     el.appendChild(card);
     document.body.appendChild(el);
   }
@@ -689,6 +707,9 @@ window.CLIENTJS.accountGate = (function () {
     if (onPasswordPage()) { hideReturning(); return; }   /* keep the key for later */
     showReturning();
     clearReturn();                  /* before leaving, so it can never loop */
+    if (saved.then) {
+      try { window.sessionStorage.setItem(HOP, JSON.stringify({ url: saved.then, t: Date.now() })); } catch (e) { /* no second hop: they land on the extra-night page, still usable */ }
+    }
     track('returned');
     window.location.replace(saved.url || saved.path);
   }
@@ -738,10 +759,44 @@ window.CLIENTJS.accountGate = (function () {
     }
   });
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { try { start(); } catch (e) { /* never block */ } });
-  } else {
-    try { start(); } catch (e) { /* never block */ }
+  /* FAST PATH on the account page. Revelex serves profile/0/home.html only to
+     signed-in visitors (a signed-out request is redirected to login.html,
+     verified 2026-09-23), so there is no need to wait for their
+     authentication-status call, or for DOMContentLoaded, which sits behind
+     their 4 MB bundle. This file is loaded just BEFORE that bundle, so the
+     page above us is already parsed: go now. Paul saw the account page for
+     seconds before the message under the old wait. The password check still
+     holds here because Revelex renders its password fields in the HTML. */
+  var early = false;
+  try {
+    if (LANDING.test(window.location.pathname) && readReturn() && document.body && !onPasswordPage()) {
+      early = true;
+      maybeReturn();
+    }
+  } catch (e) { early = false; /* fall back to the normal path below */ }
+
+  /* SECOND HOP. We are on the extra-night room page. Its rates are built by
+     Revelex's server during the redirect that brought us here (no later
+     request fetches them, checked 2026-09-23), so the refresh has already
+     happened: leave at once, under the message, for the real dates. */
+  try {
+    if (!early && /\/hotel\/0\/room_selection\.html$/.test(window.location.pathname) && document.body) {
+      var hop = JSON.parse(window.sessionStorage.getItem(HOP) || 'null');
+      window.sessionStorage.removeItem(HOP);
+      if (hop && hop.url && (Date.now() - hop.t) < 3 * 60 * 1000) {
+        early = true;
+        showReturning();
+        window.location.replace(hop.url);
+      }
+    }
+  } catch (e) { early = false; }
+
+  if (!early) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { try { start(); } catch (e) { /* never block */ } });
+    } else {
+      try { start(); } catch (e) { /* never block */ }
+    }
   }
 
   return { start: start, authState: authState };
