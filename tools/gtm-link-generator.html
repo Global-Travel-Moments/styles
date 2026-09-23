@@ -29,7 +29,9 @@
   fetched with an HTTP Range request and gunzipped in the browser (the pack and
   its byte-offset map are built by build-hotel-index.py). A local GTCHotels.csv
   picker is kept as a fallback for offline use.
-  Registry lives in localStorage; nothing else is sent anywhere.
+  Registry: kept in localStorage, and every saved link is posted to
+  /api/registry (netlify/edge-functions/registry.js), which forwards it to the
+  shared Google Sheet with the token added server-side.
 -->
 <style>
 :root {
@@ -350,7 +352,7 @@ td.url { font-family: 'Menlo', monospace; font-size: 0.7rem; word-break: break-a
 
   <div class="card">
     <h2 class="section-title">6 &middot; Registry</h2>
-    <p class="section-note">Kept in this browser. Export the JSON to keep the inventory somewhere real.</p>
+    <p class="section-note">The links saved in this browser. The shared record is the sheet; anything marked unsent here can be retried with Send to sheet.</p>
     <div id="registry-body"><p class="registry-empty">Nothing saved yet.</p></div>
     <div class="actions">
       <button id="send-btn">Send to sheet</button>
@@ -361,22 +363,9 @@ td.url { font-family: 'Menlo', monospace; font-size: 0.7rem; word-break: break-a
   </div>
 
   <div class="card">
-    <h2 class="section-title">7 &middot; Google Sheet</h2>
-    <p class="section-note">Point this at the deployed Apps Script from <code>gtm-link-registry-appsscript.gs</code> and every saved link is pushed to the shared sheet. Kept in this browser, so each person enters it once.</p>
-    <div class="field">
-      <label for="sheet-url">Web app URL</label>
-      <input type="text" id="sheet-url" placeholder="https://script.google.com/macros/s/.../exec">
-    </div>
-    <div class="field">
-      <label for="sheet-token">Shared token</label>
-      <input type="text" id="sheet-token" placeholder="the SHARED_TOKEN from the script">
-      <small class="hint">Not a password to anything else — it just stops a stranger who finds the URL appending junk.</small>
-    </div>
-    <div class="toggle-row">
-      <input type="checkbox" id="sheet-auto">
-      <label for="sheet-auto">Push automatically whenever I save a link</label>
-    </div>
-    <div class="status" id="sheet-status"></div>
+    <h2 class="section-title">7 &middot; Shared sheet</h2>
+    <p class="section-note">Every link you save goes to the shared GTM link sheet automatically. Nothing to set up.</p>
+    <div class="status" id="sheet-status">Checking the connection…</div>
   </div>
 </div>
 
@@ -1057,7 +1046,6 @@ function saveRegistry(rows) {
     return localStorage.getItem(REGISTRY_KEY) === json;
   } catch (e) { return false; }
 }
-const STORAGE_BLOCKED = 'Not saved. This browser is blocking the tool from storing anything. That usually means a private window, blocked cookies, or the tool opened from inside Gmail, Slack or WhatsApp. Open it in ordinary Chrome or Safari, or copy the link and keep it yourself.';
 
 /* One message slot beside the Copy/Save buttons, so feedback appears where
    the click was. A single timer, so an old "Copied." cannot wipe a newer message. */
@@ -1119,15 +1107,19 @@ function renderRegistry() {
   body.appendChild(table);
 }
 
-$('save-btn').addEventListener('click', () => {
+/* Save goes to two places: this browser's registry and the shared sheet. The
+   sheet is the one that matters, so a browser that blocks storage still saves
+   there, and the message says exactly which of the two worked. */
+$('save-btn').addEventListener('click', async () => {
   const url = buildURL(false);
   if (!url) return;
   const rows = loadRegistry();
-  if (rows.some(r => r.url === url)) {
-    linkStatus('Already saved. This exact link is in the registry below.', 6000);
+  const existing = rows.find(r => r.url === url);
+  if (existing && existing.sent) {
+    linkStatus('Already saved. This exact link is in the registry and on the sheet.', 6000);
     return;
   }
-  rows.push({
+  const row = existing || {
     saved: new Date().toISOString(),
     endpoint: $('endpoint').value,
     hotel: $('hotel-name').value.trim() || null,
@@ -1135,84 +1127,91 @@ $('save-btn').addEventListener('click', () => {
     destination: $('place-name').value.trim() || null,
     utm: utmValues(),
     url: url
-  });
-  if (!saveRegistry(rows)) {
-    linkStatus(STORAGE_BLOCKED);
-    return;
-  }
+  };
+  if (!existing) rows.push(row);
+  const local = saveRegistry(rows);
   renderRegistry();
-  linkStatus('✓ Saved. ' + rows.length + ' link' + (rows.length === 1 ? '' : 's') + ' in the registry below.', 6000);
-  if (loadSheetCfg().auto) sendToSheet([rows[rows.length - 1]], true);
+
+  $('save-btn').disabled = true;
+  linkStatus('Saving…');
+  const sheet = await sendToSheet([row]);
+  $('save-btn').disabled = false;
+
+  if (sheet.ok && local) {
+    linkStatus('✓ Saved to the shared sheet and the registry below.', 6000);
+  } else if (sheet.ok) {
+    linkStatus('✓ Saved to the shared sheet. This browser will not keep its own copy (private window or blocked cookies), which is fine.', 8000);
+  } else if (local) {
+    linkStatus('Saved in this browser only. The sheet did not take it: ' + sheet.error + ' Try Send to sheet in a minute.');
+  } else {
+    linkStatus('Not saved. The sheet did not take it (' + sheet.error + ') and this browser is blocking storage. Copy the link and send it to Paul.');
+  }
 });
 
 /* ---------------- google sheet ----------------
-   Apps Script web apps redirect their response through googleusercontent,
-   which breaks CORS, so this posts no-cors: the row lands, but the page
-   cannot read a confirmation. Rows are therefore marked "sent" rather than
-   "confirmed", and localStorage stays the working copy. The sheet is the
-   shared record; check it if you want certainty. */
-const SHEET_CFG_KEY = 'gtm-link-sheet-cfg-v1';
-
-function loadSheetCfg() {
-  try { return JSON.parse(localStorage.getItem(SHEET_CFG_KEY) || '{}'); }
-  catch (e) { return {}; }
-}
-function saveSheetCfg() {
-  try {
-    localStorage.setItem(SHEET_CFG_KEY, JSON.stringify({
-      url: $('sheet-url').value.trim(),
-      token: $('sheet-token').value.trim(),
-      auto: $('sheet-auto').checked
-    }));
-  } catch (e) {
-    $('sheet-status').textContent = 'This browser is blocking storage, so these settings will not be kept.';
-  }
-}
+   Links go to /api/registry (netlify/edge-functions/registry.js), which adds
+   the token and forwards them to the Apps Script. Nobody configures anything,
+   and because the relay reads the Apps Script reply, "sent" means the sheet
+   confirmed the row. Returns { ok, error }. */
+const REGISTRY_API = '/api/registry';
 
 function sheetStatus(text) {
   $('sheet-status').textContent = text;
-  if (text) setTimeout(() => { $('sheet-status').textContent = ''; }, 5000);
 }
 
-async function sendToSheet(rows, quiet) {
-  const cfg = loadSheetCfg();
-  if (!cfg.url || !cfg.token) {
-    if (!quiet) sheetStatus('Add the web app URL and token below first.');
-    return false;
-  }
-  if (!rows.length) {
-    if (!quiet) sheetStatus('Nothing new to send — everything here is already on the sheet.');
-    return false;
-  }
+async function sendToSheet(rows) {
+  if (!rows.length) return { ok: true };
+  let data;
   try {
-    await fetch(cfg.url, {
+    const res = await fetch(REGISTRY_API, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ token: cfg.token, links: rows })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ links: rows })
     });
-    const all = loadRegistry();
-    const sentUrls = {};
-    rows.forEach(r => { sentUrls[r.url] = true; });
-    all.forEach(r => { if (sentUrls[r.url]) r.sent = new Date().toISOString(); });
-    saveRegistry(all);
-    renderRegistry();
-    sheetStatus('Sent ' + rows.length + ' link' + (rows.length === 1 ? '' : 's') + ' to the sheet. Check the sheet to confirm — the response cannot be read back.');
-    return true;
+    try { data = await res.json(); }
+    catch (e) { data = { ok: false, error: 'the sheet connection did not answer (HTTP ' + res.status + ').' }; }
   } catch (e) {
-    sheetStatus('Could not reach the web app. ' + e.message);
-    return false;
+    data = { ok: false, error: 'could not reach the sheet connection.' };
+  }
+  if (!data.ok) return { ok: false, error: data.error || 'unknown error.' };
+
+  const all = loadRegistry();
+  const sentUrls = {};
+  rows.forEach(r => { sentUrls[r.url] = true; r.sent = new Date().toISOString(); });
+  all.forEach(r => { if (sentUrls[r.url]) r.sent = new Date().toISOString(); });
+  saveRegistry(all);
+  renderRegistry();
+  checkSheet();
+  return { ok: true };
+}
+
+async function checkSheet() {
+  try {
+    const res = await fetch(REGISTRY_API, { cache: 'no-store' });
+    const data = await res.json();
+    if (data.ok) {
+      sheetStatus(typeof data.rows === 'number'
+        ? '✓ Connected. ' + data.rows + ' link' + (data.rows === 1 ? '' : 's') + ' on the sheet.'
+        : '✓ Connected.');
+    } else {
+      sheetStatus('Sheet not connected: ' + (data.error || 'unknown error.') + ' Saved links stay in this browser until it is.');
+    }
+  } catch (e) {
+    sheetStatus('Sheet not reachable from here. Saved links stay in this browser until it is.');
   }
 }
 
-$('send-btn').addEventListener('click', () => {
+$('send-btn').addEventListener('click', async () => {
   const unsent = loadRegistry().filter(r => !r.sent);
-  sendToSheet(unsent, false);
-});
-
-['sheet-url', 'sheet-token', 'sheet-auto'].forEach(id => {
-  $(id).addEventListener('input', saveSheetCfg);
-  $(id).addEventListener('change', saveSheetCfg);
+  if (!unsent.length) {
+    $('registry-status').textContent = 'Nothing to send. Everything here is already on the sheet.';
+    return;
+  }
+  $('registry-status').textContent = 'Sending…';
+  const r = await sendToSheet(unsent);
+  $('registry-status').textContent = r.ok
+    ? '✓ Sent ' + unsent.length + ' link' + (unsent.length === 1 ? '' : 's') + ' to the sheet.'
+    : 'Not sent: ' + r.error;
 });
 
 $('export-btn').addEventListener('click', () => {
@@ -1320,13 +1319,8 @@ $('check-in').addEventListener('change', () => {
 /* Editing the check-out by hand redefines the stay length. */
 $('check-out').addEventListener('change', () => { previousCheckIn = $('check-in').value; });
 
-/* restore the sheet connection for this browser */
-const savedCfg = loadSheetCfg();
-if (savedCfg.url) $('sheet-url').value = savedCfg.url;
-if (savedCfg.token) $('sheet-token').value = savedCfg.token;
-$('sheet-auto').checked = !!savedCfg.auto;
-
 renderRegistry();
+checkSheet();
 rebuild();
 </script>
 </body>
