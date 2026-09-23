@@ -156,6 +156,18 @@ button {
 }
 button:hover { background: var(--midnight); border-color: var(--midnight); }
 button:disabled { opacity: 0.4; cursor: default; }
+/* Save in flight: greyed, spinner, no second click. Stays disabled through the
+   "Saved" pause so a double click cannot add the same link twice. */
+button.is-saving, button.is-saved { opacity: 0.6; cursor: wait; pointer-events: none; }
+button.is-saved { cursor: default; }
+button.is-saving::before {
+  content: ''; display: inline-block; width: 0.85em; height: 0.85em;
+  margin-right: 0.55em; vertical-align: -0.1em;
+  border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  animation: btn-spin 0.7s linear infinite;
+}
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { button.is-saving::before { animation-duration: 2s; } }
 button.secondary, .btn-link.secondary { background: transparent; color: var(--midnight); border-color: var(--midnight); }
 button.secondary:hover, .btn-link.secondary:hover { background: var(--midnight); color: var(--pearl); }
 .btn-link {
@@ -374,6 +386,9 @@ const HOST = 'https://book.globaltravelmoments.com';
 const HATOKEN = 'GTCGTM01';
 const PHOTON_URL = 'https://photon.komoot.io/api/';
 const REGISTRY_KEY = 'gtm-link-registry-v1';
+/* true from the click until the "Saved" pause ends. rebuild() checks it, so
+   editing a field mid-save cannot switch the button back on. */
+let saveBusy = false;
 const $ = id => document.getElementById(id);
 
 /* ---------------------------------------------------------------
@@ -1025,7 +1040,7 @@ function rebuild() {
     out.classList.remove('empty');
     link.setAttribute('href', buildURL(false));
     link.removeAttribute('aria-disabled');
-    $('save-btn').disabled = false;
+    $('save-btn').disabled = saveBusy;
   }
   renderBlockers();
 }
@@ -1110,9 +1125,22 @@ function renderRegistry() {
 /* Save goes to two places: this browser's registry and the shared sheet. The
    sheet is the one that matters, so a browser that blocks storage still saves
    there, and the message says exactly which of the two worked. */
+const SAVE_LABEL = 'Save to registry';
+function setSaveButton(state) {
+  const b = $('save-btn');
+  b.classList.toggle('is-saving', state === 'saving');
+  b.classList.toggle('is-saved', state === 'saved');
+  b.textContent = state === 'saving' ? 'Saving…' : state === 'saved' ? 'Saved ✓' : SAVE_LABEL;
+  b.setAttribute('aria-busy', state === 'saving' ? 'true' : 'false');
+  b.disabled = state !== 'idle' || !buildURL(false);
+}
+
 $('save-btn').addEventListener('click', async () => {
+  if (saveBusy) return;
   const url = buildURL(false);
   if (!url) return;
+  saveBusy = true;
+  setSaveButton('saving');
   /* Every click saves a new row, even for a link saved before (Paul,
      2026-09-23: "id rather we had it saved twice"). */
   const rows = loadRegistry();
@@ -1129,10 +1157,16 @@ $('save-btn').addEventListener('click', async () => {
   const local = saveRegistry(rows);
   renderRegistry();
 
-  $('save-btn').disabled = true;
   linkStatus('Saving…');
   const sheet = await sendToSheet([row]);
-  $('save-btn').disabled = false;
+
+  if (sheet.ok) {
+    setSaveButton('saved');
+    setTimeout(() => { saveBusy = false; setSaveButton('idle'); }, 2500);
+  } else {
+    saveBusy = false;
+    setSaveButton('idle');
+  }
 
   if (sheet.ok && !sheet.added && sheet.updated) {
     linkStatus('✓ Already on the shared sheet, so no new row: its existing row was updated (see Last sent).', 8000);
