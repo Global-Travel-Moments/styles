@@ -3842,3 +3842,264 @@ body {
         background-repeat: no-repeat !important;
     }
 }
+
+
+/* ============================================================================
+   68. ROOM SELECTION, MOBILE + TABLET - the sticky hotel bar sits BELOW the
+       header, not under it (23 Sep 2026, Paul: "the details bar JUMPS and
+       then is hidden behind the logo")
+   ==========================================================================*/
+
+/* Once you scroll past the hotel summary, Revelex pins it with
+   position:fixed; top:0. Our header is also fixed at the top (96px tall on a
+   phone, 128px from 480px up) and sits above the whole app container, so the
+   bar's hotel name, dates and guests all landed underneath it and only the
+   bottom of its Details button showed, as an empty pill. Pin it to the
+   header's bottom edge instead. The extra top padding clears the logo circle,
+   which hangs 16px below the bar. */
+@media screen and (max-width: 991px) {
+    .rvlx-app-container.hotel-room-page .item-summary-hotel.is-sticky {
+        top: 128px !important;
+        padding-top: 28px !important;
+        /* square top corners: it butts against the header, and rounded ones
+           let the room cards' edges peek through */
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .rvlx-app-container.hotel-room-page .item-summary-hotel.is-sticky {
+        top: 96px !important;
+    }
+}
+
+
+/* ============================================================================
+   69. RESULTS PAGE, MOBILE - the Details tabs become one segmented pill
+       (23 Sep 2026, Paul: "they really look squashed together... maybe it's
+       a long pill")
+   ==========================================================================*/
+
+/* Revelex renders Description / Gallery / Map / Street View / Benefits as
+   five separate 56px outlined pills jammed edge to edge, with "Street View"
+   wrapping onto two lines. Now: one Midnight-outlined track holding all five
+   as segments; the open one fills Midnight. Pure CSS, same links, one tap
+   each. If a hotel ever has more labels than fit, the track scrolls sideways
+   rather than wrapping. */
+@media screen and (max-width: 767px) {
+    .rvlx-app-container .tabs.hotel-details .tabs-container {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 2px !important;
+        padding: 4px !important;
+        border: 1.5px solid #0B152D !important;
+        border-radius: 2em !important;
+        background: #FFF9EE !important;
+        box-shadow: none !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+    }
+
+    .rvlx-app-container .tabs.hotel-details .tabs-container::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .rvlx-app-container .tabs.hotel-details .tabs-container::before,
+    .rvlx-app-container .tabs.hotel-details .tabs-container::after {
+        content: none !important;
+    }
+
+    /* [data-tabs-label] lifts these to the same specificity as section 21's
+       `a:not(.is-active)` tab rules, which come earlier, so these win.
+       Revelex sets the labels full-width and 56px tall on mobile: reset both,
+       and let them SHRINK (flex-shrink 0 made each one 375px wide). */
+    .rvlx-app-container .tabs.hotel-details .tabs-container > a[data-tabs-label] {
+        flex: 1 1 auto !important;
+        width: auto !important;
+        max-width: none !important;
+        height: 38px !important;
+        min-height: 0 !important;
+        min-width: 0 !important;
+        padding: 0 9px !important;
+        margin: 0 !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: 0 !important;
+        border-radius: 2em !important;
+        background: transparent !important;
+        background-image: none !important;
+        box-shadow: none !important;
+        color: #0B152D !important;
+        font-family: Manrope, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        line-height: 1 !important;
+        white-space: nowrap !important;
+        text-decoration: none !important;
+    }
+
+    .rvlx-app-container .tabs.hotel-details .tabs-container > a[data-tabs-label].is-active {
+        background: #0B152D !important;
+        color: #FFF9EE !important;
+    }
+}
+
+/* 69b. Small phones (360px): five labels need a touch less room to stay on
+   one line without scrolling */
+@media screen and (max-width: 389px) {
+    .rvlx-app-container .tabs.hotel-details .tabs-container > a[data-tabs-label] {
+        padding: 0 6px !important;
+        font-size: 12px !important;
+    }
+}
+
+
+/* ============================================================================
+   70. ROOM SELECTION, MOBILE - room rates: description and price no longer
+       collide (23 Sep 2026, Paul: "room selection is also suffering from the
+       overlapping words with amounts")
+   ==========================================================================*/
+
+/* Same fault as the results cards (section 66). Each rate's price block is
+   position:absolute in the top-right corner and the rate description is held
+   to max-width:65% beside it, so a long description ("Best Flexible Rate -
+   Hideaway Pool Villa Total 154 Sqm...") ran under the price and total. On a
+   phone the price drops into the flow as its own row, directly above
+   "Book Now, Pay Deposit" and Select Room, and the description takes the
+   full width. */
+@media screen and (max-width: 767px) {
+    .rvlx-app-container.hotel-room-page .hotel-room-results-container .item-summary-subtitle {
+        max-width: none !important;
+        width: auto !important;
+    }
+
+    .rvlx-app-container.hotel-room-page .hotel-room-results-container .item-summary-extras > .item-summary-price {
+        position: static !important;
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    /* 70b. "ClientID: X2TRate Plan Code:" ran together with no gap, and a long
+       Rate Description stayed on one line and ran off the card. Space the
+       items and let values wrap. */
+    .rvlx-app-container.hotel-room-page .hotel-room-results-container .item-summary-list-room-rates {
+        gap: 8px 20px !important;
+    }
+
+    .rvlx-app-container.hotel-room-page .hotel-room-results-container .item-summary-list-room-rates .hotel-room-rate-type {
+        flex: 0 1 auto !important;
+        flex-wrap: wrap !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    /* 70c. "Taxes:" was rendering in the Instrument Serif display face */
+    .rvlx-app-container.hotel-room-page .hotel-room-results-container .hotel-room-price-taxes {
+        font-family: Manrope, sans-serif !important;
+    }
+}
+
+
+/* ============================================================================
+   71. HEADER, MOBILE + TABLET - the cream background fills the whole header
+       (23 Sep 2026, Paul: "can we fix the header background?")
+   ==========================================================================*/
+
+/* The fixed .navbar is 96px tall on a phone (128px from 480px up), but its
+   cream layer, .navbar-base, is only 67px. The bottom 29px of the header was
+   see-through beside the logo, so page content scrolled visibly through it,
+   most obviously between the header and the room-selection sticky bar
+   (section 68). The website has the same 67px bar, but it sits over a hero
+   photo there. Stretch the cream to the full header box; the logo circle
+   still hangs 16px below it, as on the website. */
+@media screen and (max-width: 991px) {
+    .navbar.is-primary > .navbar-base {
+        top: 0 !important;
+        bottom: auto !important;
+        height: 100% !important;
+    }
+}
+
+
+/* ============================================================================
+   72. Revelex's orange focus ring - keyboard only, not after a tap
+       (23 Sep 2026, Paul: "orange ring - fixable?")
+   ==========================================================================*/
+
+/* Revelex draws `box-shadow: 0 0 0 2px #FF640F` on any focused .button. That
+   is an accessibility focus indicator, but it uses :focus, so on a phone
+   every tapped button (Details, most visibly) kept an orange ring. Keep it
+   for keyboard users (:focus-visible) and drop it after a tap or click. */
+.rvlx-app-container .button:focus:not(:focus-visible) {
+    box-shadow: none !important;
+}
+
+
+/* ============================================================================
+   73. RESULTS PAGE, MOBILE - Details and Select: equal, smaller, apart
+       (23 Sep 2026, Paul: "they are quite on top of one another... could the
+       buttons be the same size?")
+   ==========================================================================*/
+
+/* Revelex sizes the pair unevenly (Details 219px, Select 167px - Select sits
+   inside its own <form>) with no gap, so the two pills touched. Equal halves,
+   12px apart, 44px tall. */
+@media screen and (max-width: 767px) {
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-cta {
+        display: flex !important;
+        gap: 12px !important;
+    }
+
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-cta > .results-details-action,
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-cta > form {
+        /* exact halves: with flex:1 1 0 the Details link's own padding and
+           border (28px) were added on top, so it came out wider */
+        flex: 0 0 calc(50% - 6px) !important;
+        min-width: 0 !important;
+        width: auto !important;
+        margin: 0 !important;
+    }
+
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-cta .results-details-action,
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-cta .results-details-online {
+        width: 100% !important;
+        height: 44px !important;
+        min-height: 0 !important;
+        padding: 0 12px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 13px !important;
+    }
+}
+
+
+/* ============================================================================
+   74. RESULTS PAGE, MOBILE - tighter gap under the hotel name
+       (23 Sep 2026, Paul: "tighten the gap under the hotel name")
+   ==========================================================================*/
+
+/* Revelex fixes .item-summary-title at height:90px - the photo's height - but
+   on cards with a partner-programme logo row (SELECT etc.) the title starts
+   33px lower, so the box ran 33px past the photo, all of it empty. Let the
+   title size to its text, with a floor that still clears the bottom of the
+   photo (photo ends 90px down; the logo row takes the first 33px). Cards
+   without a logo row keep the full 90px floor. Long names still grow. */
+@media screen and (max-width: 767px) {
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-title {
+        height: auto !important;
+        min-height: 90px !important;
+    }
+
+    .rvlx-app-container.hotel-search-results .item-summary-hotel .item-summary-content:has(> .item-summary-benefits) .item-summary-title {
+        min-height: 57px !important;
+    }
+}
