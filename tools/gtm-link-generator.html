@@ -1046,8 +1046,26 @@ function loadRegistry() {
   try { return JSON.parse(localStorage.getItem(REGISTRY_KEY) || '[]'); }
   catch (e) { return []; }
 }
+/* Returns false if the browser refused the write. Private windows, blocked
+   cookies and the in-app browsers of Gmail/Slack/WhatsApp all block or throw
+   on localStorage; unguarded, the Save click died silently (Duncan, 2026-09-23).
+   Reads the value back so "Saved" is only ever shown for a link that stuck. */
 function saveRegistry(rows) {
-  localStorage.setItem(REGISTRY_KEY, JSON.stringify(rows));
+  try {
+    const json = JSON.stringify(rows);
+    localStorage.setItem(REGISTRY_KEY, json);
+    return localStorage.getItem(REGISTRY_KEY) === json;
+  } catch (e) { return false; }
+}
+const STORAGE_BLOCKED = 'Not saved. This browser is blocking the tool from storing anything. That usually means a private window, blocked cookies, or the tool opened from inside Gmail, Slack or WhatsApp. Open it in ordinary Chrome or Safari, or copy the link and keep it yourself.';
+
+/* One message slot beside the Copy/Save buttons, so feedback appears where
+   the click was. A single timer, so an old "Copied." cannot wipe a newer message. */
+let linkStatusTimer = null;
+function linkStatus(text, ms) {
+  clearTimeout(linkStatusTimer);
+  $('status').textContent = text;
+  if (ms) linkStatusTimer = setTimeout(() => { $('status').textContent = ''; }, ms);
 }
 
 function renderRegistry() {
@@ -1106,8 +1124,7 @@ $('save-btn').addEventListener('click', () => {
   if (!url) return;
   const rows = loadRegistry();
   if (rows.some(r => r.url === url)) {
-    $('registry-status').textContent = 'That exact link is already in the registry.';
-    setTimeout(() => { $('registry-status').textContent = ''; }, 3500);
+    linkStatus('Already saved. This exact link is in the registry below.', 6000);
     return;
   }
   rows.push({
@@ -1119,10 +1136,12 @@ $('save-btn').addEventListener('click', () => {
     utm: utmValues(),
     url: url
   });
-  saveRegistry(rows);
+  if (!saveRegistry(rows)) {
+    linkStatus(STORAGE_BLOCKED);
+    return;
+  }
   renderRegistry();
-  $('registry-status').textContent = 'Saved. ' + rows.length + ' link' + (rows.length === 1 ? '' : 's') + ' in the registry.';
-  setTimeout(() => { $('registry-status').textContent = ''; }, 3500);
+  linkStatus('✓ Saved. ' + rows.length + ' link' + (rows.length === 1 ? '' : 's') + ' in the registry below.', 6000);
   if (loadSheetCfg().auto) sendToSheet([rows[rows.length - 1]], true);
 });
 
@@ -1139,11 +1158,15 @@ function loadSheetCfg() {
   catch (e) { return {}; }
 }
 function saveSheetCfg() {
-  localStorage.setItem(SHEET_CFG_KEY, JSON.stringify({
-    url: $('sheet-url').value.trim(),
-    token: $('sheet-token').value.trim(),
-    auto: $('sheet-auto').checked
-  }));
+  try {
+    localStorage.setItem(SHEET_CFG_KEY, JSON.stringify({
+      url: $('sheet-url').value.trim(),
+      token: $('sheet-token').value.trim(),
+      auto: $('sheet-auto').checked
+    }));
+  } catch (e) {
+    $('sheet-status').textContent = 'This browser is blocking storage, so these settings will not be kept.';
+  }
 }
 
 function sheetStatus(text) {
@@ -1229,14 +1252,13 @@ function tryCopy(text) {
 
 $('copy-btn').addEventListener('click', async () => {
   const url = buildURL($('readable').checked);
-  if (!url) { $('status').textContent = 'Fill the required fields first.'; return; }
+  if (!url) { linkStatus('Fill the required fields first.', 4000); return; }
   let ok = false;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     try { await navigator.clipboard.writeText(url); ok = true; } catch (e) {}
   }
   if (!ok) ok = tryCopy(url);
-  $('status').textContent = ok ? 'Copied.' : 'Auto-copy blocked — select the link and press Cmd+C.';
-  setTimeout(() => { $('status').textContent = ''; }, 4000);
+  linkStatus(ok ? 'Copied.' : 'Auto-copy blocked — select the link and press Cmd+C.', 4000);
 });
 
 /* ---------------- wiring ---------------- */
