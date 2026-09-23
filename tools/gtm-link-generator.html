@@ -1113,13 +1113,10 @@ function renderRegistry() {
 $('save-btn').addEventListener('click', async () => {
   const url = buildURL(false);
   if (!url) return;
+  /* Every click saves a new row, even for a link saved before (Paul,
+     2026-09-23: "id rather we had it saved twice"). */
   const rows = loadRegistry();
-  const existing = rows.find(r => r.url === url);
-  if (existing && existing.sent) {
-    linkStatus('Already saved. This exact link is in the registry and on the sheet.', 6000);
-    return;
-  }
-  const row = existing || {
+  const row = {
     saved: new Date().toISOString(),
     endpoint: $('endpoint').value,
     hotel: $('hotel-name').value.trim() || null,
@@ -1128,7 +1125,7 @@ $('save-btn').addEventListener('click', async () => {
     utm: utmValues(),
     url: url
   };
-  if (!existing) rows.push(row);
+  rows.push(row);
   const local = saveRegistry(rows);
   renderRegistry();
 
@@ -1137,12 +1134,14 @@ $('save-btn').addEventListener('click', async () => {
   const sheet = await sendToSheet([row]);
   $('save-btn').disabled = false;
 
-  if (sheet.ok && local) {
+  if (sheet.ok && !sheet.added && sheet.updated) {
+    linkStatus('✓ Already on the shared sheet, so no new row: its existing row was updated (see Last sent).', 8000);
+  } else if (sheet.ok && local) {
     linkStatus('✓ Saved to the shared sheet and the registry below.', 6000);
   } else if (sheet.ok) {
     linkStatus('✓ Saved to the shared sheet. This browser will not keep its own copy (private window or blocked cookies), which is fine.', 8000);
   } else if (local) {
-    linkStatus('Saved in this browser only. The sheet did not take it: ' + sheet.error + ' Try Send to sheet in a minute.');
+    linkStatus('Saved in this browser only. The sheet did not take it: ' + sheet.error.replace(/\.?$/, '.') + ' Try Send to sheet in a minute.');
   } else {
     linkStatus('Not saved. The sheet did not take it (' + sheet.error + ') and this browser is blocking storage. Copy the link and send it to Paul.');
   }
@@ -1152,7 +1151,9 @@ $('save-btn').addEventListener('click', async () => {
    Links go to /api/registry (netlify/edge-functions/registry.js), which adds
    the token and forwards them to the Apps Script. Nobody configures anything,
    and because the relay reads the Apps Script reply, "sent" means the sheet
-   confirmed the row. Returns { ok, error }. */
+   confirmed the row. Returns { ok, added, updated, error }. The Apps Script
+   appends a row per save; "updated" only comes back from the older script
+   version, which merged repeat links into one row. */
 const REGISTRY_API = '/api/registry';
 
 function sheetStatus(text) {
@@ -1160,7 +1161,7 @@ function sheetStatus(text) {
 }
 
 async function sendToSheet(rows) {
-  if (!rows.length) return { ok: true };
+  if (!rows.length) return { ok: true, added: 0, updated: 0 };
   let data;
   try {
     const res = await fetch(REGISTRY_API, {
@@ -1176,13 +1177,17 @@ async function sendToSheet(rows) {
   if (!data.ok) return { ok: false, error: data.error || 'unknown error.' };
 
   const all = loadRegistry();
-  const sentUrls = {};
-  rows.forEach(r => { sentUrls[r.url] = true; r.sent = new Date().toISOString(); });
-  all.forEach(r => { if (sentUrls[r.url]) r.sent = new Date().toISOString(); });
+  /* Match on url + saved time, not url alone: the same link can be saved
+     more than once and each save is its own row. */
+  const key = r => r.url + '|' + r.saved;
+  const sentKeys = {};
+  const now = new Date().toISOString();
+  rows.forEach(r => { sentKeys[key(r)] = true; r.sent = now; });
+  all.forEach(r => { if (sentKeys[key(r)]) r.sent = now; });
   saveRegistry(all);
   renderRegistry();
   checkSheet();
-  return { ok: true };
+  return { ok: true, added: data.added || 0, updated: data.updated || 0 };
 }
 
 async function checkSheet() {
@@ -1209,9 +1214,11 @@ $('send-btn').addEventListener('click', async () => {
   }
   $('registry-status').textContent = 'Sending…';
   const r = await sendToSheet(unsent);
-  $('registry-status').textContent = r.ok
-    ? '✓ Sent ' + unsent.length + ' link' + (unsent.length === 1 ? '' : 's') + ' to the sheet.'
-    : 'Not sent: ' + r.error;
+  const n = (k, word) => k + ' ' + word + (k === 1 ? '' : 's');
+  $('registry-status').textContent = !r.ok
+    ? 'Not sent: ' + r.error
+    : '✓ Sent to the sheet: ' + n(r.added, 'new row') +
+      (r.updated ? ', ' + n(r.updated, 'existing row') + ' updated (already on the sheet)' : '') + '.';
 });
 
 $('export-btn').addEventListener('click', () => {

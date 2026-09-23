@@ -17,12 +17,16 @@
  *    That is why SHARED_TOKEN exists: it is the only thing stopping a
  *    stranger who finds the URL from appending junk rows. Treat the URL
  *    as semi-private, don't post it publicly, and rotate the token if it
- *    ever leaks (change it here, redeploy, update it in the generator).
- * 5. Copy the web app URL, paste it into the generator's Sheet section
- *    along with the same token.
+ *    ever leaks (change it here, redeploy, update REGISTRY_TOKEN in Netlify,
+ *    redeploy Netlify).
+ * 5. Put the web app URL and the token into the deeplink generator's Netlify
+ *    environment variables REGISTRY_URL and REGISTRY_TOKEN (secret,
+ *    production). netlify/edge-functions/registry.js adds the token
+ *    server-side, so nobody using the tool ever enters either.
  *
- * The sheet is append-and-update: sending the same URL twice updates that
- * row's "last sent" rather than creating a duplicate, so re-sending is safe.
+ * Every save is its own row, even for a link saved before (Paul, 2026-09-23:
+ * "id rather we had it saved twice"). Column A is when the link was saved,
+ * column B when the sheet received it. Nothing is ever merged or overwritten.
  *
  * NOTE: no secrets beyond the token live here, and the token is not a
  * credential for anything else. Do not put API keys in this file.
@@ -58,29 +62,12 @@ function doPost(e) {
     if (!links.length) return json({ ok: true, added: 0, updated: 0 });
 
     var sheet = getSheet();
-    var existing = urlRowMap(sheet);
     var now = new Date();
-    var added = 0, updated = 0;
-    var toAppend = [];
+    var rows = links.map(function (link) { return rowFor(link, now); });
+    sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, HEADERS.length)
+         .setValues(rows);
 
-    links.forEach(function (link) {
-      var row = rowFor(link, now);
-      var found = existing[link.url];
-      if (found) {
-        sheet.getRange(found, 1, 1, HEADERS.length).setValues([row]);
-        updated++;
-      } else {
-        toAppend.push(row);
-        added++;
-      }
-    });
-
-    if (toAppend.length) {
-      sheet.getRange(sheet.getLastRow() + 1, 1, toAppend.length, HEADERS.length)
-           .setValues(toAppend);
-    }
-
-    return json({ ok: true, added: added, updated: updated });
+    return json({ ok: true, added: rows.length, updated: 0 });
   } catch (err) {
     return json({ ok: false, error: String(err) });
   }
@@ -103,7 +90,7 @@ function doGet(e) {
 function rowFor(link, now) {
   var u = link.utm || {};
   return [
-    link.saved || '',
+    link.saved ? new Date(link.saved) : now,   // a real date, shown in the sheet's timezone
     now,
     u.utm_campaign || '',
     u.utm_id || '',
@@ -126,20 +113,6 @@ function getSheet() {
     sheet.setFrozenRows(1);
   }
   return sheet;
-}
-
-/** URL → row number, so a repeat send updates instead of duplicating. */
-function urlRowMap(sheet) {
-  var last = sheet.getLastRow();
-  var map = {};
-  if (last < 2) return map;
-  var urlCol = HEADERS.indexOf('URL') + 1;
-  var values = sheet.getRange(2, urlCol, last - 1, 1).getValues();
-  for (var i = 0; i < values.length; i++) {
-    var v = values[i][0];
-    if (v) map[v] = i + 2;
-  }
-  return map;
 }
 
 function json(obj) {
