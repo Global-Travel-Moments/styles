@@ -386,11 +386,12 @@ window.CLIENTJS.dateChanger = (function () {
    where each Select button was. After they register or sign in we send them
    back to the page they left, and their results are still there.
 
-   WHY THE RETURN WORKS. Revelex keeps the search in the server session
-   (RVLXSESSID), not in the URL. Verified live 2026-09-23: results ->
-   registration.html -> a bare hotel_selection.html shows the same hotels with
-   no new search. So the return is a plain navigation to the saved path.
-   The gate links must NEVER carry clear=all, which would wipe that session.
+   THE RETURN RE-RUNS THE SEARCH. Revelex keeps the search in the server
+   session, but after registration its own server redirects to
+   login.html?clear=all, which empties that session (Paul's live test,
+   2026-09-23). So on click we save the search as a deeplink and load it once
+   they are signed in. See searchURL(). Our own gate links still never carry
+   clear=all.
 
    HOW IT STAYS INSIDE RULE 2. We never touch their buttons or forms. We add
    our own element as a sibling AFTER their form, and CSS hides a form only
@@ -452,9 +453,51 @@ window.CLIENTJS.accountGate = (function () {
     return null;
   }
 
+  /* The search itself, as a deeplink that re-runs it.
+     WHY NOT JUST GO BACK TO THE PAGE. Tested live by Paul 2026-09-23: after
+     registering, Revelex's own server sends the visitor to login.html?clear=all,
+     which empties the session. Going back to hotel_selection.html then 302s to
+     a blank search.html. So we rebuild the search from what we read here.
+       Results page: their Modify Search form carries every search[...] field
+         (place, coordinates, distance, dates, rooms, ages, stars). Read only.
+       Room page: the date changer already rebuilds the hotel's deeplink.
+     No clear=all on either: they are signed in by then and it would undo that. */
+  function isoDate(us) {
+    var m = String(us || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    return m ? m[3] + '-' + ('0' + m[1]).slice(-2) + '-' + ('0' + m[2]).slice(-2) : '';
+  }
+
+  function searchURL() {
+    var enc = encodeURIComponent;
+    if (pageName() === 'room') {
+      var dc = window.CLIENTJS.dateChanger;
+      if (!dc) return null;
+      var id = dc.hotelId();
+      var p = dc.searchParams();
+      if (!id || !p || !isoDate(p.check_in_date) || !isoDate(p.check_out_date)) return null;
+      return dc.buildURL(id, p, isoDate(p.check_in_date), isoDate(p.check_out_date));
+    }
+    var form = document.querySelector('form[action*="search_hotels.html"]');
+    if (!form) return null;
+    var q = ['hatoken=' + enc(HATOKEN)];
+    var els = form.elements;
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (!el.name || el.name.indexOf('search[') !== 0 || el.value === '') continue;
+      if ((el.type === 'checkbox' || el.type === 'radio') && !el.checked) continue;
+      q.push(enc(el.name) + '=' + enc(el.value));
+    }
+    /* Coordinates are what the search actually runs on. Without them it is
+       not a search, so fall back to the page. */
+    if (q.join('&').indexOf('latitude') === -1) return null;
+    return form.getAttribute('action').split('?')[0] + '?' + q.join('&');
+  }
+
   function saveReturn() {
+    var url = null;
+    try { url = searchURL(); } catch (e) { /* fall back to the page alone */ }
     try {
-      window.sessionStorage.setItem(KEY, JSON.stringify({ path: window.location.pathname, t: Date.now() }));
+      window.sessionStorage.setItem(KEY, JSON.stringify({ path: window.location.pathname, url: url, t: Date.now() }));
     } catch (e) { /* storage blocked: they still get to register, just no return */ }
   }
 
@@ -575,10 +618,14 @@ window.CLIENTJS.accountGate = (function () {
   function maybeReturn() {
     var saved = readReturn();
     if (!saved) return;
-    if (window.location.pathname === saved.path) { clearReturn(); return; }
+    /* Already back on the page they left, with their hotels showing. */
+    if (window.location.pathname === saved.path && document.querySelector(SELECT_BUTTONS)) {
+      clearReturn();
+      return;
+    }
     clearReturn();                  /* before leaving, so it can never loop */
     track('returned');
-    window.location.replace(saved.path);
+    window.location.replace(saved.url || saved.path);
   }
 
   /* --- boot -------------------------------------------------------------- */
