@@ -435,6 +435,71 @@
 
     checkIn.addEventListener('change', function () { syncCheckout(); refreshDebug(); });
     checkOut.addEventListener('change', refreshDebug);
+
+    /* DATES IN WORDS (Capella review item 8, 2026-09-24). The date fields are the
+       browser's own, so each visitor sees their own numeric format (24/10/2026,
+       10/24/2026 or 2026/10/24) and 10/11 can be misread either way. One line
+       under them says it in words, with the night count. */
+    var DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var datesSummary = document.createElement('div');
+    datesSummary.className = 'mhb-dates-words';
+    datesSummary.setAttribute('aria-live', 'polite');
+    datesSummary.style.cssText = 'margin-top:0.45rem;font-size:0.8rem;line-height:1.3;opacity:0.8;text-align:center;';
+    var datesBox = checkIn.closest('.mhb-dates-inner');
+    if (datesBox && datesBox.parentNode) datesBox.parentNode.appendChild(datesSummary);
+    function wordDate(iso) {
+      var p = (iso || '').split('-');
+      if (p.length !== 3) return '';
+      var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+      var s = DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
+      return d.getFullYear() === new Date().getFullYear() ? s : s + ' ' + d.getFullYear();
+    }
+    function renderDatesWords() {
+      var a = wordDate(checkIn.value), z = wordDate(checkOut.value);
+      if (!a || !z) { datesSummary.textContent = ''; return; }
+      var p1 = checkIn.value.split('-'), p2 = checkOut.value.split('-');
+      var nights = Math.round((new Date(p2[0], p2[1] - 1, p2[2]) - new Date(p1[0], p1[1] - 1, p1[2])) / 86400000);
+      datesSummary.textContent = a + ' \u2192 ' + z + (nights > 0 ? ' \u00b7 ' + nights + (nights === 1 ? ' night' : ' nights') : '');
+    }
+    renderDatesWords();
+    checkIn.addEventListener('change', renderDatesWords);
+    checkOut.addEventListener('change', renderDatesWords);
+
+    /* QUICK VIEW RESERVE (Capella item 7, 2026-09-24). The hub's Quick View panel
+       carries a "Reserve your stay" link (data-gtm-reserve) to the booking section.
+       The panel script closes the panel and scrolls; this selects that panel's hotel
+       here first. Capture phase, because the panel script stops the click bubbling.
+       Matched on the hotel name, which both come from the same CMS item. */
+    root.gtmSelectHotel = function (name) {
+      var want = String(name || '').trim().toLowerCase();
+      if (!want) return false;
+      var labels = pillsEl.querySelectorAll('.mhb-pill');
+      for (var i = 0; i < labels.length; i++) {
+        var n = labels[i].querySelector('.mhb-pill-name');
+        var input = labels[i].querySelector('input');
+        if (n && input && n.textContent.trim().toLowerCase() === want) {
+          input.checked = true;
+          input.dispatchEvent(new Event('change'));
+          return true;
+        }
+      }
+      return false;
+    };
+    if (!window.gtmMhbReserveHook) {
+      window.gtmMhbReserveHook = true;
+      document.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('[data-gtm-reserve]') : null;
+        if (!a) return;
+        var panel = a.closest('[data-gtm-stay="panel"]');
+        var h = panel ? panel.querySelector('h1, h2, h3') : null;
+        if (!h) return;
+        var roots = document.querySelectorAll('.gtm-mhb');
+        for (var j = 0; j < roots.length; j++) {
+          if (typeof roots[j].gtmSelectHotel === 'function') roots[j].gtmSelectHotel(h.textContent);
+        }
+      }, true);
+    }
     childrenEl.addEventListener('input', function () { renderChildAges(); refreshDebug(); });
     adultsEl.addEventListener('input', refreshDebug);
     roomsEl.addEventListener('input', refreshDebug);
