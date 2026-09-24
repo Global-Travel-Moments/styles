@@ -303,7 +303,10 @@
 
       var p = [];
       p.push(enc('hatoken', HATOKEN));
-      p.push(enc('clear', 'all'));
+      /* NO clear=all (removed 2026-09-25). Revelex defines it as "start a new session",
+         which signs a member out, and with the account wall live that sent members back
+         behind it on every website search. Tested live without it: a cold visitor gets
+         full results, and a second search in the same tab replaces the first cleanly. */
       p.push(enc('search[name]', selectedGeo.name));
       p.push(enc('search[latitude]', selectedGeo.lat));
       p.push(enc('search[longitude]', selectedGeo.lng));
