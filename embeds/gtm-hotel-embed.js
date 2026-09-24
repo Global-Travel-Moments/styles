@@ -71,6 +71,63 @@
     return encodeURIComponent(key) + '=' + encodeURIComponent(value);
   }
 
+  /* WHERE THE VISITOR REALLY CAME FROM (Capella review item D2, 2026-09-24).
+     The configured UTMs say outthere, which is only true when this embed sits
+     on OutThere's own site. On our own pages that labelled every Google,
+     Meta, newsletter and direct visitor as OutThere. So on our own hosts the
+     link carries the visitor's inbound source instead: their landing UTMs
+     (remembered for the tab, so the hub -> hotel page hop keeps them), else
+     the external site that referred them, else gtm-website / referral.
+     Campaign and content stay as configured unless the inbound link set them.
+     On any other host (OutThere) the configured values stand untouched.
+     The dataLayer push keeps the CONFIGURED campaign and placement: those
+     describe this placement, not the visitor. */
+  var OWN_HOST = /(^|\.)globaltravelmoments\.com$|\.webflow\.io$/;
+  var INBOUND_KEY = 'gtm_inbound';
+  var SEARCH_ENGINE = /(^|\.)(google|bing|duckduckgo|yahoo|ecosia|baidu|yandex)\./;
+
+  function inbound() {
+    var host = window.location.hostname;
+    if (!OWN_HOST.test(host)) return null;
+    var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'utm_id'];
+    var got = {}, any = false;
+    var qs = window.location.search.slice(1).split('&');
+    for (var i = 0; i < qs.length; i++) {
+      var kv = qs[i].split('=');
+      if (keys.indexOf(kv[0]) === -1 || !kv[1]) continue;
+      try { got[kv[0]] = decodeURIComponent(kv[1].replace(/\+/g, ' ')); any = true; } catch (e) { /* skip */ }
+    }
+    try {
+      if (any) {
+        window.sessionStorage.setItem(INBOUND_KEY, JSON.stringify(got));
+        return got;
+      }
+      var saved = JSON.parse(window.sessionStorage.getItem(INBOUND_KEY) || 'null');
+      if (saved && saved.utm_source) return saved;
+    } catch (e) { /* storage blocked: fall through */ }
+    var ref = '';
+    try { ref = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) { ref = ''; }
+    if (ref && !OWN_HOST.test(ref)) {
+      var r = { utm_source: ref.replace(/^www\./, ''), utm_medium: SEARCH_ENGINE.test(ref) ? 'organic' : 'referral' };
+      try { window.sessionStorage.setItem(INBOUND_KEY, JSON.stringify(r)); } catch (e) { /* ignore */ }
+      return r;
+    }
+    return { utm_source: 'gtm-website', utm_medium: 'referral' };
+  }
+
+  function withInbound(utm) {
+    var out = {};
+    Object.keys(utm).forEach(function (key) { out[key] = utm[key]; });
+    var inb = inbound();
+    if (inb) Object.keys(inb).forEach(function (key) { if (inb[key]) out[key] = inb[key]; });
+    return out;
+  }
+
+  /* Remember the inbound source on ARRIVAL, not only on the Reserve click, so a
+     visitor who lands on the hub from an OutThere link and books from a hotel
+     page still carries it. */
+  try { inbound(); } catch (e) { /* never block the embed */ }
+
   function isoToRevelex(iso) {
     if (!iso) return '';
     var b = iso.split('-');
@@ -178,9 +235,10 @@
         });
       }
 
+      var utmLink = withInbound(UTM);
       var utmPairs = [];
-      Object.keys(UTM).forEach(function (key) {
-        if (UTM[key]) utmPairs.push(enc(key, UTM[key]));
+      Object.keys(utmLink).forEach(function (key) {
+        if (utmLink[key]) utmPairs.push(enc(key, utmLink[key]));
       });
       p = p.concat(utmPairs);
 

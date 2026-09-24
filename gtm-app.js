@@ -375,6 +375,87 @@ window.CLIENTJS.dateChanger = (function () {
 }());
 
 /* ----------------------------------------------------------------------------
+   Partner arrival (Capella item 4, the "D1 hash-reader")
+   ----------------------------------------------------------------------------
+   THE PROBLEM. Our partner links (OutThere, the Capella pages, Brevo) carry
+   their UTMs twice, in the query string and after the #, because Revelex's
+   302 on room_availability.html and search_hotels.html throws the query string
+   away. GA4 never reads the # part, so a visitor who lands here cold arrives
+   as a bare referral or as direct, and the campaign and placement are lost.
+
+   WHY NOT FIX THE SESSION ITSELF. The plan was a header script that copies
+   the # values into the query string before Google's tag reads the page.
+   Measured on the live room page 2026-09-24: Revelex streams the <head> in
+   two parts, and their gtag.js has ALREADY sent the page_view 3 to 6 seconds
+   before our header slot is even parsed. Nothing in a slot we own can run
+   first. Only Revelex can place a script above their tag (a Marco ask).
+
+   WHAT THIS DOES INSTEAD. Reads the # values and sends them as one GA4 event,
+   partner_arrival, once per link per tab. The session keeps whatever source
+   GA4 gave it; the campaign and placement become event parameters that can be
+   joined to hotel_desk_booking in an exploration. Read-only on the page.
+   search_hotel_id deliberately reuses the website's parameter name, so one
+   GA4 custom dimension covers both.
+   --------------------------------------------------------------------------*/
+
+window.CLIENTJS.arrival = (function () {
+  'use strict';
+
+  var KEY = 'gtm_arrival_sent';
+  var FIELDS = ['source', 'medium', 'campaign', 'content', 'term', 'id'];
+
+  function read() {
+    var h = window.location.hash;
+    if (!h || h.indexOf('utm_') === -1) return null;
+    var out = {}, found = false;
+    var parts = h.slice(1).split('&');
+    for (var i = 0; i < parts.length; i++) {
+      var m = parts[i].match(/^utm_(source|medium|campaign|content|term|id)=([^&]*)$/);
+      if (!m || !m[2]) continue;
+      try { out[m[1]] = decodeURIComponent(m[2].replace(/\+/g, ' ')).slice(0, 100); } catch (e) { continue; }
+      found = true;
+    }
+    return found ? out : null;
+  }
+
+  function page() {
+    var p = window.location.pathname;
+    if (/room_(selection|availability)\.html$/.test(p)) return 'room';
+    if (/hotel_selection\.html$/.test(p)) return 'results';
+    return p.split('/').pop().replace(/\.html$/, '').slice(0, 40) || 'other';
+  }
+
+  function send() {
+    var utm = read();
+    if (!utm || typeof window.gtag !== 'function') return;
+    /* Once per link per tab. The date changer carries the # onto every new
+       set of dates, and that must not count as a second arrival. */
+    var sig = FIELDS.map(function (f) { return utm[f] || ''; }).join('|');
+    try {
+      if (window.sessionStorage.getItem(KEY) === sig) return;
+      window.sessionStorage.setItem(KEY, sig);
+    } catch (e) { /* storage blocked: send anyway, a rare double beats nothing */ }
+    var hotel = document.querySelector('[data-hotel]');
+    var params = { arrival_page: page() };
+    for (var i = 0; i < FIELDS.length; i++) {
+      if (utm[FIELDS[i]]) params['arrival_' + FIELDS[i]] = utm[FIELDS[i]];
+    }
+    if (hotel && hotel.getAttribute('data-hotel')) params.search_hotel_id = hotel.getAttribute('data-hotel');
+    window.gtag('event', 'partner_arrival', params);
+  }
+
+  try {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { try { send(); } catch (e) { /* never block */ } });
+    } else {
+      send();
+    }
+  } catch (e) { /* tracking must never break the page */ }
+
+  return { read: read };
+}());
+
+/* ----------------------------------------------------------------------------
    Account gate
    ----------------------------------------------------------------------------
    THE PROBLEM. Anyone can book on the Hotel Desk without an account, and GTC
@@ -433,14 +514,18 @@ window.CLIENTJS.accountGate = (function () {
     return null;
   }
 
-  function pageName() {
-    return /room_selection/.test(window.location.pathname) ? 'room' : 'results';
+  function pageName(path) {
+    return /room_selection/.test(path || window.location.pathname) ? 'room' : 'results';
   }
 
-  function track(action) {
+  /* gate_action: create_account | sign_in on the click, then
+     returned_after_create | returned_after_sign_in when we bring them back.
+     gate_page is the page they left, also on the return (which fires from the
+     account page, so it must come from the saved path, not the current one). */
+  function track(action, path) {
     try {
       if (typeof window.gtag === 'function') {
-        window.gtag('event', 'account_gate', { gate_action: action, gate_page: pageName() });
+        window.gtag('event', 'account_gate', { gate_action: action, gate_page: pageName(path) });
       }
     } catch (e) { /* tracking must never break the page */ }
   }
@@ -494,11 +579,11 @@ window.CLIENTJS.accountGate = (function () {
     return form.getAttribute('action').split('?')[0] + '?' + q.join('&');
   }
 
-  function saveReturn() {
+  function saveReturn(action) {
     var url = null;
     try { url = searchURL(); } catch (e) { /* fall back to the page alone */ }
     try {
-      window.sessionStorage.setItem(KEY, JSON.stringify({ path: window.location.pathname, url: url, t: Date.now() }));
+      window.sessionStorage.setItem(KEY, JSON.stringify({ path: window.location.pathname, url: url, action: action, t: Date.now() }));
     } catch (e) { /* storage blocked: they still get to register, just no return */ }
   }
 
@@ -596,8 +681,8 @@ window.CLIENTJS.accountGate = (function () {
 
     /* Never preventDefault: these are ordinary links, we only remember where
        the visitor was before they leave. */
-    signin.addEventListener('click', function () { saveReturn(); track('sign_in'); });
-    create.addEventListener('click', function () { saveReturn(); track('create_account'); busy(create); });
+    signin.addEventListener('click', function () { saveReturn('sign_in'); track('sign_in'); });
+    create.addEventListener('click', function () { saveReturn('create_account'); track('create_account'); busy(create); });
 
     root.appendChild(note);
     root.appendChild(create);
@@ -717,7 +802,7 @@ window.CLIENTJS.accountGate = (function () {
        Removing it before we go leaves the browser as a new tab would be; the
        room page rebuilds it from the server. We never write to it. */
     try { window.sessionStorage.removeItem('roomsStorage'); } catch (e) { /* ignore */ }
-    track('returned');
+    track(saved.action === 'create_account' ? 'returned_after_create' : 'returned_after_sign_in', saved.path);
     window.location.replace(saved.url || saved.path);
   }
 
