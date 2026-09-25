@@ -158,10 +158,28 @@
   /* ---- success: swap to the thank-you and record the lead once ---- */
   var done = false;
   var ok = card.querySelector('#success-message');
+  /* Brevo's main.js overwrites the success panel with the form's own server message ("Your subscription has
+     been successful.") on a real send. Keep our thank-you and put it back whenever Brevo replaces it. */
+  var okInner = ok ? ok.querySelector('.sib-form-message-panel__inner-text') : null;
+  var thanksHTML = okInner ? okInner.innerHTML : '';
+  function restoreThanks() {
+    var inner = ok.querySelector('.sib-form-message-panel__inner-text');
+    if (!inner) {
+      inner = document.createElement('span');
+      inner.className = 'sib-form-message-panel__inner-text';
+      var wrap = ok.querySelector('.sib-form-message-panel__text') || ok;
+      wrap.innerHTML = '';
+      wrap.appendChild(inner);
+    }
+    if (thanksHTML && !inner.querySelector('.gtm-enq__thanks')) inner.innerHTML = thanksHTML;
+  }
+  if (ok && window.MutationObserver) new MutationObserver(function () { if (done) restoreThanks(); })
+    .observe(ok, { childList: true, subtree: true, characterData: true });
   function checkDone() {
     if (done || !ok) return;
     if (window.getComputedStyle(ok).display === 'none') return;
     done = true;
+    restoreThanks();
     card.classList.add('gtm-enq--done');
     var hotelId = document.querySelector('.gtm-shb [data-shb-field="id"]');
     window.dataLayer = window.dataLayer || [];

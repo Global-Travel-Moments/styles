@@ -484,6 +484,9 @@ window.CLIENTJS.arrival = (function () {
    stay visible and the booking works as before. The wall must never become a
    dead end.
 
+   EXCEPTIONS. Hotels in OPEN_HOTELS never get the wall (the six Capella
+   campaign properties, Paul 2026-09-25).
+
    SIGNED-IN STATE. Revelex renders all four account-menu links with .is-hidden
    and un-hides one pair after fetch_authentication_status.json answers:
      signed out -> .authentication-module-login  loses .is-hidden
@@ -506,7 +509,47 @@ window.CLIENTJS.accountGate = (function () {
   var SIGNED_OUT = '.authentication-module-login:not(.is-hidden)';
   var SIGNED_IN = '.authentication-module-logout:not(.is-hidden)';
 
+  /* NO WALL for these hotels (GDSHotelIDs). Paul, 2026-09-25: the six
+     OutThere x Capella campaign properties book with zero friction, so their
+     Select stays Revelex's own on the results and room pages. Every other
+     hotel keeps the wall. If a hotel's ID cannot be read, it gets the wall. */
+  var OPEN_HOTELS = {
+    '100731601': 'Capella Bangkok',
+    '100033282': 'Capella Singapore',
+    '102925241': 'Capella Taipei',
+    '103644183': 'Capella Kyoto',
+    '102253845': 'Patina Maldives',
+    '102856219': 'Patina Osaka'
+  };
+
   /* --- state (read-only) ------------------------------------------------- */
+
+  /* The hotel a Select belongs to, read from Revelex's markup (never written).
+       Results page: each form names it, search[hotel_list][gds_hotel_id][ID].
+       Room page: one hotel, on [data-hotel] above the rates. Each rate's
+         room_id is also base64 of "-3-ID-...", used if [data-hotel] is missing.
+     Checked live 2026-09-25 on Capella Bangkok and Patina Maldives. */
+  function formHotelId(form) {
+    var els = form.elements;
+    for (var i = 0; i < els.length; i++) {
+      var m = (els[i].name || '').match(/\[gds_hotel_id\]\[(\d+)\]/);
+      if (m) return m[1];
+    }
+    if (pageName() !== 'room') return null;
+    var el = document.querySelector('[data-hotel]');
+    if (el && el.getAttribute('data-hotel')) return el.getAttribute('data-hotel');
+    var room = form.querySelector('[name$="[room_id]"]');
+    try {
+      var r = room && window.atob(room.value).match(/^-\d+-(\d+)-/);
+      if (r) return r[1];
+    } catch (e) { /* not base64: unknown hotel, so it keeps the wall */ }
+    return null;
+  }
+
+  function isOpenHotel(form) {
+    var id = formHotelId(form);
+    return !!(id && Object.prototype.hasOwnProperty.call(OPEN_HOTELS, id));
+  }
 
   function authState() {
     if (document.querySelector(SIGNED_IN)) return 'in';
@@ -699,6 +742,7 @@ window.CLIENTJS.accountGate = (function () {
     for (var i = 0; i < buttons.length; i++) {
       var form = buttons[i].form;
       if (!form || done.has(form) || !form.parentNode) continue;
+      if (isOpenHotel(form)) { done.add(form); continue; }
       var next = form.nextElementSibling;
       if (!(next && next.getAttribute('data-gtm-gate'))) {
         form.parentNode.insertBefore(gate(), form.nextSibling);
