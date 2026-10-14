@@ -303,16 +303,70 @@ window.CLIENTJS.hd = (function () {
     });
   }
 
+  /* Password recovery (password_recovery.html) and "check your email"
+     (password_recovery_token_display.html): hero copy left of Revelex's form, then the Plum block. */
+  function buildPassword() {
+    var hd = window.CLIENTJS && window.CLIENTJS.hd;
+    var page = document.querySelector('.members-area-recovery, .members-area-token');
+    var wrap = page && page.querySelector('.members-content-wrapper');
+    var card = wrap && wrap.querySelector('.members-content');
+    var hero = page && page.querySelector('.members-main-container');
+    if (!hd || !card || !hero || document.querySelector('.gtm-pw')) return;
+    var isToken = page.classList.contains('members-area-token');
+
+    /* Same folder as these pages on production and UAT. Absolute paths, because Revelex pages set
+       a <base> that breaks relative links. Sign-in carries the hatoken only, never clear=all. */
+    var dir = location.pathname.replace(/[^\/]*$/, '');
+    var signIn = dir + 'login.html?hatoken=GTCGTM01';
+    var again = dir + 'password_recovery.html?hatoken=GTCGTM01';
+
+    var copy = document.createElement('div');
+    copy.className = 'gtm-hero-copy gtm-pw';
+    copy.id = 'gtm-pw-copy';
+    copy.innerHTML = isToken
+      ? '<span class="gtm-eyebrow is-orange">The Hotel Desk by Global Travel Moments</span>' +
+        '<h1 class="gtm-title">Check your email.</h1>' +
+        '<p class="gtm-sub">If that email address has an account with us, a link to reset your password is on its way. Each link and token works once only. If your email gives you a token instead, paste it here.</p>' +
+        '<p class="gtm-pw-alt">Nothing arrived? Check your spam folder, or <a class="gtm-pw-link" href="' + again + '">ask for a new link</a>.</p>'
+      : '<span class="gtm-eyebrow is-orange">The Hotel Desk by Global Travel Moments</span>' +
+        '<h1 class="gtm-title">Forgot your password?</h1>' +
+        '<p class="gtm-sub">Enter the email address you signed up with and we\u2019ll send you a link to reset it.</p>' +
+        '<p class="gtm-pw-alt">Remembered it? <a class="gtm-pw-link" href="' + signIn + '">Sign in</a></p>';
+    wrap.insertBefore(copy, wrap.firstChild);
+
+    var head = document.createElement('div');
+    head.className = 'gtm-card-head';
+    head.innerHTML = isToken
+      ? '<h2>Enter your token</h2><p>Only needed if your email gave you a token rather than a link.</p>'
+      : '<h2>Reset your password</h2><p>We\u2019ll email you a link to set a new one.</p>';
+    var main = card.querySelector('.members-main-content');
+    main.parentNode.insertBefore(head, main);
+
+    var after = document.createElement('div');
+    after.className = 'gtm-after gtm-pw-page';
+    after.id = 'gtm-after';
+    after.innerHTML = hd.plum('Trouble resetting your password? Speak to a Travel Designer in London or New York.');
+    hero.parentNode.insertBefore(after, hero.nextSibling);
+  }
+
   function init() {
     try { buildSignUp(); } catch (e) {}
     try { buildSignIn(); } catch (e) {}
+    try { buildPassword(); } catch (e) {}
   }
 
   /* Loaded async from the header, so this usually runs while the page is still
      arriving. Build the moment Revelex's members markup is complete (the
      benefits panel is the last thing in it) rather than waiting for the whole
      page: that is what keeps the old layout from ever painting. */
-  function membersReady() { return !!document.querySelector('.members-content-wrapper .members-content-benefits-section'); }
+  function membersReady() {
+    var w = document.querySelector('.members-content-wrapper');
+    if (!w) return false;
+    /* sign-up and sign-in end with the benefits panel; the password pages have none and end
+       with the contact strip */
+    if (document.querySelector('.members-area-registration, .members-area-page')) return !!w.querySelector('.members-content-benefits-section');
+    return !!w.querySelector('.members-contact-items');
+  }
   if (membersReady() || document.readyState !== 'loading') {
     init();
   } else {

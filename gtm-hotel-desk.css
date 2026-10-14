@@ -16,7 +16,9 @@
    everything appears in one frame. If the script fails, the 2.5s animation
    reveals Revelex's page as it was. */
 .members-area-registration .members-main-container,
-.members-area-page .members-main-container:has(form[action*="authenticate"]) {
+.members-area-page .members-main-container:has(form[action*="authenticate"]),
+.members-area-recovery .members-main-container,
+.members-area-token .members-main-container {
     background-size: cover !important;
 }
 .members-area-registration .members-main-container {
@@ -25,21 +27,25 @@
         url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
     background-position: center 60% !important;
 }
-.members-area-page .members-main-container:has(form[action*="authenticate"]) {
+.members-area-page .members-main-container:has(form[action*="authenticate"]),
+.members-area-recovery .members-main-container,
+.members-area-token .members-main-container {
     background-image:
         linear-gradient(90deg, rgba(11,21,45,.86) 0%, rgba(11,21,45,.62) 50%, rgba(11,21,45,.2) 100%),
         url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
     background-position: center 60% !important;
 }
 .members-area-registration .members-container:not(:has(.gtm-hero-copy)),
-.members-area-page .members-container:has(form[action*="authenticate"]):not(:has(.gtm-hero-copy)) {
+.members-area-page .members-container:has(form[action*="authenticate"]):not(:has(.gtm-hero-copy)),
+.members-area-recovery .members-container:not(:has(.gtm-hero-copy)),
+.members-area-token .members-container:not(:has(.gtm-hero-copy)) {
     visibility: hidden;
     animation: gtm-hd-reveal 0s 2.5s forwards;
 }
 @keyframes gtm-hd-reveal { to { visibility: visible; } }
 
 /* ---------- 1. Shared parts ---------- */
-.gtm-reg, .gtm-login, .gtm-after { --mid:#0B152D; --pearl:#FFF9EE; --orange:#FF640F; --carib:#ADD1CF; --plum:#5C0D3B; }
+.gtm-reg, .gtm-login, .gtm-pw, .gtm-after { --mid:#0B152D; --pearl:#FFF9EE; --orange:#FF640F; --carib:#ADD1CF; --plum:#5C0D3B; }
 
 /* ---------- hero, shared by both pages ---------- */
 /* Clip sideways only (the hero wave is 2px wider than the page each side). Clipping vertically
@@ -402,4 +408,56 @@ body:has(.gtm-login) .members-area-page .members-register-extras a::after {
     .gtm-chips span::before { left: 11px; }
     .gtm-join-sec { padding-top: 64px; padding-bottom: 150px; }
     .gtm-join .gtm-perks-card { padding: 24px 22px 20px; }
+}
+
+/* ---------- 4. Password recovery pages ----------
+   password_recovery.html (.members-area-recovery) and password_recovery_token_display.html
+   (.members-area-token, "check your email"). Same hero as sign-in, no waves, then the Plum
+   contact block. Revelex's form, fields and buttons are restyled only. */
+/* full width like sign-up and sign-in (gtm-booking.css section 26 only frees those two) */
+body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .main-area-container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .members-main-container { padding: 96px 32px 110px !important; }
+body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .members-content-wrapper {
+    display: grid !important; grid-template-columns: minmax(0, 1fr) 480px !important; gap: 72px !important; align-items: start !important;
+}
+body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .members-content {
+    display: block !important; height: auto !important; padding: 40px 40px 32px !important;
+}
+body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .members-main-content {
+    width: 100% !important; margin: 0 !important; padding: 0 !important;
+}
+/* Revelex indents the form 16px; line it up with our card heading, as on sign-in */
+body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .members-sections { margin-left: 0 !important; margin-right: 0 !important; }
+/* their explanatory paragraph lives in our hero copy instead */
+body:has(.gtm-pw) .members-area-token .members-main-content > p { display: none !important; }
+/* Revelex's long username label: hidden visually, kept for screen readers; our card heading says it */
+body:has(.gtm-pw) .members-area-recovery label.members-text {
+    position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important;
+    overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; border: 0 !important;
+}
+.gtm-pw h1.gtm-title { font-size: 76px !important; }
+.gtm-pw .gtm-sub { margin-bottom: 22px; }
+#gtm-pw-copy a.gtm-pw-link {
+    color: var(--pearl) !important; font: 600 15px Manrope, sans-serif; text-decoration: underline !important;
+    text-decoration-color: var(--orange) !important; text-underline-offset: 4px;
+}
+.gtm-pw .gtm-pw-alt { font-size: 15px; margin: 0; color: var(--pearl); }
+
+@media (min-width: 768px) {
+    .gtm-pw { margin-top: -46px; }   /* headline level with the top of the box, as on sign-in */
+}
+@media (max-width: 1100px) {
+    body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .members-content-wrapper { grid-template-columns: minmax(0,1fr) 440px !important; gap: 40px !important; }
+    .gtm-pw h1.gtm-title { font-size: 58px !important; }
+}
+@media (max-width: 767px) {
+    body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .members-main-container {
+        padding: 36px 16px 56px !important;
+        background-image:
+            linear-gradient(180deg, rgba(11,21,45,.8) 0%, rgba(11,21,45,.7) 100%),
+            url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
+    }
+    body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .members-content-wrapper { grid-template-columns: 1fr !important; gap: 24px !important; }
+    body:has(.gtm-pw) :is(.members-area-recovery, .members-area-token) .members-content { padding: 28px 20px 24px !important; }
+    .gtm-pw h1.gtm-title { font-size: 44px !important; margin-bottom: 12px !important; }
 }
