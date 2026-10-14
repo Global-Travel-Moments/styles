@@ -12,7 +12,17 @@
 window.CLIENTJS = window.CLIENTJS || {};
 window.CLIENTJS.hd = (function () {
   var SELECT = 'https://book.globaltravelmoments.com/resources/book.globaltravelcollection.com/images/select.png';
-  var REG = 'https://book.globaltravelmoments.com/app/0/users/0/registration.html?clear=all&hatoken=GTCGTM01';
+  /* The registration page on whichever site the visitor is on (production or UAT). Revelex
+     pages set a <base>, so a relative link resolves to the wrong folder: read the address
+     from Revelex's own register link in the sign-in card (read only; NOT the header's links,
+     which point at production even on UAT), then the login path, then production. */
+  function regUrl() {
+    var q = '?clear=all&hatoken=GTCGTM01';
+    var theirs = document.querySelector('.members-register-extras a[href*="registration.html"]');
+    if (theirs) return theirs.href.split('?')[0] + q;
+    if (/\/login\.html$/.test(location.pathname)) return location.pathname.replace(/login\.html$/, 'registration.html') + q;
+    return 'https://book.globaltravelmoments.com/app/0/users/0/registration.html' + q;
+  }
   var PERKS = [
     'Daily breakfast for two',
     'A hotel credit to spend during your stay',
@@ -154,7 +164,7 @@ window.CLIENTJS.hd = (function () {
     hero.appendChild(w);
   }
 
-  return { REG: REG, lockup: lockup, ticks: ticks, perksCard: perksCard, reviews: reviews, plum: plum,
+  return { regUrl: regUrl, lockup: lockup, ticks: ticks, perksCard: perksCard, reviews: reviews, plum: plum,
            wireCarousel: wireCarousel, wireScrollToForm: wireScrollToForm, heroWave: heroWave };
 })();
 
@@ -270,7 +280,7 @@ window.CLIENTJS.hd = (function () {
         '<div><span class="gtm-eyebrow">Not a member yet?</span>' +
           '<h2>Perks you won\u2019t get booking direct</h2>' +
           '<p class="gtm-lead">The same hotel, the same dates, the same rate. A different arrival. Setting up your account takes about a minute.</p>' +
-          '<a class="gtm-btn" href="' + hd.REG + '">Create your account</a></div>' +
+          '<a class="gtm-btn" href="' + hd.regUrl() + '">Create your account</a></div>' +
         hd.perksCard() +
       '</div><div class="gtm-wave is-down" aria-hidden="true"></div></section>' +
       hd.reviews(false) +
@@ -278,6 +288,19 @@ window.CLIENTJS.hd = (function () {
 
     hero.parentNode.insertBefore(after, hero.nextSibling);
     hd.wireCarousel(after.querySelector('.gtm-reviews-sec'));
+
+    /* GA4: how many sign-in visitors switch to creating an account from our band.
+       Same route as the account gate's events (Revelex's gtag, both GA4 properties).
+       Beacon transport so the hit survives the navigation; never blocks the click.
+       Revelex's own "Create an account" link in the card is theirs and is not tracked. */
+    var join = after.querySelector('.gtm-join a.gtm-btn');
+    if (join) join.addEventListener('click', function () {
+      try {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'signin_create_account', { cta_location: 'not_a_member_band', transport_type: 'beacon' });
+        }
+      } catch (e) { /* tracking must never break the page */ }
+    });
   }
 
   function init() {
