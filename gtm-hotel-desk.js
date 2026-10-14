@@ -75,7 +75,7 @@ window.CLIENTJS.hd = (function () {
 
   /* Review carousel on phones: native swipe, plus arrows and dots. Snap is lifted
      during a programmatic scroll because mandatory snap cancels smooth scrolling. */
-  /* Review carousel: native swipe/scroll, plus arrows and one dot per resting position.
+  /* Review carousel: native swipe/scroll, plus wrapping arrows and one dot per resting position.
      Works out how many cards are on show (3, 2 or 1 by width) and rebuilds on resize.
      Snap is lifted during a programmatic scroll because mandatory snap cancels smooth
      scrolling, then restored. */
@@ -93,8 +93,6 @@ window.CLIENTJS.hd = (function () {
     function paint() {
       var c = current();
       dots.forEach(function (d, i) { d.classList.toggle('is-on', i === c); });
-      prev.disabled = c <= 0;
-      next.disabled = c >= stops - 1;
     }
     /* Restore snapping only once the scroll has reached its target (or stopped moving
        after it started), or a long jump gets snapped part-way through. */
@@ -131,8 +129,9 @@ window.CLIENTJS.hd = (function () {
       }
       paint();
     }
-    prev.addEventListener('click', function () { go(current() - 1); });
-    next.addEventListener('click', function () { go(current() + 1); });
+    /* The arrows wrap: next from the last stop goes back to the first, and back again */
+    prev.addEventListener('click', function () { var c = current(); go(c <= 0 ? stops - 1 : c - 1); });
+    next.addEventListener('click', function () { var c = current(); go(c >= stops - 1 ? 0 : c + 1); });
     track.addEventListener('scroll', paint, { passive: true });
     var t;
     window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 150); });

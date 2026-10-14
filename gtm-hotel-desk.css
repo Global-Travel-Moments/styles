@@ -42,7 +42,9 @@
 .gtm-reg, .gtm-login, .gtm-after { --mid:#0B152D; --pearl:#FFF9EE; --orange:#FF640F; --carib:#ADD1CF; --plum:#5C0D3B; }
 
 /* ---------- hero, shared by both pages ---------- */
-body:has(.gtm-hero-copy) .members-main-container { position: relative !important; overflow: hidden !important; }
+/* Clip sideways only (the hero wave is 2px wider than the page each side). Clipping vertically
+   too cut the form card's shadow off at the foot of the hero and left a hard grey line on phones. */
+body:has(.gtm-hero-copy) .members-main-container { position: relative !important; overflow: hidden !important; overflow-x: clip !important; overflow-y: visible !important; }
 body:has(.gtm-hero-copy) .members-container { max-width: 1200px !important; margin: 0 auto !important; padding: 0 !important; position: relative; z-index: 1; }
 body:has(.gtm-hero-copy) .members-container-header,
 body:has(.gtm-hero-copy) .members-content-benefits-section,
@@ -176,7 +178,6 @@ body:has(.gtm-hero-copy) .members-actions .button {
     transition: background .2s, color .2s, opacity .2s;
 }
 .gtm-carousel-nav button.gtm-prev:hover, .gtm-carousel-nav button.gtm-next:hover { background: var(--mid); color: var(--pearl); }
-.gtm-carousel-nav button[disabled] { opacity: .3; cursor: default; pointer-events: none; }
 .gtm-dots { display: flex; gap: 8px; }
 .gtm-dots button { width: 10px; height: 10px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: rgba(11,21,45,.25); }
 .gtm-dots button.is-on { background: var(--orange); }
@@ -205,6 +206,8 @@ body:has(.gtm-hero-copy) .members-actions .button {
 
 /* ---------- phone ---------- */
 @media (max-width: 767px) {
+    /* a tighter shadow on phones, where the card sits close to the foot of the hero */
+    body:has(.gtm-hero-copy) .members-content { box-shadow: 0 10px 28px rgba(11,21,45,.32) !important; }
     .gtm-hero-wave { height: 96px; }
     .gtm-hero-copy h1.gtm-title { font-size: 42px !important; }
     .gtm-sub { font-size: 16px; margin-bottom: 20px; }
