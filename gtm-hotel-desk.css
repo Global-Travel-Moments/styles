@@ -1,0 +1,381 @@
+/* ============================================================================
+   gtm-hotel-desk.css  -  The Hotel Desk sign-up and sign-in pages (Revelex)
+   ----------------------------------------------------------------------------
+   Pairs with gtm-hotel-desk.js, which adds our own sections around Revelex's
+   form. Revelex's form keeps its fields, order and behaviour; we restyle it only.
+
+   Loaded by header-uat.html (UAT) only until go-live. Served from GitHub Pages
+   (10-minute cache). Every layout rule is gated on our injected .gtm-hero-copy,
+   so if the script never runs the page falls back to Revelex's own layout.
+   ============================================================================ */
+
+/* ---------- 0. No flash of the old page ----------
+   This stylesheet loads with the header, before the page content, so these
+   rules apply from the first paint. The hero photo is ours straight away and
+   the page body stays hidden until our script has added its content, then
+   everything appears in one frame. If the script fails, the 2.5s animation
+   reveals Revelex's page as it was. */
+.members-area-registration .members-main-container,
+.members-area-page .members-main-container:has(form[action*="authenticate"]) {
+    background-size: cover !important;
+}
+.members-area-registration .members-main-container {
+    background-image:
+        linear-gradient(90deg, rgba(11,21,45,.88) 0%, rgba(11,21,45,.70) 45%, rgba(11,21,45,.25) 100%),
+        url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
+    background-position: center 60% !important;
+}
+.members-area-page .members-main-container:has(form[action*="authenticate"]) {
+    background-image:
+        linear-gradient(90deg, rgba(11,21,45,.86) 0%, rgba(11,21,45,.62) 50%, rgba(11,21,45,.2) 100%),
+        url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
+    background-position: center 60% !important;
+}
+.members-area-registration .members-container:not(:has(.gtm-hero-copy)),
+.members-area-page .members-container:has(form[action*="authenticate"]):not(:has(.gtm-hero-copy)) {
+    visibility: hidden;
+    animation: gtm-hd-reveal 0s 2.5s forwards;
+}
+@keyframes gtm-hd-reveal { to { visibility: visible; } }
+
+/* ---------- 1. Shared parts ---------- */
+.gtm-reg, .gtm-login, .gtm-after { --mid:#0B152D; --pearl:#FFF9EE; --orange:#FF640F; --carib:#ADD1CF; --plum:#5C0D3B; }
+
+/* ---------- hero, shared by both pages ---------- */
+body:has(.gtm-hero-copy) .members-main-container { position: relative !important; overflow: hidden !important; }
+body:has(.gtm-hero-copy) .members-container { max-width: 1200px !important; margin: 0 auto !important; padding: 0 !important; position: relative; z-index: 1; }
+body:has(.gtm-hero-copy) .members-container-header,
+body:has(.gtm-hero-copy) .members-content-benefits-section,
+body:has(.gtm-hero-copy) .members-content-title,
+body:has(.gtm-hero-copy) .members-contact-items { display: none !important; }
+body:has(.gtm-hero-copy) .members-content {
+    width: auto !important; max-width: none !important; flex: none !important;
+    border-radius: 2em !important; box-shadow: 0 24px 60px rgba(11,21,45,.35) !important; scroll-margin-top: 150px;
+}
+body:has(.gtm-hero-copy) .members-actions .button {
+    min-height: 54px !important; font-size: 16px !important; font-weight: 600 !important; letter-spacing: .02em !important;
+}
+
+.gtm-hero-copy { color: var(--pearl); font-family: Manrope, sans-serif; }
+.gtm-eyebrow {
+    display: block; font: 600 13px/1.3 Manrope, sans-serif; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--mid); margin: 0 0 22px; padding-left: 44px; position: relative;
+}
+.gtm-eyebrow::before { content:""; position:absolute; left:0; top:.6em; width:32px; height:2px; background: var(--orange); }
+.gtm-eyebrow.is-orange { color: var(--orange); }   /* dark backgrounds only: orange small text fails on light ones */
+.gtm-hero-copy h1.gtm-title {
+    font: 400 68px/1.02 "Instrument Serif", serif !important; color: var(--pearl) !important;
+    margin: 0 0 20px !important; text-transform: none !important; background: none !important; padding: 0 !important; text-align: left !important;
+}
+.gtm-sub { font-size: 18px; line-height: 1.55; margin: 0 0 28px; max-width: 30em; color: var(--pearl); }
+
+/* the wave at the foot of the hero: our own div inside Revelex's hero */
+.gtm-hero-wave {
+    position: absolute; left: -2px; right: -2px; bottom: -1px; height: 160px; z-index: 0; pointer-events: none;
+    background: no-repeat 0 0 / cover; transform: scaleX(-1);
+}
+.gtm-hero-wave.is-carib { background-image: url('https://global-travel-moments.github.io/styles/images/gtm-divider-caribbean.webp'); }
+.gtm-hero-wave.is-pearl { background-image: url('https://global-travel-moments.github.io/styles/images/gtm-divider-pearl.webp'); }
+
+.gtm-card-head h2 { font: 400 38px/1.1 "Instrument Serif", serif !important; color: #0B152D !important; margin: 0 0 6px !important; text-transform: none !important; }
+.gtm-card-head p { font: 400 15px/1.5 Manrope, sans-serif; color: #0B152D; margin: 0 0 18px; }
+
+/* ---------- small parts ---------- */
+.gtm-lockup { display: flex; align-items: center; gap: 10px; margin: 0 0 16px; }
+.gtm-lockup img { height: 36px; width: auto; display: block; }
+.gtm-plus { position: relative; width: 20px; height: 20px; flex: 0 0 20px; }
+.gtm-plus::before, .gtm-plus::after { content:""; position:absolute; background: var(--orange); border-radius: 1px; }
+.gtm-plus::before { left:0; right:0; top:50%; height:4px; margin-top:-2px; }
+.gtm-plus::after  { top:0; bottom:0; left:50%; width:4px; margin-left:-2px; }
+.gtm-ticks { list-style: none; margin: 0; padding: 0; }
+.gtm-ticks li { position: relative; padding-left: 30px; margin: 0 0 10px; font-size: 16px; line-height: 1.4; }
+.gtm-ticks li::before {
+    content:""; position:absolute; left:0; top:2px; width:18px; height:18px;
+    background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF640F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
+}
+.gtm-note { font-size: 12px; line-height: 1.5; color: rgba(11,21,45,.7); margin: 8px 0 0; padding-top: 12px; border-top: 1px solid rgba(11,21,45,.12); }
+.gtm-perks-card { background: var(--pearl); color: var(--mid); border-radius: 2em; padding: 26px 30px 22px; }
+
+/* ---------- sections ---------- */
+.gtm-after { background: var(--pearl); width: 100% !important; flex: 0 0 100% !important; align-self: stretch !important; max-width: none !important; }
+.gtm-sec { font-family: Manrope, sans-serif; color: var(--mid); padding: 110px 32px; position: relative; overflow: hidden; }
+.gtm-sec-in { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+.gtm-sec h2 { font: 400 54px/1.05 "Instrument Serif", serif !important; color: inherit !important; margin: 0 0 18px !important; text-transform: none !important; }
+.gtm-sec .gtm-lead { font-size: 18px; line-height: 1.6; max-width: 40em; margin: 0 auto; }
+.gtm-center { text-align: center; }
+#gtm-after a.gtm-btn {
+    display: inline-block; background: var(--orange); color: var(--mid) !important; text-decoration: none !important;
+    font: 700 14px/1 Manrope, sans-serif; letter-spacing: .12em; text-transform: uppercase;
+    padding: 18px 34px; border-radius: 999px; margin-top: 40px; transition: background .2s, color .2s;
+}
+#gtm-after a.gtm-btn:hover { background: var(--mid); color: var(--pearl) !important; }
+#gtm-after .gtm-founder-sec a.gtm-btn:hover { background: var(--pearl); color: var(--mid) !important; }
+
+/* a wave as the first child of the section BELOW it, so that section's colour sits behind the image */
+.gtm-sec > .gtm-wave { position: absolute; left: -2px; right: -2px; top: -1px; height: 160px; background: no-repeat 0 0 / cover; transform: rotate(180deg); }
+.gtm-wave.is-midnight { background-image: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ce40018b183123d66ad963_global-travel-moments-divider-midnight-1.png'); }
+.gtm-wave.is-carib { background-image: url('https://global-travel-moments.github.io/styles/images/gtm-divider-caribbean.webp'); }
+.gtm-sec.has-wave { padding-top: 220px; }
+
+/* steps, teal with pearl boxes */
+.gtm-steps-sec { background: var(--carib); padding-top: 60px; }
+.gtm-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 48px auto 0; text-align: left; }
+.gtm-step { background: var(--pearl); border-radius: 2em; padding: 30px 30px 32px; }
+.gtm-step-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 12px; }
+/* Claude Design's numbering: "01" in orange serif, no circle */
+.gtm-step-n { flex: 0 0 auto; color: var(--orange); font: 400 44px/1 "Instrument Serif", serif; letter-spacing: .01em; }
+.gtm-step h3 { font: 400 26px/1.1 "Instrument Serif", serif !important; margin: 0 !important; color: var(--mid) !important; text-transform: none !important; }
+.gtm-step p { font-size: 15px; line-height: 1.55; margin: 0; }
+
+/* the difference, midnight */
+.gtm-founder-sec { background: var(--mid); color: var(--pearl); }
+.gtm-founder { display: grid; grid-template-columns: 1.1fr .9fr; gap: 80px; align-items: center; }
+.gtm-founder h2 { color: var(--pearl) !important; }
+.gtm-founder p { font-size: 17px; line-height: 1.65; margin: 0 0 18px; max-width: 32em; }
+.gtm-signoff { margin: 30px 0 0; }
+.gtm-signoff strong { display: block; font: 400 30px/1.1 "Instrument Serif", serif; color: var(--pearl); }
+.gtm-signoff span { display: block; margin-top: 8px; font: 600 12px/1 Manrope, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); }
+.gtm-founder-img { border: 6px solid var(--orange); border-radius: 3em; overflow: hidden; aspect-ratio: 4 / 5; }
+.gtm-founder-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* SELECT+, teal */
+.gtm-perks-sec { background: var(--carib); }
+.gtm-perks-sec .gtm-lockup { justify-content: center; margin: 0 0 22px; }
+.gtm-perks-sec .gtm-lockup img { height: 44px; }
+.gtm-perk-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-top: 56px; text-align: left; }
+.gtm-perk { background: var(--pearl); border-radius: 2em; padding: 30px 24px 28px; }
+.gtm-perk-icon { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--orange); display:flex; align-items:center; justify-content:center; margin-bottom: 18px; }
+.gtm-perk-icon svg { width: 22px; height: 22px; stroke: var(--orange); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.gtm-perk h3 { font: 400 24px/1.1 "Instrument Serif", serif !important; color: var(--mid) !important; margin: 0 0 10px !important; text-transform: none !important; }
+.gtm-perk p { font-size: 14px; line-height: 1.55; margin: 0; }
+.gtm-perks-foot { font-size: 13px; margin-top: 28px; }
+
+/* reviews, pearl */
+.gtm-reviews-sec { background: var(--pearl); }
+.gtm-ratings { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 28px; margin-top: 10px; font-size: 15px; }
+#gtm-after .gtm-ratings a { color: var(--mid) !important; text-decoration: none !important; border-bottom: 1px solid var(--carib); }
+.gtm-stars { color: var(--orange); letter-spacing: 2px; font-size: 16px; }
+.gtm-review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; text-align: left; }
+.gtm-review { border: 1px solid var(--carib); border-radius: 2em; padding: 30px; display: flex; flex-direction: column; background: var(--pearl); }
+.gtm-review blockquote { border: 0 !important; padding: 0 !important; margin: 14px 0 22px; font: 400 21px/1.35 "Instrument Serif", serif; flex: 1; }
+.gtm-review cite { font-style: normal; font-size: 14px; font-weight: 600; }
+.gtm-review cite span { font-weight: 400; color: rgba(11,21,45,.7); }
+.gtm-carousel-nav { display: none; }
+
+/* plum contact block */
+.gtm-plum-sec { background: var(--plum); color: var(--pearl); padding: 90px 32px; }
+.gtm-plum { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+.gtm-plum h2 { font-size: 46px !important; color: var(--pearl) !important; margin: 0 0 12px !important; }
+.gtm-plum p { font-size: 17px; line-height: 1.55; margin: 0; max-width: 30em; }
+.gtm-pills { display: flex; gap: 14px; flex: 0 0 auto; }
+#gtm-after .gtm-pills a {
+    display: inline-block; border: 1.5px solid var(--pearl); border-radius: 999px; padding: 15px 26px;
+    color: var(--pearl) !important; text-decoration: none !important; font: 600 16px/1 Manrope, sans-serif; white-space: nowrap;
+    transition: background .2s, color .2s;
+}
+#gtm-after .gtm-pills a:hover { background: var(--pearl); color: var(--plum) !important; }
+.gtm-pills a span { font-weight: 700; letter-spacing: .06em; margin-right: 8px; font-size: 13px; }
+
+/* ---------- tablet ---------- */
+@media (max-width: 1100px) {
+    .gtm-hero-copy h1.gtm-title { font-size: 54px !important; }
+    .gtm-perk-grid { grid-template-columns: repeat(3, 1fr); }
+    .gtm-plum { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---------- phone ---------- */
+@media (max-width: 767px) {
+    .gtm-hero-wave { height: 96px; }
+    .gtm-hero-copy h1.gtm-title { font-size: 42px !important; }
+    .gtm-sub { font-size: 16px; margin-bottom: 20px; }
+    .gtm-perks-card { padding: 22px 20px 18px; }
+    .gtm-ticks li { font-size: 15px; }
+    .gtm-card-head h2 { font-size: 32px !important; }
+    .gtm-sec { padding: 64px 20px; }
+    .gtm-sec h2 { font-size: 40px !important; }
+    .gtm-steps, .gtm-founder { grid-template-columns: 1fr; gap: 20px; }
+    .gtm-sec > .gtm-wave { height: 96px; }
+    .gtm-sec.has-wave { padding-top: 140px; }
+
+    /* reviews: one at a time, swipe or tap */
+    .gtm-review-grid {
+        display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+        margin: 36px -20px 0; padding: 0 20px; scroll-padding: 0 20px;
+    }
+    .gtm-review-grid::-webkit-scrollbar { display: none; }
+    .gtm-review { flex: 0 0 100%; scroll-snap-align: start; }
+    .gtm-carousel-nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 22px; }
+    .gtm-carousel-nav button {
+        width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--mid); background: transparent; color: var(--mid);
+        font: 400 20px/1 Manrope, sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+    }
+    .gtm-dots { display: flex; gap: 8px; }
+    .gtm-dots button { width: 10px; height: 10px; border-radius: 50%; border: 0; padding: 0; background: rgba(11,21,45,.25); }
+    .gtm-dots button.is-on { background: var(--orange); }
+
+    .gtm-plum-sec { padding: 64px 20px; }
+    .gtm-plum h2 { font-size: 38px !important; }
+    .gtm-pills { flex-direction: column; width: 100%; }
+    #gtm-after .gtm-pills a { display: block; text-align: center; }
+}
+
+/* Revelex's back-to-top button: Magic Orange with a Midnight arrow (6.1:1), inverting on hover.
+   In production this belongs in gtm-booking.css unscoped, so it matches on every booking page. */
+.rvlx-app-container .scroll-to-top-button {
+    background: #FF640F !important; border: 1px solid #FF640F !important;
+    box-shadow: 0 6px 18px rgba(11,21,45,.25) !important; transition: background .2s, border-color .2s !important;
+}
+.rvlx-app-container .scroll-to-top-button::before { color: #0B152D !important; }
+.rvlx-app-container .scroll-to-top-button:hover { background: #0B152D !important; border-color: #FFF9EE !important; }
+.rvlx-app-container .scroll-to-top-button:hover::before { color: #FFF9EE !important; }
+
+/* ---------- 2. Sign-up page (registration.html) ---------- */
+body:has(.gtm-reg) .members-area-registration .members-main-container {
+    background-image:
+        linear-gradient(90deg, rgba(11,21,45,.88) 0%, rgba(11,21,45,.70) 45%, rgba(11,21,45,.25) 100%),
+        url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
+    background-size: cover !important;
+    background-position: center 60% !important;
+    padding: 72px 32px 150px !important;
+}
+body:has(.gtm-reg) .members-area-registration .members-main-content > p:not(.legend-required) { display: none !important; }
+body:has(.gtm-reg) .members-area-registration .members-content-wrapper {
+    display: grid !important; grid-template-columns: minmax(0, 1fr) 560px !important; gap: 64px !important; align-items: start !important;
+}
+body:has(.gtm-reg) .members-area-registration .members-content { padding: 40px 40px 32px !important; }
+.gtm-reg { padding-top: 24px; }
+.gtm-reg .gtm-perks-card { max-width: 470px; }
+
+body:has(.gtm-reg) .members-area-registration .form-grid-2 { gap: 14px 16px !important; }
+body:has(.gtm-reg) .members-area-registration .form-grid { margin-top: 0 !important; padding-top: 10px !important; }
+
+/* "Click here if you already have an account" -> "Already a member? Sign in" (same link, new words) */
+body:has(.gtm-reg) .members-area-registration .members-register-extras { text-align: center !important; margin-top: 18px !important; }
+body:has(.gtm-reg) .members-area-registration .members-register-extras a { font-size: 0 !important; text-decoration: none !important; }
+body:has(.gtm-reg) .members-area-registration .members-register-extras a::before { content: "Already a member? "; font: 400 15px Manrope, sans-serif; color: #0B152D; }
+body:has(.gtm-reg) .members-area-registration .members-register-extras a::after {
+    content: "Sign in"; font: 600 15px Manrope, sans-serif; color: #0B152D; text-decoration: underline; text-decoration-color: #FF640F; text-underline-offset: 4px;
+}
+
+/* Duncan, 2026-10-14: the form box starts level with the headline, not the eyebrow above it */
+@media (min-width: 768px) {
+    body:has(.gtm-reg) .members-area-registration .members-content { margin-top: 70px !important; }
+}
+
+@media (max-width: 1100px) {
+    body:has(.gtm-reg) .members-area-registration .members-content-wrapper { grid-template-columns: minmax(0,1fr) 480px !important; gap: 40px !important; }
+}
+
+@media (max-width: 767px) {
+    body:has(.gtm-reg) .members-area-registration .members-main-container {
+        padding: 40px 16px 110px !important;
+        background-image:
+            linear-gradient(180deg, rgba(11,21,45,.85) 0%, rgba(11,21,45,.75) 60%, rgba(11,21,45,.6) 100%),
+            url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
+    }
+    body:has(.gtm-reg) .members-area-registration .members-content-wrapper { grid-template-columns: 1fr !important; gap: 28px !important; }
+    body:has(.gtm-reg) .members-area-registration .members-content { padding: 28px 20px 24px !important; }
+    body:has(.gtm-reg) .members-area-registration .form-grid { padding-top: 18px !important; }
+    .gtm-reg { padding-top: 0; }
+
+    /* the hero already carries the perks and the pitch on a phone */
+    .gtm-reg-page .gtm-steps-sec,
+    .gtm-reg-page .gtm-founder-sec,
+    .gtm-reg-page .gtm-perks-sec,
+    .gtm-reg-page .gtm-reviews-sec > .gtm-wave { display: none !important; }
+    .gtm-reg-page .gtm-reviews-sec.has-wave { padding-top: 40px; }
+    /* hero now runs into cream (reviews), not teal (steps) */
+    .gtm-hero-wave.is-carib { background-image: url('https://global-travel-moments.github.io/styles/images/gtm-divider-pearl.webp'); }
+}
+
+/* ---------- 3. Sign-in page (login.html) ---------- */
+body:has(.gtm-login) .members-area-page .members-main-container {
+    background-image:
+        linear-gradient(90deg, rgba(11,21,45,.86) 0%, rgba(11,21,45,.62) 50%, rgba(11,21,45,.2) 100%),
+        url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
+    background-size: cover !important;
+    background-position: center 60% !important;
+    padding: 96px 32px 110px !important;
+}
+body:has(.gtm-login) .members-area-page .members-sections-welcome > p { display: none !important; }
+
+/* hero and the band below share one grid, so the two boxes line up and match in width */
+body:has(.gtm-login) .members-area-page .members-content-wrapper,
+.gtm-join {
+    display: grid !important; grid-template-columns: minmax(0, 1fr) 480px !important; gap: 72px !important; align-items: center !important;
+}
+/* Duncan, 2026-10-14: "Welcome back" sits level with the top of the sign-in box, as on the sign-up page */
+body:has(.gtm-login) .members-area-page .members-content-wrapper { align-items: start !important; }
+@media (min-width: 768px) {
+    .gtm-login { margin-top: -46px; }
+}
+body:has(.gtm-login) .members-area-page .members-content { display: block !important; height: auto !important; padding: 40px 40px 30px !important; }
+body:has(.gtm-login) .members-area-page .members-main-content {
+    display: flex !important; flex-direction: column !important; gap: 0 !important;
+    width: 100% !important; margin: 0 !important; padding: 0 !important; height: auto !important;
+}
+body:has(.gtm-login) .members-area-page .members-sections-login { order: 1; flex: none !important; height: auto !important; width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+body:has(.gtm-login) .members-area-page .members-sections-welcome {
+    order: 2; display: block !important; flex: none !important; height: auto !important; min-height: 0 !important;
+    width: 100% !important; max-width: none !important; margin: 22px 0 0 !important; padding: 18px 0 0 !important;
+    border-top: 1px solid rgba(11,21,45,.12) !important;
+}
+body:has(.gtm-login) .members-area-page .members-disclaimer {
+    text-align: center !important; font-style: normal !important; font-size: 12px !important; color: rgba(11,21,45,.6) !important; margin: 0 !important;
+}
+body:has(.gtm-login) .members-area-page .members-disclaimer::before {
+    content: ""; display: inline-block; width: 11px; height: 12px; margin-right: 6px; vertical-align: -1px;
+    background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B152D' stroke-opacity='.6' stroke-width='2'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 018 0v4'/%3E%3C/svg%3E");
+}
+body:has(.gtm-login) .members-area-page .login-forgot-password { font-size: 14px !important; }
+
+/* "Don't have an account? Click here to register." -> "New to The Hotel Desk? Create an account" */
+body:has(.gtm-login) .members-area-page .members-register-extras { font-size: 0 !important; text-align: center !important; margin-top: 18px !important; }
+body:has(.gtm-login) .members-area-page .members-register-extras a { font-size: 0 !important; text-decoration: none !important; }
+body:has(.gtm-login) .members-area-page .members-register-extras a::before { content: "New to The Hotel Desk? "; font: 400 15px Manrope, sans-serif; color: #0B152D; }
+body:has(.gtm-login) .members-area-page .members-register-extras a::after {
+    content: "Create an account"; font: 600 15px Manrope, sans-serif; color: #0B152D;
+    text-decoration: underline; text-decoration-color: #FF640F; text-underline-offset: 4px;
+}
+
+/* hero copy */
+.gtm-login h1.gtm-title { font-size: 76px !important; }
+.gtm-login .gtm-sub { margin-bottom: 30px; }
+.gtm-chips { display: flex; flex-wrap: wrap; gap: 10px; max-width: 520px; }
+.gtm-chips span { border: 1px solid rgba(255,249,238,.45); border-radius: 999px; padding: 9px 16px 9px 34px; font-size: 14px; position: relative; }
+.gtm-chips span::before {
+    content:""; position:absolute; left:13px; top:50%; margin-top:-7px; width:14px; height:14px;
+    background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF640F' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
+}
+
+/* "Not a member yet?" band on pearl. No waves on this page (Duncan, 2026-10-14): straight edges. */
+.gtm-join-sec { background: var(--pearl); padding-top: 100px; padding-bottom: 100px; }
+.gtm-join .gtm-lead { margin: 0; max-width: 28em; }
+.gtm-join .gtm-perks-card { border: 1px solid var(--carib); box-shadow: 0 18px 50px rgba(11,21,45,.08); padding: 32px 34px 28px; }
+.gtm-login-page .gtm-reviews-sec { background: var(--mid); color: var(--pearl); }
+#gtm-after.gtm-login-page .gtm-ratings a { color: var(--pearl) !important; border-bottom-color: rgba(173,209,207,.6); }
+.gtm-login-page .gtm-review { background: transparent; border-color: rgba(173,209,207,.55); }
+.gtm-login-page .gtm-review cite span { color: rgba(255,249,238,.72); }
+
+@media (max-width: 1100px) {
+    body:has(.gtm-login) .members-area-page .members-content-wrapper, .gtm-join { grid-template-columns: minmax(0,1fr) 440px !important; gap: 40px !important; }
+    .gtm-login h1.gtm-title { font-size: 58px !important; }
+}
+@media (max-width: 767px) {
+    body:has(.gtm-login) .members-area-page .members-main-container {
+        padding: 36px 16px 56px !important;
+        background-image:
+            linear-gradient(180deg, rgba(11,21,45,.8) 0%, rgba(11,21,45,.7) 100%),
+            url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ca94626df234bbecdf49bd_Global-Travel-Moments-Amanyara-Turks-Caicos.jpg') !important;
+    }
+    body:has(.gtm-login) .members-area-page .members-content-wrapper, .gtm-join { grid-template-columns: 1fr !important; gap: 28px !important; }
+    body:has(.gtm-login) .members-area-page .members-content { padding: 28px 20px 24px !important; }
+    .gtm-login h1.gtm-title { font-size: 44px !important; margin-bottom: 12px !important; }
+    .gtm-chips span { font-size: 13px; padding: 7px 12px 7px 30px; }
+    .gtm-chips span::before { left: 11px; }
+    .gtm-join-sec { padding-top: 64px; padding-bottom: 64px; }
+    .gtm-join .gtm-perks-card { padding: 24px 22px 20px; }
+    .gtm-login-page .gtm-carousel-nav button { border-color: var(--pearl); color: var(--pearl); }
+    .gtm-login-page .gtm-dots button { background: rgba(255,249,238,.35); }
+    .gtm-login-page .gtm-dots button.is-on { background: var(--orange); }
+}
