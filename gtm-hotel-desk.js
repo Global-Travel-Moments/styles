@@ -34,10 +34,18 @@ window.CLIENTJS.hd = (function () {
   }
 
   function reviews(waveFromTeal) {
+    /* Verbatim from Google (whole sentences, names exactly as shown there). Source of
+       truth: GTM/embeds/components/google-reviews. Ratings only, never review counts. */
     var r = [
       ['Duncan\u2019s hotel advice was spot on in response to our preferences. Tours were also very well planned.', 'Holly Sorkin'],
       ['She helped us pick spectacular hotels that were five-star quality without the five-star price.', 'Greg W'],
-      ['They take care of every detail and check in regularly.', 'Mark Brant']
+      ['The right rooms, the right recommendations, and those small touches you wouldn\u2019t think to ask for but make all the difference.', 'matthew drinkwater'],
+      ['They take care of every detail and check in regularly.', 'Mark Brant'],
+      ['Every detail was customized to us, and everything was seamless from start to finish.', 'michael waldron'],
+      ['Amazing travel ideas and great to know that everything is taken care of, so you can just relax and not have to worry about planning and logistics.', 'Jon Henwood'],
+      ['I had the pleasure of dealing with Duncan, not only was the service amazing but he really tailored our experience to our needs.', 'Richard Kitching'],
+      ['Duncan made the process of planning a trip for 10 adults across multiple cities a breeze.', 'Daniel Mosebach'],
+      ['Above and beyond may be an understatement. Rarely do you encounter a company with such professionalism and thorough, thoughtful service.', 'Matthew Murgatroyd']
     ];
     return '<section class="gtm-sec gtm-reviews-sec' + (waveFromTeal ? ' has-wave' : '') + '">' +
       (waveFromTeal ? '<div class="gtm-wave is-carib" aria-hidden="true"></div>' : '') +
@@ -47,12 +55,12 @@ window.CLIENTJS.hd = (function () {
           '<a href="https://maps.google.com/?cid=6775153238315330732" target="_blank" rel="noopener"><span class="gtm-stars">' + STARS + '</span> 4.9 London on Google</a>' +
           '<a href="https://maps.google.com/?cid=9391311828870468762" target="_blank" rel="noopener"><span class="gtm-stars">' + STARS + '</span> 5.0 New York on Google</a>' +
         '</div>' +
-        '<div class="gtm-review-grid">' + r.map(function (x) {
+        '<div class="gtm-review-grid" aria-label="Google reviews">' + r.map(function (x) {
           return '<div class="gtm-review"><span class="gtm-stars">' + STARS + '</span><blockquote>\u201c' + x[0] + '\u201d</blockquote><cite>' + x[1] + ' <span>\u00b7 Google review</span></cite></div>';
         }).join('') + '</div>' +
-        '<div class="gtm-carousel-nav"><button type="button" class="gtm-prev" aria-label="Previous review">\u2190</button>' +
-          '<div class="gtm-dots">' + r.map(function (x, i) { return '<button type="button" aria-label="Review ' + (i + 1) + '"' + (i ? '' : ' class="is-on"') + '></button>'; }).join('') + '</div>' +
-          '<button type="button" class="gtm-next" aria-label="Next review">\u2192</button></div>' +
+        '<div class="gtm-carousel-nav"><button type="button" class="gtm-prev" aria-label="Previous reviews">\u2190</button>' +
+          '<div class="gtm-dots"></div>' +
+          '<button type="button" class="gtm-next" aria-label="Next reviews">\u2192</button></div>' +
       '</div></section>';
   }
 
@@ -67,25 +75,68 @@ window.CLIENTJS.hd = (function () {
 
   /* Review carousel on phones: native swipe, plus arrows and dots. Snap is lifted
      during a programmatic scroll because mandatory snap cancels smooth scrolling. */
+  /* Review carousel: native swipe/scroll, plus arrows and one dot per resting position.
+     Works out how many cards are on show (3, 2 or 1 by width) and rebuilds on resize.
+     Snap is lifted during a programmatic scroll because mandatory snap cancels smooth
+     scrolling, then restored. */
   function wireCarousel(root) {
     var track = root.querySelector('.gtm-review-grid');
     if (!track) return;
-    var dots = [].slice.call(root.querySelectorAll('.gtm-dots button'));
     var cards = [].slice.call(track.children);
-    function current() { return Math.round(track.scrollLeft / (cards[0].offsetWidth + 16)); }
-    function go(i) {
-      i = Math.max(0, Math.min(cards.length - 1, i));
-      track.style.scrollSnapType = 'none';
-      track.scrollTo({ left: cards[i].offsetLeft - cards[0].offsetLeft, behavior: 'smooth' });
-      setTimeout(function () { track.style.scrollSnapType = ''; }, 450);
-    }
-    dots.forEach(function (d, i) { d.addEventListener('click', function () { go(i); }); });
-    root.querySelector('.gtm-prev').addEventListener('click', function () { go(current() - 1); });
-    root.querySelector('.gtm-next').addEventListener('click', function () { go(current() + 1); });
-    track.addEventListener('scroll', function () {
+    var dotsWrap = root.querySelector('.gtm-dots');
+    var prev = root.querySelector('.gtm-prev'), next = root.querySelector('.gtm-next');
+    var dots = [], stops = 1;
+
+    function step() { return cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth; }
+    function visible() { return Math.max(1, Math.round(track.clientWidth / step())); }
+    function current() { return Math.min(stops - 1, Math.round(track.scrollLeft / step())); }
+    function paint() {
       var c = current();
       dots.forEach(function (d, i) { d.classList.toggle('is-on', i === c); });
-    }, { passive: true });
+      prev.disabled = c <= 0;
+      next.disabled = c >= stops - 1;
+    }
+    /* Restore snapping only once the scroll has reached its target (or stopped moving
+       after it started), or a long jump gets snapped part-way through. */
+    function settle(target) {
+      var last = track.scrollLeft, moved = false, still = 0, frames = 0;
+      (function check() {
+        var x = track.scrollLeft;
+        if (Math.abs(x - last) >= 0.5) { moved = true; still = 0; } else { still++; }
+        last = x;
+        if (Math.abs(x - target) < 1 || (moved && still >= 6) || ++frames > 180) {
+          track.style.scrollSnapType = ''; paint(); return;
+        }
+        requestAnimationFrame(check);
+      })();
+    }
+    function go(i) {
+      i = Math.max(0, Math.min(stops - 1, i));
+      var target = Math.min(i * step(), track.scrollWidth - track.clientWidth);
+      track.style.scrollSnapType = 'none';
+      track.scrollTo({ left: target, behavior: 'smooth' });
+      requestAnimationFrame(function () { settle(target); });
+    }
+    function build() {
+      stops = Math.max(1, cards.length - visible() + 1);
+      dotsWrap.innerHTML = '';
+      dots = [];
+      for (var i = 0; i < stops; i++) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Show reviews from ' + (i + 1));
+        b.addEventListener('click', (function (n) { return function () { go(n); }; })(i));
+        dotsWrap.appendChild(b);
+        dots.push(b);
+      }
+      paint();
+    }
+    prev.addEventListener('click', function () { go(current() - 1); });
+    next.addEventListener('click', function () { go(current() + 1); });
+    track.addEventListener('scroll', paint, { passive: true });
+    var t;
+    window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 150); });
+    build();
   }
 
   function wireScrollToForm(after, card) {
@@ -132,7 +183,7 @@ window.CLIENTJS.hd = (function () {
     /* 2. Our heading at the top of the form card */
     var head = document.createElement('div');
     head.className = 'gtm-card-head';
-    head.innerHTML = '<h2>Create your account</h2><p>It takes about a minute.</p>';
+    head.innerHTML = '<h2>Create your account</h2><p>It takes about a minute. Fields marked <span class="gtm-req">*</span> are required.</p>';
     var main = card.querySelector('.members-main-content');
     main.insertBefore(head, main.firstChild);
 
@@ -222,7 +273,7 @@ window.CLIENTJS.hd = (function () {
           '<p class="gtm-lead">The same hotel, the same dates, the same rate. A different arrival. Setting up your account takes about a minute.</p>' +
           '<a class="gtm-btn" href="' + hd.REG + '">Create your account</a></div>' +
         hd.perksCard() +
-      '</div></section>' +
+      '</div><div class="gtm-wave is-down" aria-hidden="true"></div></section>' +
       hd.reviews(false) +
       hd.plum('Trouble signing in, or rather talk it through? Speak to a Travel Designer in London or New York.');
 

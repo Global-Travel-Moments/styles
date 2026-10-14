@@ -155,12 +155,31 @@ body:has(.gtm-hero-copy) .members-actions .button {
 .gtm-ratings { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 28px; margin-top: 10px; font-size: 15px; }
 #gtm-after .gtm-ratings a { color: var(--mid) !important; text-decoration: none !important; border-bottom: 1px solid var(--carib); }
 .gtm-stars { color: var(--orange); letter-spacing: 2px; font-size: 16px; }
-.gtm-review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; text-align: left; }
-.gtm-review { border: 1px solid var(--carib); border-radius: 2em; padding: 30px; display: flex; flex-direction: column; background: var(--pearl); }
+/* A carousel at every size: three across on desktop, two on tablet, one on phones.
+   Native swipe/scroll, plus arrows and dots built by the script. */
+.gtm-review-grid {
+    display: flex; gap: 24px; margin-top: 48px; text-align: left;
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.gtm-review-grid::-webkit-scrollbar { display: none; }
+.gtm-review {
+    flex: 0 0 calc((100% - 48px) / 3); scroll-snap-align: start; box-sizing: border-box;
+    border: 1px solid var(--carib); border-radius: 2em; padding: 30px; display: flex; flex-direction: column; background: var(--pearl);
+}
 .gtm-review blockquote { border: 0 !important; padding: 0 !important; margin: 14px 0 22px; font: 400 21px/1.35 "Instrument Serif", serif; flex: 1; }
 .gtm-review cite { font-style: normal; font-size: 14px; font-weight: 600; }
 .gtm-review cite span { font-weight: 400; color: rgba(11,21,45,.7); }
-.gtm-carousel-nav { display: none; }
+.gtm-carousel-nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 30px; }
+.gtm-carousel-nav button.gtm-prev, .gtm-carousel-nav button.gtm-next {
+    width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--mid); background: transparent; color: var(--mid);
+    font: 400 20px/1 Manrope, sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+    transition: background .2s, color .2s, opacity .2s;
+}
+.gtm-carousel-nav button.gtm-prev:hover, .gtm-carousel-nav button.gtm-next:hover { background: var(--mid); color: var(--pearl); }
+.gtm-carousel-nav button[disabled] { opacity: .3; cursor: default; pointer-events: none; }
+.gtm-dots { display: flex; gap: 8px; }
+.gtm-dots button { width: 10px; height: 10px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: rgba(11,21,45,.25); }
+.gtm-dots button.is-on { background: var(--orange); }
 
 /* plum contact block */
 .gtm-plum-sec { background: var(--plum); color: var(--pearl); padding: 90px 32px; }
@@ -178,6 +197,7 @@ body:has(.gtm-hero-copy) .members-actions .button {
 
 /* ---------- tablet ---------- */
 @media (max-width: 1100px) {
+    .gtm-review { flex-basis: calc((100% - 24px) / 2); }
     .gtm-hero-copy h1.gtm-title { font-size: 54px !important; }
     .gtm-perk-grid { grid-template-columns: repeat(3, 1fr); }
     .gtm-plum { flex-direction: column; align-items: flex-start; }
@@ -197,21 +217,10 @@ body:has(.gtm-hero-copy) .members-actions .button {
     .gtm-sec > .gtm-wave { height: 96px; }
     .gtm-sec.has-wave { padding-top: 140px; }
 
-    /* reviews: one at a time, swipe or tap */
-    .gtm-review-grid {
-        display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-        margin: 36px -20px 0; padding: 0 20px; scroll-padding: 0 20px;
-    }
-    .gtm-review-grid::-webkit-scrollbar { display: none; }
-    .gtm-review { flex: 0 0 100%; scroll-snap-align: start; }
-    .gtm-carousel-nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 22px; }
-    .gtm-carousel-nav button {
-        width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--mid); background: transparent; color: var(--mid);
-        font: 400 20px/1 Manrope, sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
-    }
-    .gtm-dots { display: flex; gap: 8px; }
-    .gtm-dots button { width: 10px; height: 10px; border-radius: 50%; border: 0; padding: 0; background: rgba(11,21,45,.25); }
-    .gtm-dots button.is-on { background: var(--orange); }
+    /* reviews: one at a time, the next card peeking in at the edge */
+    .gtm-review-grid { gap: 16px; margin: 36px -20px 0; padding: 0 20px; scroll-padding: 0 20px; }
+    .gtm-review { flex: 0 0 100%; }
+    .gtm-carousel-nav { margin-top: 22px; }
 
     .gtm-plum-sec { padding: 64px 20px; }
     .gtm-plum h2 { font-size: 38px !important; }
@@ -256,6 +265,10 @@ body:has(.gtm-reg) .members-area-registration .members-register-extras a::before
 body:has(.gtm-reg) .members-area-registration .members-register-extras a::after {
     content: "Sign in"; font: 600 15px Manrope, sans-serif; color: #0B152D; text-decoration: underline; text-decoration-color: #FF640F; text-underline-offset: 4px;
 }
+
+/* Revelex's "* Required" legend floats beside our heading; our subtitle now says it instead */
+body:has(.gtm-reg) .members-area-registration p.legend-required { display: none !important; }
+.gtm-card-head .gtm-req { color: #D5312D; } /* the same red Revelex uses on the field asterisks */
 
 /* Duncan, 2026-10-14: the form box starts level with the headline, not the eyebrow above it */
 @media (min-width: 768px) {
@@ -348,14 +361,25 @@ body:has(.gtm-login) .members-area-page .members-register-extras a::after {
     background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF640F' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
 }
 
-/* "Not a member yet?" band on pearl. No waves on this page (Duncan, 2026-10-14): straight edges. */
-.gtm-join-sec { background: var(--pearl); padding-top: 100px; padding-bottom: 100px; }
+/* "Not a member yet?" band on pearl. The hero meets it with a straight edge (Duncan, 2026-10-14);
+   the band flows into the Midnight reviews through the website's midnight wave (Paul, same day).
+   A 4px Midnight strip under the image's bottom edge plus a 2px overlap stop a Pearl hairline. */
+.gtm-join-sec { background: var(--pearl); padding-top: 100px; padding-bottom: 230px; }
+.gtm-join-sec > .gtm-wave.is-down {
+    top: auto; bottom: 0; transform: scaleX(-1);
+    background: url('https://cdn.prod.website-files.com/678bb152f89031822d47ac39/69ce40018b183123d66ad963_global-travel-moments-divider-midnight-1.png') 0 0 / cover no-repeat,
+                linear-gradient(to bottom, transparent calc(100% - 4px), #0B152D calc(100% - 4px));
+}
 .gtm-join .gtm-lead { margin: 0; max-width: 28em; }
 .gtm-join .gtm-perks-card { border: 1px solid var(--carib); box-shadow: 0 18px 50px rgba(11,21,45,.08); padding: 32px 34px 28px; }
-.gtm-login-page .gtm-reviews-sec { background: var(--mid); color: var(--pearl); }
+.gtm-login-page .gtm-reviews-sec { background: var(--mid); color: var(--pearl); margin-top: -2px; }
 #gtm-after.gtm-login-page .gtm-ratings a { color: var(--pearl) !important; border-bottom-color: rgba(173,209,207,.6); }
 .gtm-login-page .gtm-review { background: transparent; border-color: rgba(173,209,207,.55); }
 .gtm-login-page .gtm-review cite span { color: rgba(255,249,238,.72); }
+.gtm-login-page .gtm-carousel-nav button.gtm-prev, .gtm-login-page .gtm-carousel-nav button.gtm-next { border-color: var(--pearl); color: var(--pearl); }
+.gtm-login-page .gtm-carousel-nav button.gtm-prev:hover, .gtm-login-page .gtm-carousel-nav button.gtm-next:hover { background: var(--pearl); color: var(--mid); }
+.gtm-login-page .gtm-dots button { background: rgba(255,249,238,.35); }
+.gtm-login-page .gtm-dots button.is-on { background: var(--orange); }
 
 @media (max-width: 1100px) {
     body:has(.gtm-login) .members-area-page .members-content-wrapper, .gtm-join { grid-template-columns: minmax(0,1fr) 440px !important; gap: 40px !important; }
@@ -373,9 +397,6 @@ body:has(.gtm-login) .members-area-page .members-register-extras a::after {
     .gtm-login h1.gtm-title { font-size: 44px !important; margin-bottom: 12px !important; }
     .gtm-chips span { font-size: 13px; padding: 7px 12px 7px 30px; }
     .gtm-chips span::before { left: 11px; }
-    .gtm-join-sec { padding-top: 64px; padding-bottom: 64px; }
+    .gtm-join-sec { padding-top: 64px; padding-bottom: 150px; }
     .gtm-join .gtm-perks-card { padding: 24px 22px 20px; }
-    .gtm-login-page .gtm-carousel-nav button { border-color: var(--pearl); color: var(--pearl); }
-    .gtm-login-page .gtm-dots button { background: rgba(255,249,238,.35); }
-    .gtm-login-page .gtm-dots button.is-on { background: var(--orange); }
 }
