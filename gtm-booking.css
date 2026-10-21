@@ -4105,3 +4105,23 @@ body {
         min-height: 57px !important;
     }
 }
+
+
+/* ============================================================================
+   75. SEARCH BAR, MOBILE - the date calendar opened UNDER our header
+       (21 Oct 2026, Duncan's iPhone screenshot)
+   ==========================================================================*/
+
+/* Same trap as 65a. On a phone Revelex opens the calendar as a full-screen
+   sheet (.output-view-calendar, position fixed, z-index 9999), but it lives
+   inside .rvlx-app-container, a stacking context at z-index 2, so our fixed
+   navbar (1500) sat on top. The logo covered the month name and the header
+   hid the sheet's own "Select Day Range" back arrow and title. While the
+   sheet is open, lift that container above the header. It is the only
+   .output-view in the search bar. From 768px up it is an ordinary dropdown
+   under the field, so this stays phone-only. */
+@media screen and (max-width: 767px) {
+    .rvlx-app-container:has(.output-view.is-visible) {
+        z-index: 2000 !important;
+    }
+}
