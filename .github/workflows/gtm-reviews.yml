@@ -1,0 +1,57 @@
+# Refresh embeds/gtm-reviews.json from Google once a day.
+# OFF until the repo variable GTM_REVIEWS_ENABLED is "true" (Settings > Secrets
+# and variables > Actions > Variables). Needs the secrets GBP_CLIENT_ID,
+# GBP_CLIENT_SECRET and GBP_REFRESH_TOKEN, and reviews-config.json filled in.
+# Commits only when the reviews actually changed.
+name: Refresh Google reviews
+
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: gtm-reviews
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: ${{ vars.GTM_REVIEWS_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch reviews from Google
+        run: node .github/scripts/fetch-reviews.mjs
+        env:
+          GBP_CLIENT_ID: ${{ secrets.GBP_CLIENT_ID }}
+          GBP_CLIENT_SECRET: ${{ secrets.GBP_CLIENT_SECRET }}
+          GBP_REFRESH_TOKEN: ${{ secrets.GBP_REFRESH_TOKEN }}
+
+      - name: Commit if changed
+        id: commit
+        run: |
+          if git diff --quiet -- embeds/gtm-reviews.json; then
+            echo "No change"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add embeds/gtm-reviews.json
+          git commit -m "Refresh Google reviews"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made by this job may not start a Pages build on its own, so ask for one
+      - name: Rebuild GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "Pages build request failed; the next push will publish it"
+        env:
+          GH_TOKEN: ${{ github.token }}

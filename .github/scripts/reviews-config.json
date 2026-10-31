@@ -1,0 +1,7 @@
+{
+  "account": "",
+  "listings": [
+    { "id": "london", "label": "London", "location": "", "url": "https://maps.google.com/?cid=6775153238315330732" },
+    { "id": "new-york", "label": "New York", "location": "", "url": "https://maps.google.com/?cid=9391311828870468762" }
+  ]
+}

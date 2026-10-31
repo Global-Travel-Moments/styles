@@ -51,6 +51,13 @@ Served to visitors' browsers from GitHub Pages, like everything in `css/`:
   placement inside the 10 minute Pages cache. The embeds themselves still live in
   `~/Desktop/GTM Embeds/search-bars/`; that folder's README is the guide.
 
+- **`gtm-reviews.js` + `gtm-reviews.json`** - every Google reviews embed (carousel,
+  rail, strip), added 2026-10-28. The JSON is the only place review text lives; the
+  embeds are an empty div plus a `<script src>`. From the day Google API access is
+  granted, `.github/workflows/gtm-reviews.yml` refreshes the JSON daily (off until the
+  repo variable `GTM_REVIEWS_ENABLED` is `true`). Guide and snippets:
+  `GTM/embeds/components/google-reviews-hosted/README.md`.
+
 **This folder is NOT part of the frozen root.** Revelex points at nothing in here,
 so files can be added or renamed - but a rename breaks every embed already pasted
 into Webflow, which is a re-paste of every page. Treat the filenames as fixed.
